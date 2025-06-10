@@ -1,2 +1,3 @@
 # Fedri-256
-Feel Free to code
+
+Every line of code is a step closer to the future I'm building. #SoftwareEngineeringStuden
