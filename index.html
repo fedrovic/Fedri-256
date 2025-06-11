@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fred's Personal Website</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Italianno&family=Poppins&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #28a745;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid white;
+      margin-top: 10px;
+    }
+
+    h1 {
+      font-family: 'Italianno', cursive;
+      font-size: 48px;
+      margin: 10px 0;
+    }
+
+    /* Style for the welcome-container created by JS */
+    #welcome-container h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: white;
+    }
+
+    #welcome-container p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #d4f0d4;
+    }
+
+    #welcome-container button {
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      background-color: #1abc9c;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #welcome-container button:hover {
+      background-color: #16a085;
+    }
+
+    section {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #28a745;
+      border-bottom: 2px solid #28a745;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      padding: 5px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: white;
+    }
+
+    .social-icons a {
+      margin: 0 10px;
+      color: #28a745;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    .social-icons a:hover {
+      color: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="Fred-photo.png" alt="Fred's photo" class="profile-img" />
+    <h1>Akunzire Fred</h1>
+    <!-- Remove static welcome message and replace with this empty div -->
+    <div id="welcome-container"></div>
+  </header>
+
+  <section>
+    <h2>About Me</h2>
+    <p>I'm a Software Engineering student at Mbarara University. I enjoy building websites and learning new technologies. My goal is to become a professional full-stack developer.</p>
+
+    <h2>Skills</h2>
+    <ul>
+      <li><i class="fas fa-code"></i> HTML & CSS</li>
+      <li><i class="fas fa-terminal"></i> C Programming</li>
+      <li><i class="fab fa-git-alt"></i> Git & GitHub</li>
+      <li><i class="fas fa-laptop-code"></i> Problem Solving</li>
+    </ul>
+
+    <h2>Projects</h2>
+    <ul>
+      <li>✅ My First Website (this one!)</li>
+      <li>📱 More cool stuff coming soon...</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>You can reach me via:</p>
+    <div class="social-icons">
+      <a href="mailto:fredakunzire@gmail.com"><i class="fas fa-envelope"></i></a>
+      <a href="https://wa.me/256704141950" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://github.com/Fedri-256" target="_blank"><i class="fab fa-github"></i></a>
+    </div>
+  </section>
+
+  <div class="footer">
+    Made with ❤️ by Fred
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
