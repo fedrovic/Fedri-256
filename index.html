@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fred Akunzire | Portfolio</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- AOS Animate on Scroll -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container header-container">
+    <h1 class="typing" id="typing-text"></h1>
+    <button id="dark-mode-toggle" title="Toggle Dark Mode">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+  <nav id="navbar" class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">Fred Akunzire</a>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#blog" class="nav-link">Blog</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section id="about" class="container section" data-aos="fade-up">
+    <h2>About Me</h2>
+    <div class="about-container">
+      <img src="Fred-photo.png" alt="Fred Akunzire" class="profile-pic" />
+      <p>
+        Hello! I'm Fred Akunzire, a passionate Software Engineering student at Mbarara University.
+        I love building cool websites and learning programming languages like C, Java, and JavaScript.
+      </p>
+    </div>
+  </section>
+
+  <section id="skills" class="container section" data-aos="fade-up">
+    <h2>Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-item"><i class="fab fa-html5 skill-icon" style="color:#E34F26;"></i> HTML5</div>
+      <div class="skill-item"><i class="fab fa-css3-alt skill-icon" style="color:#1572B6;"></i> CSS3</div>
+      <div class="skill-item"><i class="fab fa-js skill-icon" style="color:#F7DF1E;"></i> JavaScript</div>
+      <div class="skill-item"><i class="fas fa-code skill-icon" style="color:#A8B9CC;"></i> C Programming</div>
+      <div class="skill-item"><i class="fab fa-java skill-icon" style="color:#007396;"></i> Java (Basic GUI)</div>
+      <div class="skill-item"><i class="fab fa-git-alt skill-icon" style="color:#F05032;"></i> Git & GitHub</div>
+      <div class="skill-item"><i class="fas fa-mobile-alt skill-icon" style="color:#4CAF50;"></i> Responsive Design</div>
+      <div class="skill-item"><i class="fas fa-terminal skill-icon" style="color:#333;"></i> Basic Command Line</div>
+    </div>
+  </section>
+
+  <section id="projects" class="container section" data-aos="fade-up">
+    <h2>Projects</h2>
+    <div class="projects-grid">
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="100">
+        <h3>Personal Portfolio Website</h3>
+        <p>A responsive and modern personal website built with HTML, CSS, and JavaScript.</p>
+        <a href="https://github.com/Fedri-256/Fedri-256" target="_blank" class="btn">GitHub</a>
+        <a href="https://fedrovic.github.io/Fedri-256/" target="_blank" class="btn">Live Demo</a>
+      </div>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="200">
+        <h3>File Handling in C</h3>
+        <p>A command-line program in C demonstrating how to create, read, and write files.</p>
+        <a href="https://github.com/Fedri-256/file-handling-c" target="_blank" class="btn">GitHub</a>
+      </div>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="300">
+        <h3>Java GUI Login Form</h3>
+        <p>A simple desktop login application built using Java Swing.</p>
+        <a href="https://github.com/Fedri-256/java-gui-login" target="_blank" class="btn">GitHub</a>
+      </div>
+
+      <div class="project-card" data-aos="fade-up" data-aos-delay="400">
+        <h3>Student Project Dashboard</h3>
+        <p>A web dashboard template for tracking classwork and assignments.</p>
+        <a href="https://github.com/Fedri-256/student-dashboard" target="_blank" class="btn">GitHub</a>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="blog" class="container section" data-aos="fade-up">
+    <h2>Blog</h2>
+    <article class="blog-post">
+      <h3>How I Built My First Portfolio Website</h3>
+      <p>This blog explains step-by-step how I created my personal portfolio using HTML, CSS, and JavaScript...</p>
+      <a href="#" class="btn">Read More</a>
+    </article>
+    <article class="blog-post">
+      <h3>Understanding File Handling in C</h3>
+      <p>A beginner-friendly guide to creating, reading, and writing files in C programming language...</p>
+      <a href="#" class="btn">Read More</a>
+    </article>
+  </section>
+
+  <section id="contact" class="container section" data-aos="fade-up">
+    <h2>Contact Me</h2>
+    <form action="https://formspree.io/f/mayvlwyp" method="POST" class="contact-form">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" required placeholder="Your name" />
+      
+      <label for="email">Email</label>
+      <input type="email" name="_replyto" id="email" required placeholder="Your email" />
+      
+      <label for="message">Message</label>
+      <textarea name="message" id="message" rows="5" required placeholder="Your message"></textarea>
+      
+      <button type="submit">Send Message</button>
+    </form>
+
+    <div class="contact-info">
+      <p>📧 Email: <a href="mailto:fredakunzire@gmail.com">fredakunzire@gmail.com</a></p>
+      <p>📱 WhatsApp: <a href="https://wa.me/256704141950" target="_blank">+256 704 141 950</a></p>
+      <p>💻 GitHub: <a href="https://github.com/Fedri-256" target="_blank">Fedri-256</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2025 Akunzire Fred. All rights reserved.</p>
+</footer>
+
+<!-- AOS JS -->
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+<!-- Typed.js -->
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+<script src="script.js"></script>
+
+</body>
+</html>
