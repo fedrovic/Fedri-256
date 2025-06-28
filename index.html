@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fred Akunzire | Portfolio</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <!-- Firebase SDK -->
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <header>
+    <h1>Fred Akunzire</h1>
+    <div>
+      <i id="dark-mode-toggle" class="fas fa-moon dark-toggle"></i>
+      <i class="fas fa-bars menu-toggle nav-toggle"></i>
+    </div>
+  </header>
+
+  <nav class="nav-links" id="nav">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#music">Music</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="container">
+    <section class="about" id="about">
+      <img src="Fred-photo.png" alt="Fred Akunzire">
+      <h2 style="color: #381819;">Hello, I’m Fred Akunzire</h2>
+      <p style="color: #381819; font-size: 1.05rem; line-height: 1.8;">
+        I’m a dedicated and passionate <strong>Software Engineering student</strong> with a strong interest in <strong>web development</strong>, <strong>user interface design</strong>, and <strong>emerging technologies</strong>. I believe that technology, when used creatively, has the power to transform lives and solve real-world problems — and that’s exactly what drives me every day.
+        <br><br>
+        With a curious mind and a constant hunger to learn, I actively explore modern tools, build meaningful projects, and continuously strive to improve my skills. My goal is not just to write code but to build <strong>innovative, user-friendly, and impactful digital experiences</strong> that serve a purpose.
+        <br><br>
+        Whether I’m crafting responsive interfaces, experimenting with design ideas, or contributing to real software solutions, I bring focus and creativity to every line of code. As I grow in this field, I'm committed to becoming a <strong>problem-solver, collaborator, and visionary engineer</strong> who makes a difference.
+        <br><br>
+        Thank you for visiting — I invite you to explore my work, connect with me, and let’s create something great together!
+      </p>
+      <div class="btn-group">
+        <a href="#contact" class="btn">Hire Me</a>
+      </div>
+    </section>
+
+    <section class="projects" id="projects">
+      <h2>Projects</h2>
+      <div class="project-item">
+        <h3>Personal Portfolio Website</h3>
+        <p>A responsive website built using HTML, CSS, and JavaScript to showcase my profile and skills.</p>
+      </div>
+      <div class="project-item">
+        <h3>Login Page UI</h3>
+        <p>A simple and modern login interface created as part of UI/UX design practice.</p>
+      </div>
+    </section>
+
+    <section class="music-section" id="music">
+      <h2>🎵 Choose and Play a Song</h2>
+      <select id="songSelector">
+        <option value="none">-- Select a Song --</option>
+        <option value="Miley Cyrus - Wrecking Ball (Lyrics)(MP3_160K).mp3">Wrecking Ball - Miley Cyrus</option>
+        <option value="Joshua Baraka - NANA (Official Music Video)(MP3_160K).mp3">NANA - Joshua Baraka</option>
+        <option value="JAY-Z - Young Forever (Feat. Mr Hudson) (Official Audio)(MP3_160K).mp3">Young Forever - JAY-Z</option>
+        <option value="IF DON_T LAUGH I_LL CRY - FRAWLEY (lyrics)-(REMIX)(MP3_160K).mp3">Don't Laugh I'll Cry - FRAWLEY</option>
+      </select>
+      <br><br>
+      <audio id="musicPlayer" controls style="width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;"></audio>
+    </section>
+
+    <section class="interaction" id="interaction">
+      <h2>💬 Interact</h2>
+      <div class="like-share-comment">
+        <button id="likeBtn"><i class="fas fa-heart"></i></button>
+        <span id="likeCount">0</span>
+        <button id="shareBtn"><i class="fas fa-share"></i></button>
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button class="btn" id="viewCommentsBtn">View Comments</button>
+      </div>
+
+      <form id="commentForm">
+        <textarea placeholder="Write your comment here..." required></textarea>
+        <button type="submit">Submit Comment</button>
+      </form>
+      <div id="commentMessage"></div>
+      <div id="commentsList" class="hidden"></div>
+    </section>
+
+    <section class="featured-img">
+      <h2>My Work Environment</h2>
+      <img src="pexels-fotios-photos-19743300.jpg" alt="Fred working">
+    </section>
+
+    <section class="contact" id="contact">
+      <h2>Contact Me</h2>
+      <form action="mailto:fredakunzire@gmail.com" method="post" enctype="text/plain">
+        <input type="text" name="Name" placeholder="Your Name" required>
+        <input type="email" name="Email" placeholder="Your Email" required>
+        <textarea name="Message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+      <p style="margin-top: 10px;">
+        Or WhatsApp me directly:
+        <a href="https://wa.me/256704141950" target="_blank" class="btn">Chat on WhatsApp</a>
+      </p>
+      <div style="margin-top: 10px; font-size: 14px;">
+        👁️ Total Visitors: <span id="visitorCount">Loading...</span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    © 2025 Fred Akunzire. All rights reserved.
+  </footer>
+</body>
+</html>
