@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fred Akunzire | Portfolio</title>
+  
+  <!-- 🔍 SEO -->
+  <meta name="author" content="Fred Akunzire">
+  <meta name="keywords" content="Fred Akunzire, Portfolio, Software Engineer, Web Developer, UI Designer, Emerging Technologies">
+  <meta name="description" content="Portfolio of Fred Akunzire, a Software Engineering student passionate about web development, UI/UX design, and emerging technologies.">
+  
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script type="module" src="firebase-init.js"></script>
+</head>
+<body>
+  <!-- 🔄 Background Slideshow -->
+  <div class="background-slideshow"></div>
+  <div class="background-overlay"></div>
+
+  <header>
+    <h1>Fred Akunzire</h1>
+    <div>
+      <!-- 🌙 Dark Mode -->
+      <i id="dark-mode-toggle" class="fas fa-moon dark-toggle" aria-label="Toggle Dark Mode"></i>
+      <!-- 📱 Mobile Menu -->
+      <i class="fas fa-bars menu-toggle nav-toggle" aria-label="Toggle Navigation Menu"></i>
+    </div>
+  </header>
+
+  <nav class="nav-links" id="nav">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#music">Music</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="container">
+    <!-- 👤 About Section -->
+    <section class="about" id="about">
+      <img src="Fred-photo.png" alt="Portrait of Fred Akunzire" loading="lazy">
+      <h2 style="color: #381819;">Hello, I’m Fred Akunzire</h2>
+      <p style="color: #381819; font-size: 1.05rem; line-height: 1.8;">
+        I’m a dedicated and passionate <strong>Software Engineering student</strong> with a strong interest in <strong>web development</strong>, <strong>user interface design</strong>, and <strong>emerging technologies</strong>. I believe that technology, when used creatively, has the power to transform lives and solve real-world problems — and that’s exactly what drives me every day.
+        <br><br>
+        With a curious mind and a constant hunger to learn, I actively explore modern tools, build meaningful projects, and continuously strive to improve my skills. My goal is not just to write code but to build <strong>innovative, user-friendly, and impactful digital experiences</strong> that serve a purpose.
+        <br><br>
+        Whether I’m crafting responsive interfaces, experimenting with design ideas, or contributing to real software solutions, I bring focus and creativity to every line of code. As I grow in this field, I'm committed to becoming a <strong>problem-solver, collaborator, and visionary engineer</strong> who makes a difference.
+        <br><br>
+        Thank you for visiting — I invite you to explore my work, connect with me, and let’s create something great together!
+      </p>
+      <div class="btn-group">
+        <a href="#contact" class="btn" aria-label="Hire Me">Hire Me</a>
+      </div>
+    </section>
+
+    <!-- 💻 Projects -->
+    <section class="projects" id="projects">
+      <h2>Projects</h2>
+      <div class="project-item">
+        <h3>Personal Portfolio Website</h3>
+        <p>A responsive website built using HTML, CSS, and JavaScript to showcase my profile and skills.</p>
+      </div>
+      <div class="project-item">
+        <h3>Login Page UI</h3>
+        <p>A simple and modern login interface created as part of UI/UX design practice.</p>
+      </div>
+    </section>
+
+    <!-- 🎵 Music Player -->
+    <section class="music-section" id="music">
+      <h2>🎵 Choose and Play a Song</h2>
+      <label for="songSelector" class="visually-hidden">Select a song to play</label>
+      <select id="songSelector">
+        <option value="none">-- Select a Song --</option>
+        <option value="Miley Cyrus - Wrecking Ball (Lyrics)(MP3_160K).mp3">Wrecking Ball - Miley Cyrus</option>
+        <option value="Joshua Baraka - NANA (Official Music Video)(MP3_160K).mp3">NANA - Joshua Baraka</option>
+        <option value="JAY-Z - Young Forever (Feat. Mr Hudson) (Official Audio)(MP3_160K).mp3">Young Forever - JAY-Z</option>
+        <option value="IF DON_T LAUGH I_LL CRY - FRAWLEY (lyrics)-(REMIX)(MP3_160K).mp3">Don't Laugh I'll Cry - FRAWLEY</option>
+      </select>
+      <br><br>
+      <audio id="musicPlayer" controls style="width: 100%; max-width: 400px; border-radius: 10px; margin-top: 10px;" aria-label="Music Player"></audio>
+    </section>
+
+    <!-- 💬 Interaction -->
+    <section class="interaction">
+      <h2>💬 Interact</h2>
+      <div class="like-share-comment">
+        <button class="like-btn" id="likeBtn" aria-label="Like this page">🤍</button> 
+        <span id="likeCount">0</span>
+        <button class="share-btn" id="shareBtn" aria-label="Share this page">📤</button>
+      </div>
+
+      <form id="commentForm">
+        <textarea placeholder="Write your comment here..." required aria-label="Write your comment"></textarea>
+        <button type="submit" aria-label="Submit Comment">Submit Comment</button>
+      </form>
+
+      <div id="commentMessage"></div>
+      <button id="viewCommentsBtn" aria-label="View Comments">View Comments</button>
+      <div id="commentsList" style="display: none;"></div>
+    </section>
+
+    <!-- 📸 Featured -->
+    <section class="featured-img">
+      <h2>My Work Environment</h2>
+      <img src="pexels-fotios-photos-19743300.jpg" alt="Fred working at a desk with a laptop" loading="lazy">
+    </section>
+
+    <!-- 📞 Contact -->
+    <section class="contact" id="contact">
+      <h2>Contact Me</h2>
+      <form action="mailto:fredakunzire@gmail.com" method="post" enctype="text/plain">
+        <input type="text" name="Name" placeholder="Your Name" required aria-label="Your Name">
+        <input type="email" name="Email" placeholder="Your Email" required aria-label="Your Email">
+        <textarea name="Message" rows="5" placeholder="Your Message" required aria-label="Your Message"></textarea>
+        <button type="submit" class="btn" aria-label="Send Message">Send</button>
+      </form>
+      <p style="margin-top: 10px;">
+        Or WhatsApp me directly:
+        <a href="https://wa.me/256704141950" target="_blank" class="btn" aria-label="Chat on WhatsApp">Chat on WhatsApp</a>
+      </p>
+      <p style="margin-top: 10px;">
+        <strong>Total Visitors:</strong> <span id="visitorCount">Loading...</span>
+      </p>
+    </section>
+  </div>
+
+  <footer>
+    © 2025 Fred Akunzire. All rights reserved.
+  </footer>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
