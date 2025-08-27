@@ -1,0 +1,152 @@
+/* =============================
+   General Styles
+============================= */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  transition: background-image 1s ease-in-out;
+}
+
+.container {
+  text-align: center;
+  padding: 100px 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+button {
+  background: #007bff;
+  border: none;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* =============================
+   Like Button
+============================= */
+#likeBtn {
+  margin-right: 10px;
+}
+
+#likeCount {
+  font-weight: bold;
+}
+
+/* =============================
+   Chatbot Box
+============================= */
+#chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+#chatbot.hidden {
+  display: none;
+}
+
+#chatbot header {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#chatbotMessages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #f1f1f1;
+}
+
+#chatbotMessages .user {
+  text-align: right;
+  margin: 5px 0;
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+#chatbotMessages .bot {
+  text-align: left;
+  margin: 5px 0;
+  padding: 8px 12px;
+  background: #e5e5e5;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+#chatbot footer {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+#userInput {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+}
+
+#sendBtn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+/* =============================
+   Floating Minimized Chatbot Button
+============================= */
+#minimizedChatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  background: #007bff;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 30px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 10000;
+  display: none;
+  transition: transform 0.2s, background 0.3s;
+}
+
+#minimizedChatbot:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
