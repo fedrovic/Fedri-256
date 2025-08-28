@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fred's Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background overlay -->
+  <div class="overlay"></div>
+
+  <header>
+    <h1>Welcome to My Portfolio</h1>
+    <p>Explore my work, skills, and projects below.</p>
+  </header>
+
+  <main>
+    <!-- Who I Am -->
+    <section id="about">
+      <h2>Who I Am</h2>
+      <p>
+        I am Akunzire Fred, a passionate software developer eager to explore, learn, and build
+        impactful software solutions for real-world problems. I love coding and sharing knowledge.
+      </p>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <h2>My Projects</h2>
+      <ul>
+        <li>Soccer Management Database</li>
+        <li>Hotel Booking System</li>
+        <li>Personal Portfolio Website</li>
+      </ul>
+    </section>
+
+    <!-- Like Button -->
+    <section id="like-section">
+      <button id="like-btn">👍 Like</button>
+      <span id="like-count">0</span> Likes
+    </section>
+
+    <!-- Comments -->
+    <section id="comments">
+      <h2>Leave a Comment</h2>
+      <form id="comment-form">
+        <input type="text" id="comment-input" placeholder="Write your comment..." required>
+        <button type="submit">Post</button>
+      </form>
+      <button id="view-comments">View Comments</button>
+      <ul id="comment-list"></ul>
+    </section>
+
+    <!-- Visitor Counter -->
+    <section id="visitors">
+      <h2>Visitor Count: <span id="visitor-count">0</span></h2>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Akunzire Fred. All rights reserved.</p>
+  </footer>
+
+  <!-- Chatbot Floating Button -->
+  <div id="chatbot-container">
+    <button id="chatbot-toggle">💬 Fred AI</button>
+    <div id="chatbot-box" class="hidden">
+      <div id="chatbot-header">
+        <span>🤖 Fred AI</span>
+        <button id="chatbot-close">✖</button>
+      </div>
+      <div id="chatbot-messages"></div>
+      <div id="chatbot-input-container">
+        <input type="text" id="chatbot-input" placeholder="Ask me anything...">
+        <button id="chatbot-send">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
