@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — My Swaps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;--navy-mid:#0F1E33;--navy-soft:#13243E;
+  --blue:#1E6FD9;--blue-light:#3D8EF5;--blue-glow:#5AA3FF;
+  --green:#18C77A;--green-light:#2EDEA0;
+  --amber:#F5B700;--red:#F87171;--purple:#A78BFA;
+  --white:#FFFFFF;--text-primary:#EEF2FF;--text-secondary:#9AAEC8;--text-muted:#5E7A9A;
+  --border:#1E3455;--border-light:#2A4466;
+  --card-bg:#0F1E33;--card-bg2:#111F35;
+  --sidebar-w:240px;--topbar-h:64px;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --font-display:'Syne',sans-serif;--font-body:'Outfit',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--navy);color:var(--text-primary);display:flex;flex-direction:column}
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - var(--topbar-h))}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--navy-mid);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;z-index:40}
+.topbar-left{display:flex;align-items:center;gap:1rem}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.85rem;font-weight:800;color:#fff;text-decoration:none;flex-shrink:0}
+.logo-name{font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--white);text-decoration:none}
+.topbar-search-wrap{display:flex;align-items:center;gap:.625rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .875rem;width:280px;transition:all .2s}
+.topbar-search-wrap:focus-within{border-color:var(--blue-light)}
+.topbar-search-wrap input{background:none;border:none;outline:none;color:var(--text-primary);font-family:var(--font-body);font-size:.875rem;width:100%}
+.topbar-search-wrap input::placeholder{color:var(--text-muted)}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-secondary);font-size:.9rem;position:relative}
+.icon-btn:hover{border-color:var(--border-light);background:var(--navy-soft);color:var(--text-primary)}
+.notif-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--red);border:2px solid var(--navy-mid);font-size:.6rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.8rem;font-weight:800;color:#fff;cursor:pointer;border:2px solid var(--border-light)}
+.hamburger-btn{display:none;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.hamburger-btn span{display:block;width:16px;height:1.5px;background:var(--text-secondary);border-radius:1px;transition:all .3s}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:0 .5rem;margin-bottom:.5rem}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;color:var(--text-muted);font-size:.875rem;font-weight:500;text-decoration:none}
+.nav-item:hover{background:var(--navy-soft);color:var(--text-secondary)}
+.nav-item.active{background:rgba(30,111,217,.12);color:var(--blue-glow);border:1px solid rgba(30,111,217,.2)}
+.nav-icon{width:18px;text-align:center;font-size:.95rem;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;min-width:18px;text-align:center}
+.nav-badge.green{background:var(--green)}.nav-badge.amber{background:var(--amber);color:var(--navy)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+.coin-widget{margin:auto 1rem 1.25rem;background:linear-gradient(135deg,rgba(30,111,217,.15),rgba(24,199,122,.1));border:1px solid rgba(30,111,217,.25);border-radius:var(--radius-md);padding:1rem}
+.coin-widget-label{font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem}
+.coin-widget-bal{font-family:var(--font-display);font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--blue-glow),var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.coin-widget-bar{height:4px;background:var(--border);border-radius:2px;margin-top:.75rem}
+.coin-widget-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--green));width:58%}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:29}
+
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column}
+.main-content::-webkit-scrollbar{width:5px}
+.main-content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:1.5rem 2rem 1rem;border-bottom:1px solid var(--border);background:var(--navy-mid);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;flex-shrink:0}
+.page-header-left h2{font-family:var(--font-display);font-size:1.3rem;font-weight:800;margin-bottom:.2rem}
+.page-header-left p{font-size:.82rem;color:var(--text-secondary);font-weight:300}
+.header-actions{display:flex;align-items:center;gap:.75rem}
+.btn-new-swap{padding:.6rem 1.25rem;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--blue),var(--blue-light));border:none;color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem;box-shadow:0 4px 12px rgba(30,111,217,.25)}
+.btn-new-swap:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(30,111,217,.35)}
+
+/* ── STATS STRIP ── */
+.stats-strip{display:flex;gap:0;border-bottom:1px solid var(--border);background:var(--navy-mid);flex-shrink:0}
+.strip-stat{flex:1;padding:.875rem 1.5rem;border-right:1px solid var(--border);display:flex;align-items:center;gap:.875rem}
+.strip-stat:last-child{border-right:none}
+.strip-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.strip-num{font-family:var(--font-display);font-size:1.3rem;font-weight:800;line-height:1}
+.strip-label{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+
+/* ── TABS ── */
+.swaps-tabs{display:flex;gap:0;padding:0 2rem;background:var(--navy-mid);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.swaps-tabs::-webkit-scrollbar{display:none}
+.swap-tab{padding:.875rem 1.1rem;font-size:.85rem;font-weight:500;color:var(--text-muted);cursor:pointer;border:none;background:none;font-family:var(--font-body);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+.swap-tab:hover{color:var(--text-secondary)}
+.swap-tab.active{color:var(--blue-glow);border-bottom-color:var(--blue)}
+.tab-count{font-size:.68rem;font-weight:700;padding:.1rem .375rem;border-radius:100px;background:rgba(30,111,217,.15);color:var(--blue-glow)}
+.swap-tab.active .tab-count{background:var(--blue);color:#fff}
+
+/* ── SWAP LIST AREA ── */
+.swaps-area{flex:1;padding:1.5rem 2rem;overflow-y:auto}
+.swaps-area::-webkit-scrollbar{width:4px}
+.swaps-area::-webkit-scrollbar-thumb{background:var(--border)}
+
+.tab-panel{display:none}.tab-panel.active{display:flex;flex-direction:column;gap:1rem;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SWAP CARD ── */
+.swap-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:all .25s}
+.swap-card:hover{border-color:var(--border-light);box-shadow:0 4px 20px rgba(0,0,0,.2)}
+.swap-card-accent{height:3px}
+.swap-card-body{padding:1.25rem 1.5rem;display:grid;grid-template-columns:auto 1fr auto;gap:1.25rem;align-items:center}
+.sc-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#fff;position:relative;flex-shrink:0}
+.sc-online{position:absolute;bottom:1px;right:1px;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--card-bg)}
+.sc-main{min-width:0}
+.sc-top-row{display:flex;align-items:center;gap:.875rem;flex-wrap:wrap;margin-bottom:.375rem}
+.sc-name{font-size:1rem;font-weight:700}
+.sc-location{font-size:.75rem;color:var(--text-muted)}
+.sc-exchange{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.5rem}
+.sc-exchange-item{display:flex;align-items:center;gap:.375rem;font-size:.82rem}
+.sc-dir{font-size:.68rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;flex-shrink:0}
+.dir-teach{background:rgba(24,199,122,.12);color:var(--green-light)}
+.dir-learn{background:rgba(30,111,217,.12);color:var(--blue-glow)}
+.sc-arrow{color:var(--text-muted);font-size:.8rem}
+.sc-meta{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.sc-meta-item{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:var(--text-muted)}
+.sc-right{display:flex;flex-direction:column;align-items:flex-end;gap:.625rem;flex-shrink:0;min-width:140px}
+.sc-status{font-size:.72rem;font-weight:700;padding:.25rem .625rem;border-radius:100px;white-space:nowrap}
+.status-active{background:rgba(24,199,122,.12);border:1px solid rgba(24,199,122,.2);color:var(--green-light)}
+.status-pending{background:rgba(245,183,0,.1);border:1px solid rgba(245,183,0,.2);color:#FFD700}
+.status-paused{background:rgba(94,122,154,.12);border:1px solid rgba(94,122,154,.2);color:var(--text-muted)}
+.status-completed{background:rgba(30,111,217,.1);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)}
+.status-declined{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);color:var(--red)}
+.sc-next{font-size:.75rem;color:var(--text-muted);text-align:right}
+.sc-next strong{color:var(--text-secondary)}
+.sc-coin-track{font-size:.75rem;color:var(--text-muted);text-align:right}
+.sc-coin-track span{color:var(--green-light);font-weight:600}
+
+/* SWAP CARD FOOTER */
+.swap-card-footer{padding:.75rem 1.5rem;border-top:1px solid var(--border);background:rgba(0,0,0,.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.sc-footer-left{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.btn-sm{padding:.4rem .875rem;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:transparent;color:var(--text-secondary);display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
+.btn-sm:hover{border-color:var(--border-light);color:var(--text-primary)}
+.btn-sm.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-sm.primary:hover{background:var(--blue-light)}
+.btn-sm.green{background:rgba(24,199,122,.12);border-color:rgba(24,199,122,.25);color:var(--green-light)}
+.btn-sm.green:hover{background:var(--green);border-color:var(--green);color:#fff}
+.btn-sm.danger{color:var(--red);border-color:rgba(248,113,113,.2)}
+.btn-sm.danger:hover{background:rgba(248,113,113,.1)}
+.sc-progress{display:flex;align-items:center;gap:.625rem}
+.progress-track{width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--green));transition:width .6s ease}
+.progress-label{font-size:.72rem;color:var(--text-muted)}
+
+/* ── PENDING CARD VARIANT ── */
+.pending-actions{display:flex;gap:.5rem}
+.btn-accept{padding:.45rem 1rem;border-radius:var(--radius-sm);background:rgba(24,199,122,.12);border:1px solid rgba(24,199,122,.3);color:var(--green-light);font-family:var(--font-body);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-accept:hover{background:var(--green);border-color:var(--green);color:#fff}
+.btn-decline{padding:.45rem 1rem;border-radius:var(--radius-sm);background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-body);font-size:.8rem;cursor:pointer;transition:all .2s}
+.btn-decline:hover{border-color:rgba(248,113,113,.3);color:var(--red)}
+
+/* ── SCHEDULE SESSION MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.show{display:flex;animation:fadeM .2s ease}
+@keyframes fadeM{from{opacity:0}to{opacity:1}}
+.modal{background:var(--navy-mid);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:2rem;width:100%;max-width:500px;position:relative;animation:slideM .3s ease;max-height:90vh;overflow-y:auto}
+@keyframes slideM{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem}
+.modal-close:hover{color:var(--text-primary)}
+.modal-title{font-family:var(--font-display);font-size:1.15rem;font-weight:800;margin-bottom:.25rem}
+.modal-sub{font-size:.83rem;color:var(--text-secondary);margin-bottom:1.5rem;font-weight:300}
+.modal-field{margin-bottom:1.1rem}
+.modal-field label{display:block;font-size:.78rem;font-weight:600;color:var(--text-muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:.4rem}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:.65rem .875rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--navy);color:var(--text-primary);font-family:var(--font-body);font-size:.875rem;outline:none;transition:border-color .2s}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--blue-light)}
+.modal-field input::placeholder,.modal-field textarea::placeholder{color:var(--text-muted)}
+.modal-field select option{background:var(--navy-mid)}
+.modal-field textarea{resize:none;min-height:72px;line-height:1.5}
+.modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.875rem}
+.modal-footer{display:flex;gap:.75rem;margin-top:1.5rem}
+.btn-modal-cancel{flex:1;padding:.7rem;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:.875rem;cursor:pointer}
+.btn-modal-submit{flex:1;padding:.7rem;border-radius:var(--radius-md);border:none;background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-modal-submit:hover{transform:translateY(-1px)}
+
+/* ── DISPUTE FLOW ── */
+.dispute-steps{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem}
+.dispute-step{display:flex;align-items:flex-start;gap:.75rem;padding:.875rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md)}
+.ds-num{width:24px;height:24px;border-radius:50%;background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.25);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;color:var(--blue-glow);flex-shrink:0}
+.ds-text{font-size:.82rem;color:var(--text-secondary);line-height:1.5}
+.ds-text strong{color:var(--text-primary)}
+
+/* ── EMPTY STATE ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center;gap:.75rem}
+.empty-icon{font-size:2.5rem;opacity:.35}
+.empty-state h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-secondary)}
+.empty-state p{font-size:.85rem;color:var(--text-muted);max-width:280px;line-height:1.6}
+.btn-empty{padding:.65rem 1.5rem;border-radius:var(--radius-md);background:var(--blue);border:none;color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:.5rem}
+.btn-empty:hover{background:var(--blue-light);transform:translateY(-1px)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;z-index:30;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}.sidebar-overlay.show{display:block}
+  .hamburger-btn{display:flex}.coin-widget{display:none}
+  .swap-card-body{grid-template-columns:auto 1fr}
+  .sc-right{display:none}
+  .stats-strip{overflow-x:auto}.strip-stat{min-width:120px}
+  .swaps-area{padding:1rem}
+  .page-header{padding:1rem}
+  .topbar-search-wrap{display:none}
+}
+@media(max-width:600px){
+  .sc-exchange{flex-direction:column;gap:.375rem}
+  .swap-card-footer{flex-direction:column;align-items:flex-start}
+  .sc-footer-left{flex-wrap:wrap}
+  .modal-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger-btn" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    <a href="skillswap-landing.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">SkillSwap</span>
+    </a>
+    <div class="topbar-search-wrap">
+      <span style="color:var(--text-muted);font-size:.85rem;flex-shrink:0">🔍</span>
+      <input type="text" placeholder="Search swaps..."/>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn">🔔<span class="notif-badge">3</span></button>
+    <button class="icon-btn">💬</button>
+    <div class="topbar-avatar">JD</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="nav-item" href="skillswap-dashboard.html"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a class="nav-item" href="skillswap-discover.html"><span class="nav-icon">🔍</span> Discover</a>
+      <a class="nav-item active" href="skillswap-swaps.html"><span class="nav-icon">🔁</span> My Swaps<span class="nav-badge">2</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span> Sessions</a>
+      <a class="nav-item" href="skillswap-messages.html"><span class="nav-icon">💬</span> Messages<span class="nav-badge">4</span></a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="skillswap-profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⬡</span> SkillCoins<span class="nav-badge amber">14</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏆</span> Achievements</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <a class="nav-item" href="#" style="background:rgba(30,111,217,.08);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)"><span class="nav-icon">⚡</span> Go Premium</a>
+    </div>
+    <div class="coin-widget">
+      <div class="coin-widget-label">SkillCoin Balance</div>
+      <div class="coin-widget-bal">⬡ 14</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">≈ 14 hrs of learning</div>
+      <div class="coin-widget-bar"><div class="coin-widget-fill"></div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h2>🔁 My Swaps</h2>
+        <p>Track, manage and schedule all your skill exchanges in one place</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn-new-swap" onclick="window.location.href='skillswap-discover.html'">
+          + Find New Swap
+        </button>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="strip-stat">
+        <div class="strip-icon" style="background:rgba(24,199,122,.12)">🔁</div>
+        <div><div class="strip-num" style="color:var(--green-light)">3</div><div class="strip-label">Active Swaps</div></div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-icon" style="background:rgba(245,183,0,.1)">⏳</div>
+        <div><div class="strip-num" style="color:#FFD700">2</div><div class="strip-label">Pending</div></div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-icon" style="background:rgba(30,111,217,.1)">✓</div>
+        <div><div class="strip-num" style="color:var(--blue-glow)">7</div><div class="strip-label">Completed</div></div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-icon" style="background:rgba(90,163,255,.1)">⬡</div>
+        <div><div class="strip-num" style="color:var(--blue-glow)">14</div><div class="strip-label">SkillCoins</div></div>
+      </div>
+      <div class="strip-stat">
+        <div class="strip-icon" style="background:rgba(245,183,0,.1)">★</div>
+        <div><div class="strip-num" style="color:#FFD700">4.9</div><div class="strip-label">Avg Rating</div></div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="swaps-tabs">
+      <button class="swap-tab active" onclick="showSwapTab('active',this)">Active <span class="tab-count">3</span></button>
+      <button class="swap-tab" onclick="showSwapTab('pending',this)">Pending <span class="tab-count">2</span></button>
+      <button class="swap-tab" onclick="showSwapTab('completed',this)">Completed <span class="tab-count">7</span></button>
+      <button class="swap-tab" onclick="showSwapTab('paused',this)">Paused <span class="tab-count">1</span></button>
+      <button class="swap-tab" onclick="showSwapTab('archived',this)">Archived <span class="tab-count">3</span></button>
+    </div>
+
+    <!-- SWAPS AREA -->
+    <div class="swaps-area">
+
+      <!-- ══ ACTIVE ══ -->
+      <div class="tab-panel active" id="tab-active">
+
+        <!-- Swap 1 — Active, upcoming session -->
+        <div class="swap-card" id="swap1">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#EC4899,#8B5CF6)">
+              SL<div class="sc-online"></div>
+            </div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Sara Lindqvist</span>
+                <span class="sc-location">📍 Stockholm, Sweden</span>
+                <span class="sc-status status-active">● Active</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 📸 Photography</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 🧘 Yoga</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📅 Session 3 of 8 completed</span>
+                <span class="sc-meta-item">🎥 Live video</span>
+                <span class="sc-meta-item">📆 Weekly — Tuesdays</span>
+                <span class="sc-meta-item" style="color:var(--green-light);font-weight:500">⚡ Next: Today 3:00 PM</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-next">Next session<br/><strong>Today · 3:00 PM EAT</strong></div>
+              <div class="sc-coin-track">Earned: <span>+3 ⬡</span></div>
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:37.5%"></div></div>
+                <span class="progress-label">3/8</span>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm primary" onclick="openModal('session','Sara Lindqvist')">📅 Schedule Session</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Message</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 Profile</button>
+              <button class="btn-sm" onclick="openModal('notes','Sara Lindqvist')">📝 Session Notes</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <button class="btn-sm" onclick="openModal('pause','Sara Lindqvist')">⏸ Pause Swap</button>
+              <button class="btn-sm danger" onclick="openModal('cancel','Sara Lindqvist')">✕ Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Swap 2 — Active -->
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,var(--blue),#7C3AED)"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">MK</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Maria Kovač</span>
+                <span class="sc-location">📍 Zagreb, Croatia</span>
+                <span class="sc-status status-active">● Active</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 🐍 Python</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 🇪🇸 Spanish</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📅 Session 2 of 10 completed</span>
+                <span class="sc-meta-item">🎥 Live video</span>
+                <span class="sc-meta-item">📆 Bi-weekly</span>
+                <span class="sc-meta-item">Next: Tomorrow 10:00 AM</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-next">Next session<br/><strong>Tomorrow · 10:00 AM</strong></div>
+              <div class="sc-coin-track">Earned: <span>+2 ⬡</span></div>
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:20%"></div></div>
+                <span class="progress-label">2/10</span>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm primary" onclick="openModal('session','Maria Kovač')">📅 Schedule Session</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Message</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 Profile</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <button class="btn-sm" onclick="openModal('pause','Maria Kovač')">⏸ Pause</button>
+              <button class="btn-sm danger" onclick="openModal('cancel','Maria Kovač')">✕ Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Swap 3 — Active -->
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,#F59E0B,#EF4444)"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">AR</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Ahmed Rashid</span>
+                <span class="sc-location">📍 Cairo, Egypt</span>
+                <span class="sc-status status-active">● Active</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 🎸 Guitar</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 📊 Excel</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📅 Session 5 of 6 completed</span>
+                <span class="sc-meta-item">🎥 Live video</span>
+                <span class="sc-meta-item">📆 Weekly — Fridays</span>
+                <span class="sc-meta-item">Next: Friday 10:00 AM</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-next">Next session<br/><strong>Friday · 10:00 AM</strong></div>
+              <div class="sc-coin-track">Earned: <span>+5 ⬡</span></div>
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:83%"></div></div>
+                <span class="progress-label">5/6</span>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm primary" onclick="openModal('session','Ahmed Rashid')">📅 Schedule Session</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Message</button>
+              <button class="btn-sm green" onclick="openModal('complete','Ahmed Rashid')">✓ Mark Complete</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <button class="btn-sm" onclick="openModal('dispute','Ahmed Rashid')">⚑ Dispute</button>
+              <button class="btn-sm danger" onclick="openModal('cancel','Ahmed Rashid')">✕ Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PENDING ══ -->
+      <div class="tab-panel" id="tab-pending">
+
+        <!-- Incoming request -->
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,#F5B700,#F97316)"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#10B981,#3B82F6)">NJ</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Nina Johansson</span>
+                <span class="sc-location">📍 Stockholm, Sweden</span>
+                <span class="sc-status status-pending">⏳ Incoming Request</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 💻 JavaScript</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 🇸🇪 Swedish</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📬 Received 2 hours ago</span>
+                <span class="sc-meta-item">🎥 Live video preferred</span>
+                <span class="sc-meta-item">📆 Weekly sessions requested</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-next" style="font-size:.8rem;color:var(--amber);text-align:right">Action needed</div>
+              <div class="pending-actions">
+                <button class="btn-accept" onclick="acceptSwap(this)">✓ Accept</button>
+                <button class="btn-decline" onclick="declineSwap(this)">Decline</button>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 View Profile</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Reply to Message</button>
+              <button class="btn-sm" onclick="openModal('counter','Nina Johansson')">🔄 Counter-Propose</button>
+            </div>
+            <div>
+              <span style="font-size:.72rem;color:var(--text-muted)">Expires in <strong style="color:#FFD700">6 days</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Outgoing request -->
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,#9CA3AF,#6B7280)"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">OB</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Omar Ben Ali</span>
+                <span class="sc-location">📍 Tunis, Tunisia</span>
+                <span class="sc-status status-pending">⏳ Awaiting Response</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 🎨 UI Design</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 🇦🇪 Arabic</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📤 Sent 1 day ago</span>
+                <span class="sc-meta-item">🎥 Async preferred</span>
+                <span class="sc-meta-item">📆 Bi-weekly requested</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-next" style="font-size:.75rem;color:var(--text-muted);text-align:right">Waiting for Omar<br/>to respond</div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 View Profile</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Follow Up</button>
+            </div>
+            <button class="btn-sm danger" onclick="withdrawSwap(this)">✕ Withdraw Request</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ COMPLETED ══ -->
+      <div class="tab-panel" id="tab-completed">
+
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,var(--blue-glow),var(--purple))"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">KO</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Kwame Osei</span>
+                <span class="sc-location">📍 Accra, Ghana</span>
+                <span class="sc-status status-completed">✓ Completed</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">Taught</span> 🎸 Guitar</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">Learned</span> 🇫🇷 French</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">✓ 6 sessions completed</span>
+                <span class="sc-meta-item">⬡ Earned +6 SkillCoins</span>
+                <span class="sc-meta-item">Completed Feb 2026</span>
+                <span class="sc-meta-item" style="color:#F5B700">★★★★★ 5.0 rating received</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                <span class="progress-label">6/6</span>
+              </div>
+              <div class="sc-coin-track">Earned: <span>+6 ⬡</span></div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm green" onclick="openModal('review','Kwame Osei')">★ Leave Review</button>
+              <button class="btn-sm" onclick="openModal('restart','Kwame Osei')">🔁 Start New Swap</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 View Profile</button>
+            </div>
+            <span style="font-size:.75rem;color:var(--text-muted)">Completed 45 days ago</span>
+          </div>
+        </div>
+
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,var(--blue-glow),var(--purple))"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#22D3EE,#0EA5E9)">RK</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">Riya Kapoor</span>
+                <span class="sc-location">📍 Mumbai, India</span>
+                <span class="sc-status status-completed">✓ Completed</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">Taught</span> 📸 Photography</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">Learned</span> 🧘 Yoga</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">✓ 4 sessions completed</span>
+                <span class="sc-meta-item">⬡ Earned +4 SkillCoins</span>
+                <span class="sc-meta-item">Completed Jan 2026</span>
+                <span class="sc-meta-item" style="color:#F5B700">★★★★★ 4.8 rating received</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+                <span class="progress-label">4/4</span>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm green" onclick="openModal('review','Riya Kapoor')">★ Leave Review</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-profile.html'">👤 View Profile</button>
+            </div>
+            <span style="font-size:.75rem;color:var(--text-muted)">Completed 72 days ago</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ══ PAUSED ══ -->
+      <div class="tab-panel" id="tab-paused">
+        <div class="swap-card">
+          <div class="swap-card-accent" style="background:linear-gradient(90deg,#6B7280,#4B5563)"></div>
+          <div class="swap-card-body">
+            <div class="sc-avatar" style="background:linear-gradient(135deg,#A78BFA,#6D28D9)">JD</div>
+            <div class="sc-main">
+              <div class="sc-top-row">
+                <span class="sc-name">James Donovan</span>
+                <span class="sc-location">📍 Dublin, Ireland</span>
+                <span class="sc-status status-paused">⏸ Paused</span>
+              </div>
+              <div class="sc-exchange">
+                <div class="sc-exchange-item"><span class="sc-dir dir-teach">You teach</span> 💻 JavaScript</div>
+                <span class="sc-arrow">⇄</span>
+                <div class="sc-exchange-item"><span class="sc-dir dir-learn">You learn</span> 🎸 Guitar</div>
+              </div>
+              <div class="sc-meta">
+                <span class="sc-meta-item">📅 Session 2 of 6 completed</span>
+                <span class="sc-meta-item">⏸ Paused by you — 14 days ago</span>
+                <span class="sc-meta-item" style="color:var(--amber)">⚠ Auto-archives in 16 days</span>
+              </div>
+            </div>
+            <div class="sc-right">
+              <div class="sc-progress">
+                <div class="progress-track"><div class="progress-fill" style="width:33%"></div></div>
+                <span class="progress-label">2/6</span>
+              </div>
+            </div>
+          </div>
+          <div class="swap-card-footer">
+            <div class="sc-footer-left">
+              <button class="btn-sm green" onclick="resumeSwap(this)">▶ Resume Swap</button>
+              <button class="btn-sm" onclick="window.location.href='skillswap-messages.html'">💬 Message James</button>
+            </div>
+            <button class="btn-sm danger" onclick="openModal('cancel','James Donovan')">✕ Cancel Swap</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ARCHIVED ══ -->
+      <div class="tab-panel" id="tab-archived">
+        <div class="empty-state">
+          <div class="empty-icon">📦</div>
+          <h3>Archived Swaps</h3>
+          <p>Swaps that expired or were cancelled are stored here for reference.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+
+          <div class="swap-card" style="opacity:.6">
+            <div class="swap-card-accent" style="background:var(--border)"></div>
+            <div class="swap-card-body">
+              <div class="sc-avatar" style="background:linear-gradient(135deg,#6B7280,#4B5563)">LP</div>
+              <div class="sc-main">
+                <div class="sc-top-row">
+                  <span class="sc-name">Lena Petrov</span>
+                  <span class="sc-location">📍 Moscow, Russia</span>
+                  <span class="sc-status status-declined">✕ Expired</span>
+                </div>
+                <div class="sc-exchange">
+                  <div class="sc-exchange-item"><span class="sc-dir" style="background:rgba(94,122,154,.12);color:var(--text-muted)">Offered</span> 🎨 UI Design</div>
+                  <span class="sc-arrow">⇄</span>
+                  <div class="sc-exchange-item"><span class="sc-dir" style="background:rgba(94,122,154,.12);color:var(--text-muted)">Wanted</span> 🇷🇺 Russian</div>
+                </div>
+                <div class="sc-meta"><span class="sc-meta-item">0 sessions · Expired after 45 days of inactivity</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /swaps-area -->
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- ══ MODALS ══ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// Sidebar
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+hamburgerBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('show'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); });
+
+// Tabs
+function showSwapTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.swap-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Modal system
+const modalTemplates = {
+  session: (name) => `
+    <div class="modal-title">📅 Schedule Session</div>
+    <div class="modal-sub">Propose a time with ${name}</div>
+    <div class="modal-field"><label>Session Date</label><input type="date" value="2026-04-06"/></div>
+    <div class="modal-row">
+      <div class="modal-field"><label>Start Time</label><input type="time" value="15:00"/></div>
+      <div class="modal-field"><label>Duration</label><select><option>30 minutes</option><option selected>1 hour</option><option>1.5 hours</option><option>2 hours</option></select></div>
+    </div>
+    <div class="modal-field"><label>Format</label><select><option>🎥 Live Video Call</option><option>📹 Async Recording</option><option>🤝 In Person</option></select></div>
+    <div class="modal-field"><label>Note (optional)</label><textarea placeholder="Any agenda or prep notes for this session..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit" onclick="submitModal('Session request sent to ${name}!')">Send Proposal 📅</button>
+    </div>`,
+
+  notes: (name) => `
+    <div class="modal-title">📝 Session Notes</div>
+    <div class="modal-sub">Notes for your swap with ${name}</div>
+    <div class="modal-field"><label>What to cover next session</label><textarea placeholder="Topics, questions, goals for next time..." style="min-height:100px"></textarea></div>
+    <div class="modal-field"><label>Progress tracker</label><textarea placeholder="What has ${name} learned so far? What have you learned?" style="min-height:80px"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit" onclick="submitModal('Notes saved!')">Save Notes</button>
+    </div>`,
+
+  pause: (name) => `
+    <div class="modal-title">⏸ Pause Swap</div>
+    <div class="modal-sub">This swap with ${name} will be paused. You can resume at any time within 30 days.</div>
+    <div class="modal-field"><label>Reason (shown to ${name})</label>
+      <select><option>Personal commitments</option><option>Travel / busy period</option><option>Health reasons</option><option>Need to reschedule consistently</option><option>Other</option></select>
+    </div>
+    <div class="modal-field"><label>Message to ${name} (optional)</label><textarea placeholder="Let them know when you expect to resume..."></textarea></div>
+    <div style="background:rgba(245,183,0,.08);border:1px solid rgba(245,183,0,.2);border-radius:var(--radius-sm);padding:.875rem;font-size:.82rem;color:var(--amber);margin-bottom:1rem">⚠ Your SkillCoins are protected during the pause. The swap auto-archives after 30 days if not resumed.</div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Keep Active</button>
+      <button class="btn-modal-submit" style="background:linear-gradient(135deg,#6B7280,#4B5563)" onclick="submitModal('Swap paused. ${name} has been notified.')">Pause Swap ⏸</button>
+    </div>`,
+
+  cancel: (name) => `
+    <div class="modal-title">✕ Cancel Swap</div>
+    <div class="modal-sub">Are you sure you want to cancel this swap with ${name}? This cannot be undone.</div>
+    <div class="modal-field"><label>Reason for cancellation</label>
+      <select><option>Scheduling conflicts</option><option>No longer interested in skill</option><option>Partner unresponsive</option><option>Quality concerns</option><option>Personal reasons</option></select>
+    </div>
+    <div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2);border-radius:var(--radius-sm);padding:.875rem;font-size:.82rem;color:var(--red);margin-bottom:1rem">
+      ⚠ Any SkillCoins earned for sessions already completed will be kept. Sessions you attended but ${name} hasn't reciprocated will be reviewed for coin protection.
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Keep Swap</button>
+      <button class="btn-modal-submit" style="background:linear-gradient(135deg,#EF4444,#DC2626)" onclick="submitModal('Swap cancelled. ${name} has been notified.')">Cancel Swap</button>
+    </div>`,
+
+  complete: (name) => `
+    <div class="modal-title">✓ Mark Swap Complete</div>
+    <div class="modal-sub">Confirm that your swap with ${name} is fully completed.</div>
+    <div style="background:rgba(24,199,122,.08);border:1px solid rgba(24,199,122,.2);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem">
+      <div style="font-size:.82rem;color:var(--green-light);font-weight:600;margin-bottom:.5rem">What happens next:</div>
+      <div style="font-size:.8rem;color:var(--text-secondary);display:flex;flex-direction:column;gap:.375rem">
+        <span>⬡ Your final SkillCoins will be credited</span>
+        <span>★ Both parties will be prompted to leave reviews</span>
+        <span>🏆 Completion badge awarded to your profile</span>
+        <span>📊 Stats updated on both profiles</span>
+      </div>
+    </div>
+    <div class="modal-field"><label>Final notes (optional)</label><textarea placeholder="Any final thoughts on how the swap went?"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Not Yet</button>
+      <button class="btn-modal-submit" onclick="submitModal('Swap marked complete! ⬡ Coins credited.')">Mark Complete ✓</button>
+    </div>`,
+
+  dispute: (name) => `
+    <div class="modal-title">⚑ Open Dispute</div>
+    <div class="modal-sub">Our moderation team will review your case within 24 hours.</div>
+    <div class="dispute-steps">
+      <div class="dispute-step"><div class="ds-num">1</div><div class="ds-text"><strong>You submit</strong> a dispute with evidence and description</div></div>
+      <div class="dispute-step"><div class="ds-num">2</div><div class="ds-text"><strong>${name}</strong> has 48 hours to respond</div></div>
+      <div class="dispute-step"><div class="ds-num">3</div><div class="ds-text"><strong>Moderator</strong> reviews session logs, messages, and both accounts</div></div>
+      <div class="dispute-step"><div class="ds-num">4</div><div class="ds-text"><strong>Resolution</strong> issued — refund, warning, or no action with explanation</div></div>
+    </div>
+    <div class="modal-field"><label>Issue Type</label>
+      <select><option>Partner taught incorrect information</option><option>Partner stopped responding</option><option>Partner missed sessions without notice</option><option>Misrepresented credentials</option><option>Unprofessional conduct</option><option>Other</option></select>
+    </div>
+    <div class="modal-field"><label>Description</label><textarea placeholder="Describe the issue in detail. The more specific you are, the faster the resolution..." style="min-height:100px"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit" style="background:linear-gradient(135deg,#EF4444,#DC2626)" onclick="submitModal('Dispute submitted. You\'ll hear back within 24 hours.')">Submit Dispute ⚑</button>
+    </div>`,
+
+  review: (name) => `
+    <div class="modal-title">★ Leave a Review</div>
+    <div class="modal-sub">Share your experience with ${name}</div>
+    <div class="modal-field">
+      <label>Overall Rating</label>
+      <div style="display:flex;gap:.5rem;font-size:1.75rem;cursor:pointer;margin:.25rem 0" id="starRow">
+        <span onclick="setStars(1)" style="color:#F5B700">★</span>
+        <span onclick="setStars(2)" style="color:#F5B700">★</span>
+        <span onclick="setStars(3)" style="color:#F5B700">★</span>
+        <span onclick="setStars(4)" style="color:#F5B700">★</span>
+        <span onclick="setStars(5)" style="color:#F5B700">★</span>
+      </div>
+    </div>
+    <div class="modal-field"><label>Written Feedback (max 300 chars)</label><textarea placeholder="Tell others what was great about learning with ${name}..." maxlength="300"></textarea></div>
+    <div class="modal-field">
+      <label>Tags (select all that apply)</label>
+      <div style="display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.25rem">
+        ${['Patient teacher','Well-prepared','Clear explanations','Fast progress','Flexible scheduling','Great communicator','Highly recommended'].map(t => `<span onclick="this.classList.toggle('selected')" style="padding:.25rem .625rem;border-radius:100px;font-size:.75rem;border:1px solid var(--border);cursor:pointer;transition:all .18s" class="review-tag-opt">${t}</span>`).join('')}
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Skip</button>
+      <button class="btn-modal-submit" onclick="submitModal('Review submitted! Thank you.')">Submit Review ★</button>
+    </div>`,
+
+  counter: (name) => `
+    <div class="modal-title">🔄 Counter-Propose</div>
+    <div class="modal-sub">Suggest different terms to ${name}</div>
+    <div class="modal-field"><label>Your revised offer</label><select><option>🎸 Guitar (my skill)</option><option>📸 Photography</option><option>💻 JavaScript</option><option>🎨 UI Design</option></select></div>
+    <div class="modal-field"><label>What you'd like to learn instead</label><select><option>🇸🇪 Swedish</option><option>🐍 Python</option><option>🇪🇸 Spanish</option></select></div>
+    <div class="modal-field"><label>Message to ${name}</label><textarea placeholder="Explain your counter-proposal kindly..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit" onclick="submitModal('Counter-proposal sent to ${name}!')">Send Counter 🔄</button>
+    </div>`,
+
+  restart: (name) => `
+    <div class="modal-title">🔁 Start New Swap</div>
+    <div class="modal-sub">Continue learning with ${name} in a new swap</div>
+    <div class="modal-field"><label>What you'll teach</label><select><option>🎸 Guitar</option><option>📸 Photography</option><option>💻 JavaScript</option></select></div>
+    <div class="modal-field"><label>What you want to learn</label><select><option>🇫🇷 French</option><option>🎸 Guitar</option></select></div>
+    <div class="modal-field"><label>Sessions planned</label><select><option>4 sessions</option><option>6 sessions</option><option>8 sessions</option><option>10 sessions</option><option>Open-ended</option></select></div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-submit" onclick="submitModal('New swap request sent to ${name}!')">Send Request 🔁</button>
+    </div>`,
+};
+
+function openModal(type, name) {
+  const content = modalTemplates[type] ? modalTemplates[type](name) : '<p>Coming soon</p>';
+  document.getElementById('modalContent').innerHTML = content;
+  document.getElementById('modalOverlay').classList.add('show');
+  // Style review tags
+  document.querySelectorAll('.review-tag-opt').forEach(t => {
+    t.addEventListener('click', () => { t.style.background = t.classList.contains('selected') ? 'rgba(30,111,217,.15)' : ''; t.style.borderColor = t.classList.contains('selected') ? 'rgba(30,111,217,.35)' : 'var(--border)'; t.style.color = t.classList.contains('selected') ? 'var(--blue-glow)' : ''; });
+  });
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+function submitModal(msg) {
+  document.getElementById('modalContent').innerHTML = `
+    <div style="text-align:center;padding:1.5rem 0">
+      <div style="font-size:2.5rem;margin-bottom:1rem">✅</div>
+      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:800;margin-bottom:.5rem">${msg}</div>
+      <button onclick="closeModal()" style="margin-top:1.25rem;padding:.65rem 1.75rem;border-radius:var(--radius-md);background:var(--blue);border:none;color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;cursor:pointer">Done</button>
+    </div>`;
+}
+
+function setStars(n) {
+  const stars = document.querySelectorAll('#starRow span');
+  stars.forEach((s, i) => { s.style.color = i < n ? '#F5B700' : 'var(--border)'; });
+}
+
+function acceptSwap(btn) {
+  const card = btn.closest('.swap-card');
+  card.style.transition = 'all .3s';
+  card.style.opacity = '0.4';
+  submitModal('Swap accepted! SkillCoin tracking has started.');
+  openModal('session', 'Nina Johansson');
+}
+function declineSwap(btn) {
+  const card = btn.closest('.swap-card');
+  card.style.transition = 'opacity .3s';
+  card.style.opacity = '0.3';
+  setTimeout(() => submitModal('Swap request declined. Nina has been notified.'), 100);
+  openModal('cancel', 'Nina Johansson');
+}
+function withdrawSwap(btn) {
+  const card = btn.closest('.swap-card');
+  card.style.opacity = '0.3';
+  submitModal('Request withdrawn successfully.');
+}
+function resumeSwap(btn) {
+  const card = btn.closest('.swap-card');
+  card.querySelector('.sc-status').textContent = '● Active';
+  card.querySelector('.sc-status').className = 'sc-status status-active';
+  submitModal('Swap resumed! James has been notified.');
+}
+
+// Progress bar animation
+document.querySelectorAll('.progress-fill').forEach(bar => {
+  const w = bar.style.width;
+  bar.style.width = '0';
+  setTimeout(() => { bar.style.width = w; }, 300);
+});
+
+// Card entry animation
+document.querySelectorAll('.swap-card').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(14px)';
+  el.style.transition = `opacity .4s ${i * 0.08}s ease, transform .4s ${i * 0.08}s ease`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }));
+});
+</script>
+</body>
+</html>

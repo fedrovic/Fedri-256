@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — Trade Skills, Not Money</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;
+  --navy-mid:#13213A;
+  --navy-soft:#1A2E4A;
+  --blue:#1E6FD9;
+  --blue-light:#3D8EF5;
+  --blue-glow:#5AA3FF;
+  --green:#18C77A;
+  --green-light:#2EDEA0;
+  --white:#FFFFFF;
+  --off-white:#F4F7FF;
+  --text-primary:#EEF2FF;
+  --text-secondary:#9AAEC8;
+  --text-muted:#5E7A9A;
+  --border:#1E3455;
+  --border-light:#2A4466;
+  --card-bg:#0F1E33;
+  --card-bg2:#111F35;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+  --font-display:'Syne',sans-serif;
+  --font-body:'Outfit',sans-serif;
+  --shadow-card:0 1px 3px rgba(0,0,0,.4),0 8px 32px rgba(0,0,0,.3);
+  --shadow-glow:0 0 40px rgba(30,111,217,.18);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--navy);
+  color:var(--text-primary);
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--navy)}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 5%;
+  height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(11,22,40,.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(30,52,85,.6);
+  transition:background .3s;
+}
+.nav-logo{
+  font-family:var(--font-display);
+  font-size:1.5rem;font-weight:800;
+  color:var(--white);
+  text-decoration:none;
+  display:flex;align-items:center;gap:10px;
+}
+.nav-logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:800;color:#fff;
+  flex-shrink:0;
+}
+.nav-links{display:flex;align-items:center;gap:2rem}
+.nav-links a{
+  color:var(--text-secondary);text-decoration:none;
+  font-size:.9rem;font-weight:500;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--white)}
+.nav-ctas{display:flex;align-items:center;gap:.75rem}
+.btn-ghost{
+  padding:.5rem 1.1rem;border-radius:var(--radius-sm);
+  border:1px solid var(--border-light);
+  background:transparent;color:var(--text-primary);
+  font-family:var(--font-body);font-size:.875rem;font-weight:500;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-ghost:hover{border-color:var(--blue-light);color:var(--blue-light);background:rgba(30,111,217,.08)}
+.btn-primary{
+  padding:.5rem 1.4rem;border-radius:var(--radius-sm);
+  border:none;
+  background:var(--blue);color:#fff;
+  font-family:var(--font-body);font-size:.875rem;font-weight:600;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-primary:hover{background:var(--blue-light);transform:translateY(-1px)}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;padding:4px;flex-direction:column;gap:5px}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:all .3s}
+.mobile-menu{
+  display:none;position:fixed;top:68px;left:0;right:0;
+  background:rgba(11,22,40,.98);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:1.5rem 5%;z-index:99;
+  flex-direction:column;gap:1rem;
+}
+.mobile-menu a{color:var(--text-secondary);text-decoration:none;font-size:1rem;font-weight:500;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.mobile-menu .mobile-ctas{display:flex;gap:.75rem;padding-top:.5rem}
+.mobile-menu.open{display:flex}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  padding:100px 5% 80px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(30,111,217,.14) 0%,transparent 70%),
+             radial-gradient(ellipse 40% 40% at 80% 60%,rgba(24,199,122,.07) 0%,transparent 60%);
+  pointer-events:none;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(30,52,85,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(30,52,85,.25) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:.4rem 1rem;border-radius:100px;
+  border:1px solid rgba(30,111,217,.4);
+  background:rgba(30,111,217,.1);
+  font-size:.8rem;font-weight:500;color:var(--blue-glow);
+  margin-bottom:1.75rem;
+  animation:fadeUp .6s ease both;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hero h1{
+  font-family:var(--font-display);
+  font-size:clamp(2.8rem,7vw,5.2rem);
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:-.02em;
+  max-width:820px;
+  margin-bottom:1.5rem;
+  animation:fadeUp .7s .1s ease both;
+}
+.hero h1 .highlight{
+  background:linear-gradient(135deg,var(--blue-glow),var(--green-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{
+  font-size:clamp(1rem,2.5vw,1.25rem);
+  color:var(--text-secondary);
+  max-width:580px;
+  margin-bottom:2.5rem;
+  font-weight:300;
+  line-height:1.7;
+  animation:fadeUp .7s .2s ease both;
+}
+.hero-ctas{
+  display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;
+  animation:fadeUp .7s .3s ease both;
+}
+.btn-hero{
+  padding:.85rem 2rem;border-radius:var(--radius-md);
+  font-family:var(--font-body);font-size:1rem;font-weight:600;
+  cursor:pointer;transition:all .25s;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-hero-primary{
+  background:linear-gradient(135deg,var(--blue),var(--blue-light));
+  color:#fff;border:none;
+  box-shadow:0 4px 20px rgba(30,111,217,.35);
+}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(30,111,217,.45)}
+.btn-hero-google{
+  background:var(--card-bg);color:var(--text-primary);
+  border:1px solid var(--border-light);
+}
+.btn-hero-google:hover{border-color:var(--blue-light);background:var(--card-bg2);transform:translateY(-2px)}
+.google-icon{width:18px;height:18px;flex-shrink:0}
+.hero-social-proof{
+  margin-top:2.5rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .7s .4s ease both;
+}
+.avatar-stack{display:flex}
+.avatar-stack img,.avatar-item{
+  width:32px;height:32px;border-radius:50%;
+  border:2px solid var(--navy);
+  margin-left:-8px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:#fff;
+  flex-shrink:0;
+}
+.avatar-stack .avatar-item:first-child{margin-left:0}
+.hero-social-text{font-size:.85rem;color:var(--text-secondary)}
+.hero-social-text strong{color:var(--text-primary)}
+.hero-stats{
+  display:flex;align-items:center;gap:2rem;flex-wrap:wrap;justify-content:center;
+  margin-top:4rem;
+  padding-top:3rem;
+  border-top:1px solid var(--border);
+  width:100%;max-width:700px;
+  animation:fadeUp .7s .5s ease both;
+}
+.hero-stat{text-align:center}
+.hero-stat-num{
+  font-family:var(--font-display);font-size:2rem;font-weight:800;
+  background:linear-gradient(135deg,var(--white),var(--text-secondary));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-stat-label{font-size:.8rem;color:var(--text-muted);margin-top:2px}
+.hero-stat-sep{width:1px;height:40px;background:var(--border)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── FLOATING CARDS ── */
+.floating-cards{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;
+  margin-top:4rem;
+  animation:fadeUp .7s .6s ease both;
+  position:relative;z-index:1;
+}
+.skill-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:.5rem 1rem;border-radius:100px;
+  border:1px solid var(--border-light);
+  background:var(--card-bg);
+  font-size:.85rem;font-weight:500;
+  color:var(--text-secondary);
+  transition:all .2s;cursor:default;
+}
+.skill-chip:hover{border-color:var(--blue-light);color:var(--text-primary);transform:translateY(-2px)}
+.skill-chip .chip-icon{font-size:1rem}
+
+/* ── SECTION ── */
+section{padding:5rem 5%}
+.section-tag{
+  display:inline-block;
+  font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--blue-light);margin-bottom:1rem;
+}
+.section-title{
+  font-family:var(--font-display);
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  font-weight:800;line-height:1.15;
+  letter-spacing:-.02em;margin-bottom:1rem;
+}
+.section-sub{
+  font-size:1.05rem;color:var(--text-secondary);
+  max-width:520px;line-height:1.7;font-weight:300;
+}
+.center{text-align:center}
+.center .section-sub{margin:0 auto}
+
+/* ── HOW IT WORKS ── */
+.how-it-works{background:var(--navy-mid)}
+.steps{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1.5rem;
+  margin-top:3.5rem;
+}
+.step{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:2rem 1.75rem;
+  position:relative;
+  transition:all .3s;
+}
+.step:hover{border-color:var(--border-light);transform:translateY(-4px);box-shadow:var(--shadow-glow)}
+.step-num{
+  font-family:var(--font-display);
+  font-size:3rem;font-weight:800;
+  line-height:1;
+  background:linear-gradient(135deg,rgba(30,111,217,.3),rgba(24,199,122,.2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:1.25rem;
+}
+.step-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:1rem;font-size:1.4rem;
+}
+.step h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.step p{font-size:.9rem;color:var(--text-secondary);line-height:1.6}
+.step-connector{
+  display:none;
+}
+
+/* ── SKILL CATEGORIES ── */
+.categories-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1rem;
+  margin-top:3rem;
+}
+.cat-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  padding:1.5rem 1rem;
+  text-align:center;
+  cursor:pointer;
+  transition:all .25s;
+  text-decoration:none;
+  display:block;
+}
+.cat-card:hover{border-color:var(--blue-light);background:var(--card-bg2);transform:translateY(-3px)}
+.cat-icon{font-size:2rem;margin-bottom:.75rem;display:block}
+.cat-name{font-size:.9rem;font-weight:600;color:var(--text-primary);margin-bottom:.25rem}
+.cat-count{font-size:.75rem;color:var(--text-muted)}
+
+/* ── TRUST / VERIFICATION ── */
+.trust-section{background:var(--navy-mid)}
+.trust-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:center;
+  margin-top:3rem;
+}
+.trust-tiers{display:flex;flex-direction:column;gap:1rem}
+.tier{
+  display:flex;align-items:flex-start;gap:1rem;
+  padding:1.25rem;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  transition:all .25s;cursor:default;
+}
+.tier:hover{border-color:var(--border-light);transform:translateX(4px)}
+.tier-badge{
+  flex-shrink:0;
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.tier-1{background:rgba(94,122,154,.15)}
+.tier-2{background:rgba(30,111,217,.15)}
+.tier-3{background:rgba(90,163,255,.15)}
+.tier-4{background:rgba(24,199,122,.15)}
+.tier-content h4{font-size:.95rem;font-weight:600;margin-bottom:.2rem}
+.tier-content p{font-size:.82rem;color:var(--text-secondary);line-height:1.5}
+.tier-label{
+  margin-left:auto;flex-shrink:0;
+  font-size:.7rem;font-weight:600;letter-spacing:.05em;
+  padding:.2rem .6rem;border-radius:100px;
+  white-space:nowrap;
+}
+.label-grey{background:rgba(94,122,154,.2);color:var(--text-muted)}
+.label-blue{background:rgba(30,111,217,.2);color:var(--blue-glow)}
+.label-cyan{background:rgba(90,163,255,.15);color:#88c5ff}
+.label-green{background:rgba(24,199,122,.15);color:var(--green-light)}
+.trust-visual{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  padding:2rem;
+  position:relative;overflow:hidden;
+}
+.trust-visual::before{
+  content:'';position:absolute;top:-50px;right:-50px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(30,111,217,.12),transparent 70%);
+}
+.profile-mock{display:flex;flex-direction:column;gap:1rem}
+.profile-header{display:flex;align-items:center;gap:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+.profile-avatar{
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:#fff;
+  flex-shrink:0;
+}
+.profile-name{font-weight:700;font-size:1rem;margin-bottom:2px}
+.profile-meta{font-size:.8rem;color:var(--text-muted)}
+.profile-stars{display:flex;gap:2px;color:#F5B700;font-size:.85rem;margin-top:2px}
+.skills-list{display:flex;flex-direction:column;gap:.5rem}
+.skill-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem .8rem;background:var(--navy-soft);border-radius:var(--radius-sm)}
+.skill-row-name{font-size:.85rem;font-weight:500}
+.skill-row-badge{font-size:.7rem;font-weight:600;padding:.2rem .6rem;border-radius:100px}
+
+/* ── SKILLCOIN ECONOMY ── */
+.economy{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:3rem;align-items:center;
+  margin-top:3rem;
+}
+.economy-text h3{
+  font-family:var(--font-display);
+  font-size:1.4rem;font-weight:800;margin-bottom:.75rem;
+}
+.economy-text p{font-size:.95rem;color:var(--text-secondary);line-height:1.7;margin-bottom:1.5rem}
+.economy-features{display:flex;flex-direction:column;gap:.75rem}
+.eco-feature{display:flex;align-items:center;gap:.75rem;font-size:.9rem}
+.eco-check{
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(24,199,122,.15);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:.7rem;color:var(--green);
+}
+.coin-visual{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-xl);padding:2rem;
+  display:flex;flex-direction:column;gap:1rem;
+}
+.coin-balance{
+  background:linear-gradient(135deg,rgba(30,111,217,.2),rgba(24,199,122,.1));
+  border:1px solid rgba(30,111,217,.3);
+  border-radius:var(--radius-lg);padding:1.5rem;text-align:center;
+}
+.coin-bal-label{font-size:.8rem;color:var(--text-muted);margin-bottom:.25rem}
+.coin-bal-num{
+  font-family:var(--font-display);font-size:2.5rem;font-weight:800;
+  background:linear-gradient(135deg,var(--blue-glow),var(--green-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.coin-bal-sub{font-size:.75rem;color:var(--text-muted);margin-top:4px}
+.coin-transactions{display:flex;flex-direction:column;gap:.5rem}
+.coin-tx{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem .8rem;background:var(--navy-soft);border-radius:var(--radius-sm);
+}
+.coin-tx-info{display:flex;align-items:center;gap:.6rem}
+.coin-tx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.coin-tx-earn{background:var(--green)}
+.coin-tx-spend{background:var(--blue-light)}
+.coin-tx-label{font-size:.82rem;color:var(--text-secondary)}
+.coin-tx-amount{font-size:.9rem;font-weight:600}
+.coin-tx-earn-text{color:var(--green-light)}
+.coin-tx-spend-text{color:var(--blue-glow)}
+
+/* ── TESTIMONIALS ── */
+.testimonials{background:var(--navy-mid)}
+.testimonials-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1.5rem;margin-top:3rem;
+}
+.testimonial{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:2rem;
+  transition:all .25s;
+}
+.testimonial:hover{border-color:var(--border-light);transform:translateY(-3px)}
+.testimonial-quote{
+  font-size:.95rem;color:var(--text-secondary);
+  line-height:1.7;margin-bottom:1.5rem;
+  font-weight:300;
+}
+.testimonial-quote::before{content:'"';font-size:2rem;color:var(--blue);line-height:0;vertical-align:-10px;margin-right:4px}
+.testimonial-author{display:flex;align-items:center;gap:.75rem}
+.testimonial-avatar{
+  width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:.85rem;color:#fff;
+  flex-shrink:0;
+}
+.testimonial-name{font-size:.9rem;font-weight:600}
+.testimonial-role{font-size:.78rem;color:var(--text-muted)}
+.testimonial-swap{
+  margin-top:.75rem;padding:.5rem .75rem;
+  background:rgba(30,111,217,.08);border-radius:var(--radius-sm);
+  font-size:.75rem;color:var(--blue-glow);
+  display:inline-flex;align-items:center;gap:4px;
+}
+
+/* ── PRICING ── */
+.pricing-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;margin-top:3.5rem;max-width:900px;margin-left:auto;margin-right:auto;
+}
+.price-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  padding:2rem;
+  transition:all .3s;
+  position:relative;
+  overflow:hidden;
+}
+.price-card:hover{transform:translateY(-4px)}
+.price-card.featured{
+  border-color:var(--blue);
+  box-shadow:0 0 40px rgba(30,111,217,.15);
+}
+.price-card.featured::before{
+  content:'Most Popular';
+  position:absolute;top:16px;right:16px;
+  font-size:.7rem;font-weight:700;letter-spacing:.05em;
+  padding:.3rem .7rem;border-radius:100px;
+  background:rgba(30,111,217,.2);color:var(--blue-glow);
+  border:1px solid rgba(30,111,217,.3);
+}
+.price-name{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:.25rem}
+.price-desc{font-size:.82rem;color:var(--text-muted);margin-bottom:1.5rem}
+.price-amount{
+  font-family:var(--font-display);
+  font-size:2.5rem;font-weight:800;margin-bottom:.25rem;
+  display:flex;align-items:flex-start;gap:4px;
+}
+.price-currency{font-size:1.2rem;margin-top:.4rem;color:var(--text-secondary)}
+.price-period{font-size:.8rem;color:var(--text-muted);align-self:flex-end;margin-bottom:.3rem}
+.price-divider{height:1px;background:var(--border);margin:1.5rem 0}
+.price-features{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.75rem}
+.price-feature{display:flex;align-items:center;gap:.6rem;font-size:.88rem;color:var(--text-secondary)}
+.pf-check{color:var(--green);font-size:.85rem;flex-shrink:0}
+.pf-x{color:var(--text-muted);font-size:.85rem;flex-shrink:0}
+.btn-price{
+  width:100%;padding:.75rem;border-radius:var(--radius-md);
+  font-family:var(--font-body);font-size:.9rem;font-weight:600;
+  cursor:pointer;transition:all .2s;border:1px solid var(--border-light);
+  background:transparent;color:var(--text-primary);
+}
+.btn-price:hover{border-color:var(--blue-light);color:var(--blue-light)}
+.btn-price.featured-btn{
+  background:var(--blue);border-color:var(--blue);color:#fff;
+}
+.btn-price.featured-btn:hover{background:var(--blue-light)}
+
+/* ── FAQ ── */
+.faq-list{max-width:720px;margin:3rem auto 0;display:flex;flex-direction:column;gap:.75rem}
+.faq-item{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);overflow:hidden;
+}
+.faq-q{
+  width:100%;padding:1.25rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;
+  background:none;border:none;cursor:pointer;
+  text-align:left;color:var(--text-primary);
+  font-family:var(--font-body);font-size:.95rem;font-weight:500;
+  transition:background .2s;gap:1rem;
+}
+.faq-q:hover{background:var(--card-bg2)}
+.faq-arrow{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--border);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .3s;font-size:.65rem;color:var(--text-secondary);
+}
+.faq-item.open .faq-arrow{background:var(--blue);color:#fff;transform:rotate(180deg)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s ease,padding .35s ease;
+  padding:0 1.5rem;
+  font-size:.9rem;color:var(--text-secondary);line-height:1.7;font-weight:300;
+}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:1.25rem}
+
+/* ── CTA BANNER ── */
+.cta-banner{
+  margin:0 5% 5rem;
+  background:linear-gradient(135deg,rgba(30,111,217,.2),rgba(24,199,122,.12));
+  border:1px solid rgba(30,111,217,.3);
+  border-radius:var(--radius-xl);
+  padding:4rem 3rem;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-banner::before{
+  content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(30,111,217,.1),transparent 70%);
+  pointer-events:none;
+}
+.cta-banner h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.6rem,4vw,2.5rem);
+  font-weight:800;margin-bottom:1rem;
+}
+.cta-banner p{font-size:1rem;color:var(--text-secondary);margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
+.cta-buttons{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--navy-mid);
+  border-top:1px solid var(--border);
+  padding:3rem 5% 2rem;
+}
+.footer-top{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:3rem;margin-bottom:3rem;
+}
+.footer-brand p{font-size:.875rem;color:var(--text-muted);line-height:1.7;margin-top:.75rem;max-width:260px}
+.footer-col h4{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
+.footer-col a{display:block;font-size:.875rem;color:var(--text-secondary);text-decoration:none;margin-bottom:.5rem;transition:color .2s}
+.footer-col a:hover{color:var(--text-primary)}
+.footer-bottom{
+  border-top:1px solid var(--border);
+  padding-top:1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+  font-size:.8rem;color:var(--text-muted);
+}
+.footer-socials{display:flex;gap:.75rem}
+.social-btn{
+  width:34px;height:34px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--card-bg);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-muted);font-size:.8rem;
+  text-decoration:none;transition:all .2s;
+}
+.social-btn:hover{border-color:var(--blue-light);color:var(--blue-light)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .trust-grid,.economy{grid-template-columns:1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-ctas{display:none}
+  .nav-hamburger{display:flex}
+  .hero{padding:90px 5% 60px}
+  .hero-stats{gap:1rem}
+  .hero-stat-sep{display:none}
+  .floating-cards{gap:.5rem}
+  .footer-top{grid-template-columns:1fr 1fr}
+  section{padding:3.5rem 5%}
+}
+@media(max-width:480px){
+  .footer-top{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .testimonials-grid{grid-template-columns:1fr}
+  .categories-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-ctas{flex-direction:column;align-items:center}
+  .btn-hero{width:100%;max-width:320px;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">S</div>
+    SkillSwap
+  </a>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#categories">Browse Skills</a>
+    <a href="#trust">Trust & Safety</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="nav-ctas">
+    <a href="#login" class="btn-ghost">Log in</a>
+    <a href="#signup" class="btn-primary">
+      <svg class="google-icon" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+        <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Get Started Free
+    </a>
+  </div>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#how-it-works">How it works</a>
+  <a href="#categories">Browse Skills</a>
+  <a href="#trust">Trust & Safety</a>
+  <a href="#pricing">Pricing</a>
+  <div class="mobile-ctas">
+    <a href="#login" class="btn-ghost" style="flex:1;justify-content:center">Log in</a>
+    <a href="#signup" class="btn-primary" style="flex:1;justify-content:center">Sign up free</a>
+  </div>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-badge">
+    <span class="badge-dot"></span>
+    Now live in 50+ countries
+  </div>
+
+  <h1>
+    Trade Skills.<br/>
+    <span class="highlight">Not Money.</span>
+  </h1>
+
+  <p>
+    Teach what you know. Learn what you need.
+    SkillSwap connects you with real people to exchange expertise — 
+    completely free, or on your terms.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#signup" class="btn-hero btn-hero-google">
+      <svg class="google-icon" viewBox="0 0 18 18" fill="none">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+        <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </a>
+    <a href="#signup" class="btn-hero btn-hero-primary">
+      Start Swapping Free
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+  <div class="hero-social-proof">
+    <div class="avatar-stack">
+      <div class="avatar-item">AK</div>
+      <div class="avatar-item" style="background:linear-gradient(135deg,#1E6FD9,#18C77A)">MJ</div>
+      <div class="avatar-item" style="background:linear-gradient(135deg,#7C3AED,#EC4899)">SR</div>
+      <div class="avatar-item" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">TN</div>
+      <div class="avatar-item" style="background:linear-gradient(135deg,#10B981,#3B82F6)">PL</div>
+    </div>
+    <p class="hero-social-text"><strong>12,400+</strong> skills exchanged this month</p>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">48K+</div><div class="hero-stat-label">Active Members</div></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><div class="hero-stat-num">200+</div><div class="hero-stat-label">Skill Categories</div></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><div class="hero-stat-num">4.9★</div><div class="hero-stat-label">Average Rating</div></div>
+    <div class="hero-stat-sep"></div>
+    <div class="hero-stat"><div class="hero-stat-num">$0</div><div class="hero-stat-label">Required to Start</div></div>
+  </div>
+
+  <div class="floating-cards">
+    <div class="skill-chip"><span class="chip-icon">🎸</span> Guitar Lessons</div>
+    <div class="skill-chip"><span class="chip-icon">💻</span> Python Coding</div>
+    <div class="skill-chip"><span class="chip-icon">🌍</span> Spanish Language</div>
+    <div class="skill-chip"><span class="chip-icon">📸</span> Photography</div>
+    <div class="skill-chip"><span class="chip-icon">🍳</span> French Cuisine</div>
+    <div class="skill-chip"><span class="chip-icon">🎨</span> UI Design</div>
+    <div class="skill-chip"><span class="chip-icon">📊</span> Excel Mastery</div>
+    <div class="skill-chip"><span class="chip-icon">🧘</span> Yoga</div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-it-works" id="how-it-works">
+  <div class="center">
+    <span class="section-tag">Simple Process</span>
+    <h2 class="section-title">How SkillSwap Works</h2>
+    <p class="section-sub">From signup to your first skill session in under 10 minutes.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-icon" style="background:rgba(30,111,217,.15)">🎯</div>
+      <h3>Build Your Profile</h3>
+      <p>Sign up with Google or email. List skills you can teach and skills you want to learn. Set your availability and timezone.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-icon" style="background:rgba(24,199,122,.15)">🔍</div>
+      <h3>Discover Matches</h3>
+      <p>Our smart algorithm finds users with complementary skills. Browse profiles, check verified credentials, and see availability overlap.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-icon" style="background:rgba(90,163,255,.15)">🤝</div>
+      <h3>Agree & Schedule</h3>
+      <p>Send a swap request. Agree on session frequency, mode (live or async), and duration. The platform handles scheduling and reminders.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-icon" style="background:rgba(245,183,0,.15)">🚀</div>
+      <h3>Learn & Earn</h3>
+      <p>Attend sessions via built-in video call. Earn SkillCoins when you teach. Spend them when you learn — even from someone else.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CATEGORIES ── -->
+<section id="categories">
+  <div class="center" style="margin-bottom:0">
+    <span class="section-tag">What You Can Learn</span>
+    <h2 class="section-title">200+ Skill Categories</h2>
+    <p class="section-sub">From creative arts to tech, languages to fitness — if it's a skill, it's on SkillSwap.</p>
+  </div>
+  <div class="categories-grid">
+    <a href="#" class="cat-card"><span class="cat-icon">💻</span><div class="cat-name">Technology</div><div class="cat-count">8,420 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🎨</span><div class="cat-name">Design & Art</div><div class="cat-count">5,210 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🌍</span><div class="cat-name">Languages</div><div class="cat-count">12,800 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🎵</span><div class="cat-name">Music</div><div class="cat-count">4,380 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">📈</span><div class="cat-name">Business</div><div class="cat-count">6,100 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🍳</span><div class="cat-name">Cooking</div><div class="cat-count">3,920 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🏋️</span><div class="cat-name">Fitness & Health</div><div class="cat-count">7,640 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">📸</span><div class="cat-name">Photography</div><div class="cat-count">2,890 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">✍️</span><div class="cat-name">Writing</div><div class="cat-count">4,150 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🧮</span><div class="cat-name">Mathematics</div><div class="cat-count">5,600 teachers</div></a>
+    <a href="#" class="cat-card"><span class="cat-icon">🎬</span><div class="cat-name">Video & Film</div><div class="cat-count">1,970 teachers</div></a>
+    <a href="#" class="cat-card" style="border-style:dashed;border-color:var(--border-light);background:transparent"><span class="cat-icon">➕</span><div class="cat-name">View All</div><div class="cat-count">200+ categories</div></a>
+  </div>
+</section>
+
+<!-- ── TRUST ── -->
+<section class="trust-section" id="trust">
+  <span class="section-tag">Trust & Safety</span>
+  <h2 class="section-title">Know Exactly Who You're Learning From</h2>
+  <p class="section-sub">A 4-tier verification system so you always know the difference between a hobbyist and a certified professional.</p>
+  <div class="trust-grid">
+    <div class="trust-tiers">
+      <div class="tier">
+        <div class="tier-badge tier-1">🟤</div>
+        <div class="tier-content">
+          <h4>Community Member</h4>
+          <p>Self-declared knowledge. Great for casual, informal skill sharing.</p>
+        </div>
+        <span class="tier-label label-grey">BASIC</span>
+      </div>
+      <div class="tier">
+        <div class="tier-badge tier-2">⭐</div>
+        <div class="tier-content">
+          <h4>Platform Verified</h4>
+          <p>Passed SkillSwap's built-in skill assessment test for this category.</p>
+        </div>
+        <span class="tier-label label-blue">VERIFIED</span>
+      </div>
+      <div class="tier">
+        <div class="tier-badge tier-3">🎓</div>
+        <div class="tier-content">
+          <h4>Credential Verified</h4>
+          <p>Real-world certificate, degree, or licence confirmed by our team.</p>
+        </div>
+        <span class="tier-label label-cyan">CERTIFIED</span>
+      </div>
+      <div class="tier">
+        <div class="tier-badge tier-4">💼</div>
+        <div class="tier-content">
+          <h4>Professional Verified</h4>
+          <p>Active industry professional confirmed via LinkedIn or portfolio.</p>
+        </div>
+        <span class="tier-label label-green">PRO</span>
+      </div>
+    </div>
+    <div class="trust-visual">
+      <div class="profile-mock">
+        <div class="profile-header">
+          <div class="profile-avatar">JD</div>
+          <div>
+            <div class="profile-name">James Donovan</div>
+            <div class="profile-meta">Berlin, Germany · Member since 2024</div>
+            <div class="profile-stars">★★★★★ <span style="color:var(--text-muted);font-size:.8rem;margin-left:4px">4.9 (87 reviews)</span></div>
+          </div>
+        </div>
+        <div class="skills-list">
+          <div style="font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Skills He Teaches</div>
+          <div class="skill-row">
+            <span class="skill-row-name">⚡ JavaScript / React</span>
+            <span class="skill-row-badge" style="background:rgba(24,199,122,.15);color:var(--green-light)">💼 PRO</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-row-name">🗃️ PostgreSQL</span>
+            <span class="skill-row-badge" style="background:rgba(90,163,255,.15);color:#88c5ff">🎓 CERTIFIED</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-row-name">🎸 Fingerstyle Guitar</span>
+            <span class="skill-row-badge" style="background:rgba(30,111,217,.15);color:var(--blue-glow)">⭐ VERIFIED</span>
+          </div>
+          <div style="font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin:.5rem 0 .25rem">Skills He Wants to Learn</div>
+          <div class="skill-row">
+            <span class="skill-row-name">🇪🇸 Spanish Language</span>
+            <span style="font-size:.75rem;color:var(--text-muted)">Beginner</span>
+          </div>
+          <div class="skill-row">
+            <span class="skill-row-name">📸 Portrait Photography</span>
+            <span style="font-size:.75rem;color:var(--text-muted)">Intermediate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLCOIN ── -->
+<section id="skillcoin">
+  <span class="section-tag">The SkillCoin Economy</span>
+  <div class="economy">
+    <div class="economy-text">
+      <h3>Teach Anyone.<br/>Learn from Anyone.</h3>
+      <p>No more being held hostage by one person. SkillCoins break the direct dependency — teach someone, earn coins, spend them learning from anyone on the platform.</p>
+      <div class="economy-features">
+        <div class="eco-feature"><div class="eco-check">✓</div> Earn 1 SkillCoin per hour you teach</div>
+        <div class="eco-feature"><div class="eco-check">✓</div> Spend coins to learn from any verified teacher</div>
+        <div class="eco-feature"><div class="eco-check">✓</div> If your swap partner bails — your coins are protected</div>
+        <div class="eco-feature"><div class="eco-check">✓</div> Buy coins if you want to learn before you teach</div>
+        <div class="eco-feature"><div class="eco-check">✓</div> Or pay real money for paid sessions if you prefer</div>
+      </div>
+    </div>
+    <div class="coin-visual">
+      <div class="coin-balance">
+        <div class="coin-bal-label">Your SkillCoin Balance</div>
+        <div class="coin-bal-num">⬡ 14</div>
+        <div class="coin-bal-sub">≈ 14 hours of learning available</div>
+      </div>
+      <div class="coin-transactions">
+        <div style="font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.25rem">Recent Activity</div>
+        <div class="coin-tx">
+          <div class="coin-tx-info"><div class="coin-tx-dot coin-tx-earn"></div><span class="coin-tx-label">Taught React to Maria S.</span></div>
+          <span class="coin-tx-amount coin-tx-earn-text">+2 ⬡</span>
+        </div>
+        <div class="coin-tx">
+          <div class="coin-tx-info"><div class="coin-tx-dot coin-tx-spend"></div><span class="coin-tx-label">Learned Spanish from Carlos</span></div>
+          <span class="coin-tx-amount coin-tx-spend-text">−1 ⬡</span>
+        </div>
+        <div class="coin-tx">
+          <div class="coin-tx-info"><div class="coin-tx-dot coin-tx-earn"></div><span class="coin-tx-label">Taught Guitar to Ahmed K.</span></div>
+          <span class="coin-tx-amount coin-tx-earn-text">+1 ⬡</span>
+        </div>
+        <div class="coin-tx">
+          <div class="coin-tx-info"><div class="coin-tx-dot coin-tx-spend"></div><span class="coin-tx-label">Learned Photography</span></div>
+          <span class="coin-tx-amount coin-tx-spend-text">−2 ⬡</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="testimonials">
+  <div class="center">
+    <span class="section-tag">Real Stories</span>
+    <h2 class="section-title">What Our Community Says</h2>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial">
+      <p class="testimonial-quote">I taught Python to a data scientist in London and in return learned Mandarin. Couldn't afford lessons before — now I'm conversational after 3 months.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">AP</div>
+        <div>
+          <div class="testimonial-name">Aisha Patel</div>
+          <div class="testimonial-role">Software Engineer · Mumbai, India</div>
+        </div>
+      </div>
+      <span class="testimonial-swap">🔁 Python ↔ Mandarin</span>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">I'm a retired teacher with 30 years of French teaching experience. SkillSwap let me trade French lessons for guitar lessons I always wanted.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">ML</div>
+        <div>
+          <div class="testimonial-name">Marie Lefebvre</div>
+          <div class="testimonial-role">Retired Teacher · Lyon, France</div>
+        </div>
+      </div>
+      <span class="testimonial-swap">🔁 French ↔ Guitar</span>
+    </div>
+    <div class="testimonial">
+      <p class="testimonial-quote">The verification system is what sold me. I knew my teacher was a certified UX designer before our first session. No guesswork, no wasted time.</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar" style="background:linear-gradient(135deg,#10B981,#1E6FD9)">KO</div>
+        <div>
+          <div class="testimonial-name">Kwame Osei</div>
+          <div class="testimonial-role">Marketing Manager · Accra, Ghana</div>
+        </div>
+      </div>
+      <span class="testimonial-swap">🔁 Marketing ↔ UX Design</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section id="pricing">
+  <div class="center">
+    <span class="section-tag">Simple Pricing</span>
+    <h2 class="section-title">Free to Start. Upgrade Anytime.</h2>
+    <p class="section-sub">Core skill swapping is always free. Premium unlocks unlimited swaps, paid sessions, and advanced features.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">Free</div>
+      <div class="price-desc">Perfect to get started and explore</div>
+      <div class="price-amount"><span class="price-currency">$</span>0<span class="price-period">/month</span></div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feature"><span class="pf-check">✓</span> Up to 3 active swaps</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Full messaging & video calls</div>
+        <div class="price-feature"><span class="pf-check">✓</span> SkillCoin economy access</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Profile & skill verification</div>
+        <div class="price-feature"><span class="pf-x">✗</span> Paid sessions (receive money)</div>
+        <div class="price-feature"><span class="pf-x">✗</span> Priority match ranking</div>
+        <div class="price-feature"><span class="pf-x">✗</span> Rate analytics tool</div>
+      </div>
+      <button class="btn-price">Get Started Free</button>
+    </div>
+    <div class="price-card featured">
+      <div class="price-name">Premium</div>
+      <div class="price-desc">For serious learners and teachers</div>
+      <div class="price-amount"><span class="price-currency">$</span>9<span class="price-period">/month</span></div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feature"><span class="pf-check">✓</span> Unlimited active swaps</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Accept paid sessions (earn real $)</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Priority matching algorithm</div>
+        <div class="price-feature"><span class="pf-check">✓</span> HD video + session recording</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Rate analytics & market insights</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Advanced scheduling tools</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Premium badge on profile</div>
+      </div>
+      <button class="btn-price featured-btn">Start 14-day Free Trial</button>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Teams</div>
+      <div class="price-desc">For companies & learning cohorts</div>
+      <div class="price-amount" style="font-size:1.4rem;align-items:center">Custom</div>
+      <div class="price-divider"></div>
+      <div class="price-features">
+        <div class="price-feature"><span class="pf-check">✓</span> Everything in Premium</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Private team workspace</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Admin dashboard & analytics</div>
+        <div class="price-feature"><span class="pf-check">✓</span> SSO & user provisioning</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Dedicated account manager</div>
+        <div class="price-feature"><span class="pf-check">✓</span> Custom integrations (API)</div>
+        <div class="price-feature"><span class="pf-check">✓</span> SLA & priority support</div>
+      </div>
+      <button class="btn-price">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section>
+  <div class="center">
+    <span class="section-tag">Questions</span>
+    <h2 class="section-title">Frequently Asked</h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q">What if my swap partner stops teaching their side? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">SkillCoins solve this entirely. Because you earn coins when you teach and spend them when you learn, you're never dependent on one person reciprocating. If your partner stops, you keep your coins and can learn from anyone else. For paid sessions, we offer full refunds if the teacher fails to deliver.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How does scheduling work across different timezones? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Before you even send a swap request, the platform shows a compatibility indicator based on your timezone overlap. The scheduling tool shows your available slots in both timezones simultaneously so there's no confusion. For users with zero overlap, we offer async (recorded) sessions so timezone is never a dealbreaker.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">How do I know my teacher is actually qualified? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Every teacher profile shows one of four verification tiers: Community (self-declared), Platform Verified (passed our skill assessment), Credential Verified (certificate or degree confirmed), or Professional (active industry pro verified via LinkedIn). You always know exactly what you're getting before booking.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Can I pay for a skill instead of swapping? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Yes. SkillSwap supports three modes: pure swap (no money), SkillCoin (earn by teaching, spend to learn), and paid sessions (real money via Stripe). Premium users can accept paid sessions and set their own hourly rate. You choose which mode each swap operates in.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">Is SkillSwap free to use? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">Core skill swapping is 100% free — up to 3 active swaps, full messaging, and video calling. Premium ($9/month) unlocks unlimited swaps, paid sessions, priority matching, and advanced tools. There's a 14-day free trial with no credit card required.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q">What if someone teaches me wrong or misleading information? <span class="faq-arrow">▾</span></button>
+      <div class="faq-a">After every session you can flag content quality issues. Three flags on the same teacher triggers a moderation review. For paid sessions, verified cases of misinformation result in a full refund. Teachers who repeatedly receive quality flags have their ranking reduced and may be suspended.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ── -->
+<div class="cta-banner">
+  <h2>Your Next Skill is Waiting.</h2>
+  <p>Join 48,000+ people learning and teaching on SkillSwap today — for free.</p>
+  <div class="cta-buttons">
+    <a href="#signup" class="btn-hero btn-hero-google">
+      <svg class="google-icon" viewBox="0 0 18 18" fill="none">
+        <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+        <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+        <path d="M3.964 10.706A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.038l3.007-2.332z" fill="#FBBC05"/>
+        <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+      </svg>
+      Sign up with Google
+    </a>
+    <a href="#signup" class="btn-hero btn-hero-primary">Create Free Account</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo" style="margin-bottom:.5rem;display:inline-flex">
+        <div class="nav-logo-icon">S</div>
+        SkillSwap
+      </a>
+      <p>The world's first peer-to-peer skill exchange platform. Trade knowledge, build community, grow together.</p>
+      <div class="footer-socials" style="margin-top:1rem">
+        <a href="#" class="social-btn">𝕏</a>
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">ig</a>
+        <a href="#" class="social-btn">yt</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="#">How it Works</a>
+      <a href="#">Browse Skills</a>
+      <a href="#">Pricing</a>
+      <a href="#">SkillCoin</a>
+      <a href="#">Mobile App</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Blog</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Cookie Policy</a>
+      <a href="#">GDPR</a>
+      <a href="#">Trust & Safety</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 SkillSwap Inc. All rights reserved.</span>
+    <span>Built with ❤️ for curious minds everywhere</span>
+  </div>
+</footer>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  mobileMenu.classList.toggle('open');
+  const spans = hamburger.querySelectorAll('span');
+  if (mobileMenu.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '';
+    spans[2].style.transform = '';
+  }
+});
+
+mobileMenu.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    mobileMenu.classList.remove('open');
+    hamburger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  });
+});
+
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  nav.style.background = window.scrollY > 40
+    ? 'rgba(11,22,40,.97)'
+    : 'rgba(11,22,40,.85)';
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.step, .cat-card, .tier, .testimonial, .price-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

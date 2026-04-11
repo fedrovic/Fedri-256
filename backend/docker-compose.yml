@@ -1,0 +1,71 @@
+version: '3.9'
+
+# ═══════════════════════════════════════════════════
+#  SkillSwap — Docker Compose (Development)
+# ═══════════════════════════════════════════════════
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: skillswap_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: skillswap_user
+      POSTGRES_PASSWORD: skillswap_dev_password
+      POSTGRES_DB: skillswap_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skillswap_user -d skillswap_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ───────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: skillswap_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── API Server ──────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: skillswap_api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://skillswap_user:skillswap_dev_password@postgres:5432/skillswap_db?schema=public
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./logs:/app/logs
+    command: npm run dev
+
+volumes:
+  postgres_data:
+  redis_data:

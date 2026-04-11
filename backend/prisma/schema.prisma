@@ -1,0 +1,603 @@
+// ═══════════════════════════════════════════════════
+//  SkillSwap — Prisma Database Schema
+//  Database: PostgreSQL 16
+// ═══════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ─────────────────────────────────────────
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  PENDING_VERIFICATION
+}
+
+enum SkillDirection {
+  TEACH
+  LEARN
+}
+
+enum ProficiencyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum VerificationTier {
+  COMMUNITY
+  PLATFORM_VERIFIED
+  CREDENTIAL_VERIFIED
+  PROFESSIONAL
+}
+
+enum SwapStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+  EXPIRED
+  DECLINED
+}
+
+enum SessionStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum SessionMode {
+  LIVE_VIDEO
+  ASYNC
+  IN_PERSON
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  IMAGE
+  SYSTEM
+  SESSION_INVITE
+}
+
+enum TransactionType {
+  EARN
+  SPEND
+  PURCHASE
+  REFUND
+  DISPUTE_REFUND
+  BONUS
+}
+
+enum ReportStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  DISMISSED
+}
+
+enum ReportTargetType {
+  USER
+  MESSAGE
+  REVIEW
+  SWAP
+}
+
+enum NotificationType {
+  SWAP_REQUEST
+  SWAP_ACCEPTED
+  SWAP_DECLINED
+  SWAP_COUNTER
+  SESSION_SCHEDULED
+  SESSION_REMINDER
+  SESSION_COMPLETED
+  REVIEW_RECEIVED
+  MESSAGE_RECEIVED
+  COIN_EARNED
+  BADGE_AWARDED
+  SYSTEM_ANNOUNCEMENT
+  SWAP_EXPIRY_WARNING
+  PAYMENT_RECEIVED
+}
+
+enum BadgeType {
+  FIRST_SWAP
+  FIRST_SESSION
+  TEN_SESSIONS
+  FIFTY_SESSIONS
+  TOP_TEACHER
+  VERIFIED_PRO
+  COMMUNITY_STAR
+  QUICK_RESPONDER
+  MULTI_LANGUAGE
+  RISING_STAR
+}
+
+enum PlanType {
+  FREE
+  PREMIUM
+  TEAMS
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  TRIALING
+}
+
+// ── Models ────────────────────────────────────────
+
+model User {
+  id                    String             @id @default(uuid())
+  email                 String             @unique
+  emailVerified         Boolean            @default(false)
+  emailVerifiedAt       DateTime?
+  passwordHash          String?
+  displayName           String
+  firstName             String?
+  lastName              String?
+  avatarUrl             String?
+  bio                   String?            @db.VarChar(500)
+  location              String?
+  country               String?
+  timezone              String             @default("UTC")
+  languages             String[]           @default([])
+  role                  UserRole           @default(USER)
+  status                UserStatus         @default(PENDING_VERIFICATION)
+  plan                  PlanType           @default(FREE)
+  skillCoinBalance      Int                @default(0)
+  reputationScore       Float              @default(0)
+  totalSessionsCompleted Int               @default(0)
+  totalSessionsTaught   Int               @default(0)
+  responseRate          Float              @default(100)
+  lastActiveAt          DateTime           @default(now())
+  isOnline              Boolean            @default(false)
+  twoFactorEnabled      Boolean            @default(false)
+  twoFactorSecret       String?
+  profileVisibility     String             @default("PUBLIC")
+  marketingOptIn        Boolean            @default(false)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  // Relations
+  oauthAccounts         OAuthAccount[]
+  refreshTokens         RefreshToken[]
+  skills                UserSkill[]
+  availability          Availability[]
+  swapsInitiated        Swap[]             @relation("SwapRequester")
+  swapsReceived         Swap[]             @relation("SwapRecipient")
+  sessionsTeaching      Session[]          @relation("SessionTeacher")
+  sessionsLearning      Session[]          @relation("SessionLearner")
+  messagesSent          Message[]          @relation("MessageSender")
+  reviewsGiven          Review[]           @relation("ReviewGiver")
+  reviewsReceived       Review[]           @relation("ReviewReceiver")
+  notifications         Notification[]
+  badges                UserBadge[]
+  coinTransactions      CoinTransaction[]
+  reportsFiled          Report[]           @relation("ReportFiler")
+  reportsAgainst        Report[]           @relation("ReportTarget")
+  subscription          Subscription?
+  auditLogs             AuditLog[]
+  favourites            Favourite[]        @relation("FavouriteOwner")
+  favouritedBy          Favourite[]        @relation("FavouriteTarget")
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model OAuthAccount {
+  id           String   @id @default(uuid())
+  userId       String
+  provider     String
+  providerId   String
+  accessToken  String?
+  refreshToken String?
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerId])
+  @@map("oauth_accounts")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+model Category {
+  id           String     @id @default(uuid())
+  name         String     @unique
+  slug         String     @unique
+  description  String?
+  icon         String?
+  parentId     String?
+  displayOrder Int        @default(0)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+
+  parent       Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children     Category[] @relation("CategoryParent")
+  skills       Skill[]
+
+  @@map("categories")
+}
+
+model Skill {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String      @unique
+  categoryId  String
+  description String?
+  iconUrl     String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+
+  category    Category    @relation(fields: [categoryId], references: [id])
+  userSkills  UserSkill[]
+
+  @@index([categoryId])
+  @@map("skills")
+}
+
+model UserSkill {
+  id               String           @id @default(uuid())
+  userId           String
+  skillId          String
+  direction        SkillDirection
+  proficiencyLevel ProficiencyLevel @default(INTERMEDIATE)
+  verificationTier VerificationTier @default(COMMUNITY)
+  description      String?          @db.VarChar(300)
+  portfolioUrl     String?
+  isVerified       Boolean          @default(false)
+  verifiedAt       DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill            Skill            @relation(fields: [skillId], references: [id])
+
+  @@unique([userId, skillId, direction])
+  @@index([userId])
+  @@index([skillId])
+  @@map("user_skills")
+}
+
+model Availability {
+  id        String   @id @default(uuid())
+  userId    String
+  dayOfWeek Int      // 0=Sun, 1=Mon, ... 6=Sat
+  startTime String   // "HH:MM" in user's timezone
+  endTime   String
+  timezone  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dayOfWeek])
+  @@map("availability")
+}
+
+model Swap {
+  id                 String     @id @default(uuid())
+  requesterId        String
+  recipientId        String
+  offeredSkillId     String
+  requestedSkillId   String
+  status             SwapStatus @default(PENDING)
+  mode               SessionMode @default(LIVE_VIDEO)
+  frequency          String     @default("WEEKLY")
+  plannedSessions    Int        @default(6)
+  completedSessions  Int        @default(0)
+  introMessage       String?    @db.VarChar(600)
+  pauseReason        String?
+  cancelReason       String?
+  pausedAt           DateTime?
+  completedAt        DateTime?
+  cancelledAt        DateTime?
+  expiresAt          DateTime?
+  lastActivityAt     DateTime   @default(now())
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  requester          User       @relation("SwapRequester", fields: [requesterId], references: [id])
+  recipient          User       @relation("SwapRecipient", fields: [recipientId], references: [id])
+  sessions           Session[]
+  messages           Message[]
+  coinTransactions   CoinTransaction[]
+  reviews            Review[]
+
+  @@index([requesterId])
+  @@index([recipientId])
+  @@index([status])
+  @@map("swaps")
+}
+
+model Session {
+  id              String        @id @default(uuid())
+  swapId          String
+  teacherId       String
+  learnerId       String
+  scheduledAt     DateTime
+  durationMinutes Int           @default(60)
+  status          SessionStatus @default(SCHEDULED)
+  mode            SessionMode   @default(LIVE_VIDEO)
+  videoRoomId     String?
+  videoRoomUrl    String?
+  recordingUrl    String?
+  teacherNotes    String?
+  learnerNotes    String?
+  completedAt     DateTime?
+  cancelledAt     DateTime?
+  cancelReason    String?
+  coinsAwarded    Boolean       @default(false)
+  reminderSent24h Boolean       @default(false)
+  reminderSent30m Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  swap            Swap          @relation(fields: [swapId], references: [id], onDelete: Cascade)
+  teacher         User          @relation("SessionTeacher", fields: [teacherId], references: [id])
+  learner         User          @relation("SessionLearner", fields: [learnerId], references: [id])
+  reviews         Review[]
+  qualityFlags    SessionFlag[]
+
+  @@index([swapId])
+  @@index([scheduledAt])
+  @@index([status])
+  @@map("sessions")
+}
+
+model SessionFlag {
+  id        String   @id @default(uuid())
+  sessionId String
+  userId    String
+  reason    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  session   Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("session_flags")
+}
+
+model Message {
+  id            String      @id @default(uuid())
+  swapId        String
+  senderId      String
+  type          MessageType @default(TEXT)
+  content       String?
+  fileUrl       String?
+  fileName      String?
+  fileSize      Int?
+  fileMimeType  String?
+  isDeleted     Boolean     @default(false)
+  readAt        DateTime?
+  editedAt      DateTime?
+  createdAt     DateTime    @default(now())
+
+  swap          Swap        @relation(fields: [swapId], references: [id], onDelete: Cascade)
+  sender        User        @relation("MessageSender", fields: [senderId], references: [id])
+  reactions     MessageReaction[]
+
+  @@index([swapId])
+  @@index([senderId])
+  @@index([createdAt])
+  @@map("messages")
+}
+
+model MessageReaction {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, emoji])
+  @@map("message_reactions")
+}
+
+model Review {
+  id           String   @id @default(uuid())
+  sessionId    String?
+  swapId       String?
+  reviewerId   String
+  revieweeId   String
+  rating       Int      // 1-5
+  feedback     String?  @db.VarChar(500)
+  tags         String[]
+  response     String?  @db.VarChar(300)
+  respondedAt  DateTime?
+  isPublic     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  session      Session? @relation(fields: [sessionId], references: [id])
+  swap         Swap?    @relation(fields: [swapId], references: [id])
+  reviewer     User     @relation("ReviewGiver", fields: [reviewerId], references: [id])
+  reviewee     User     @relation("ReviewReceiver", fields: [revieweeId], references: [id])
+
+  @@index([revieweeId])
+  @@index([reviewerId])
+  @@map("reviews")
+}
+
+model CoinTransaction {
+  id          String          @id @default(uuid())
+  userId      String
+  swapId      String?
+  sessionId   String?
+  type        TransactionType
+  amount      Int
+  balanceBefore Int
+  balanceAfter  Int
+  description String
+  createdAt   DateTime        @default(now())
+
+  user        User            @relation(fields: [userId], references: [id])
+  swap        Swap?           @relation(fields: [swapId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("coin_transactions")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model UserBadge {
+  id         String    @id @default(uuid())
+  userId     String
+  badgeType  BadgeType
+  awardedAt  DateTime  @default(now())
+
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeType])
+  @@map("user_badges")
+}
+
+model Favourite {
+  id         String   @id @default(uuid())
+  ownerId    String
+  targetId   String
+  createdAt  DateTime @default(now())
+
+  owner      User     @relation("FavouriteOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  target     User     @relation("FavouriteTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([ownerId, targetId])
+  @@map("favourites")
+}
+
+model Report {
+  id           String           @id @default(uuid())
+  reporterId   String
+  targetUserId String?
+  targetType   ReportTargetType
+  targetId     String
+  reason       String
+  details      String?
+  status       ReportStatus     @default(OPEN)
+  resolvedBy   String?
+  resolution   String?
+  resolvedAt   DateTime?
+  createdAt    DateTime         @default(now())
+
+  reporter     User             @relation("ReportFiler", fields: [reporterId], references: [id])
+  targetUser   User?            @relation("ReportTarget", fields: [targetUserId], references: [id])
+
+  @@index([status])
+  @@map("reports")
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  userId               String             @unique
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  plan                 PlanType           @default(FREE)
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  trialEnd             DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  action     String
+  targetType String?
+  targetId   String?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  actor      User?    @relation(fields: [actorId], references: [id])
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@map("password_reset_tokens")
+}

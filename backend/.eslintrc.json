@@ -1,0 +1,21 @@
+{
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_|next" }],
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-process-exit": "error",
+    "eqeqeq": ["error", "always"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-return-await": "error",
+    "require-await": "warn",
+    "no-throw-literal": "error",
+    "handle-callback-err": "error"
+  }
+}

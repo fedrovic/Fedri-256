@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — Discover</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;--navy-mid:#0F1E33;--navy-soft:#13243E;
+  --blue:#1E6FD9;--blue-light:#3D8EF5;--blue-glow:#5AA3FF;
+  --green:#18C77A;--green-light:#2EDEA0;
+  --amber:#F5B700;--red:#F87171;--purple:#A78BFA;
+  --white:#FFFFFF;--text-primary:#EEF2FF;--text-secondary:#9AAEC8;--text-muted:#5E7A9A;
+  --border:#1E3455;--border-light:#2A4466;
+  --card-bg:#0F1E33;--card-bg2:#111F35;
+  --sidebar-w:240px;--topbar-h:64px;--filter-w:260px;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --font-display:'Syne',sans-serif;--font-body:'Outfit',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--navy);color:var(--text-primary);display:flex;flex-direction:column}
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - var(--topbar-h))}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--navy-mid);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;position:relative;z-index:40}
+.topbar-left{display:flex;align-items:center;gap:1rem}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;cursor:pointer;text-decoration:none}
+.logo-name{font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--white);text-decoration:none}
+.topbar-search-wrap{display:flex;align-items:center;gap:.625rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.45rem .875rem;width:340px;transition:all .2s}
+.topbar-search-wrap:focus-within{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(30,111,217,.1)}
+.topbar-search-wrap input{background:none;border:none;outline:none;color:var(--text-primary);font-family:var(--font-body);font-size:.875rem;width:100%}
+.topbar-search-wrap input::placeholder{color:var(--text-muted)}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-secondary);font-size:.9rem;position:relative}
+.icon-btn:hover{border-color:var(--border-light);background:var(--navy-soft);color:var(--text-primary)}
+.notif-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--red);border:2px solid var(--navy-mid);font-size:.6rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.8rem;font-weight:800;color:#fff;cursor:pointer;border:2px solid var(--border-light)}
+.hamburger-btn{display:none;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.hamburger-btn span{display:block;width:16px;height:1.5px;background:var(--text-secondary);border-radius:1px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:0 .5rem;margin-bottom:.5rem}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;color:var(--text-muted);font-size:.875rem;font-weight:500;text-decoration:none}
+.nav-item:hover{background:var(--navy-soft);color:var(--text-secondary)}
+.nav-item.active{background:rgba(30,111,217,.12);color:var(--blue-glow);border:1px solid rgba(30,111,217,.2)}
+.nav-icon{width:18px;text-align:center;font-size:.95rem;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;min-width:18px;text-align:center}
+.nav-badge.green{background:var(--green)}.nav-badge.amber{background:var(--amber);color:var(--navy)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+.coin-widget{margin:auto 1rem 1.25rem;background:linear-gradient(135deg,rgba(30,111,217,.15),rgba(24,199,122,.1));border:1px solid rgba(30,111,217,.25);border-radius:var(--radius-md);padding:1rem}
+.coin-widget-label{font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem}
+.coin-widget-bal{font-family:var(--font-display);font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--blue-glow),var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.coin-widget-bar{height:4px;background:var(--border);border-radius:2px;margin-top:.75rem}
+.coin-widget-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--green));width:58%}
+
+/* ── DISCOVER LAYOUT ── */
+.discover-layout{flex:1;display:flex;overflow:hidden}
+.filter-panel{width:var(--filter-w);flex-shrink:0;background:var(--navy-mid);border-right:1px solid var(--border);overflow-y:auto;padding:1.25rem}
+.filter-panel::-webkit-scrollbar{width:4px}
+.filter-panel::-webkit-scrollbar-thumb{background:var(--border)}
+.discover-main{flex:1;overflow-y:auto;overflow-x:hidden}
+.discover-main::-webkit-scrollbar{width:5px}
+.discover-main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── FILTER PANEL ── */
+.filter-title{font-family:var(--font-display);font-size:.9rem;font-weight:700;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
+.filter-clear{font-size:.75rem;color:var(--blue-light);background:none;border:none;cursor:pointer;font-family:var(--font-body)}
+.filter-section{margin-bottom:1.5rem}
+.filter-label{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.75rem}
+.filter-options{display:flex;flex-direction:column;gap:.375rem}
+.filter-option{display:flex;align-items:center;gap:.625rem;cursor:pointer;padding:.3rem .375rem;border-radius:6px;transition:background .15s}
+.filter-option:hover{background:var(--navy-soft)}
+.filter-option input[type=checkbox]{accent-color:var(--blue);width:14px;height:14px;flex-shrink:0}
+.filter-option label{font-size:.83rem;color:var(--text-secondary);cursor:pointer;flex:1}
+.filter-count{font-size:.7rem;color:var(--text-muted);margin-left:auto}
+.filter-tags{display:flex;flex-wrap:wrap;gap:.375rem}
+.ftag{padding:.3rem .625rem;border-radius:100px;font-size:.75rem;font-weight:500;border:1px solid var(--border);background:var(--navy-soft);color:var(--text-muted);cursor:pointer;transition:all .18s}
+.ftag:hover{border-color:var(--border-light);color:var(--text-secondary)}
+.ftag.selected{border-color:var(--blue-light);background:rgba(30,111,217,.12);color:var(--blue-glow)}
+.filter-range{width:100%;accent-color:var(--blue);cursor:pointer}
+.range-labels{display:flex;justify-content:space-between;font-size:.72rem;color:var(--text-muted);margin-top:.25rem}
+.filter-divider{height:1px;background:var(--border);margin-bottom:1.5rem}
+
+/* ── DISCOVER HEADER ── */
+.discover-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);background:var(--navy-mid);position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.discover-header-left{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.result-count{font-size:.875rem;color:var(--text-secondary)}
+.result-count strong{color:var(--text-primary);font-weight:600}
+.sort-select{padding:.4rem .75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--navy-soft);color:var(--text-secondary);font-family:var(--font-body);font-size:.8rem;cursor:pointer}
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+.view-btn{width:34px;height:32px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.view-btn.active{background:var(--navy-soft);color:var(--text-primary)}
+.mobile-filter-btn{display:none;padding:.4rem .875rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:.8rem;cursor:pointer;align-items:center;gap:.4rem}
+
+/* ── ACTIVE FILTERS BAR ── */
+.active-filters{padding:.625rem 1.5rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;border-bottom:1px solid var(--border);min-height:0}
+.active-filters.show{display:flex}
+.active-filter-chip{display:inline-flex;align-items:center;gap:.375rem;padding:.25rem .625rem;border-radius:100px;background:rgba(30,111,217,.12);border:1px solid rgba(30,111,217,.25);color:var(--blue-glow);font-size:.75rem;font-weight:500}
+.afc-remove{cursor:pointer;opacity:.7;font-size:.65rem}
+.afc-remove:hover{opacity:1}
+
+/* ── GRID VIEW ── */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.25rem;padding:1.5rem}
+.person-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all .25s;position:relative}
+.person-card:hover{border-color:var(--border-light);transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.person-card-top{padding:1.25rem 1.25rem .875rem;text-align:center;position:relative}
+.pc-fav{position:absolute;top:.75rem;right:.75rem;width:28px;height:28px;border-radius:50%;background:rgba(0,0,0,.2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.75rem;transition:all .2s;color:var(--text-muted)}
+.pc-fav:hover,.pc-fav.active{color:#F87171;border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.1)}
+.pc-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:800;color:#fff;margin:0 auto .75rem;position:relative}
+.pc-online{position:absolute;bottom:2px;right:2px;width:13px;height:13px;border-radius:50%;background:var(--green);border:2px solid var(--card-bg)}
+.pc-name{font-size:.95rem;font-weight:700;margin-bottom:.2rem}
+.pc-loc{font-size:.75rem;color:var(--text-muted);margin-bottom:.5rem}
+.pc-rating{display:flex;align-items:center;justify-content:center;gap:.3rem;font-size:.78rem;color:var(--text-muted);margin-bottom:.625rem}
+.pc-stars{color:#F5B700}
+.pc-badges{display:flex;justify-content:center;gap:.375rem;flex-wrap:wrap;margin-bottom:.875rem}
+.pc-badge{font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:100px}
+.badge-pro{background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.2);color:var(--green-light)}
+.badge-verified{background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)}
+.badge-cert{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.2);color:var(--purple)}
+.badge-basic{background:rgba(94,122,154,.15);border:1px solid rgba(94,122,154,.2);color:var(--text-muted)}
+.pc-divider{height:1px;background:var(--border)}
+.person-card-bottom{padding:.875rem 1.25rem}
+.pc-exchange{display:flex;flex-direction:column;gap:.375rem;margin-bottom:.875rem}
+.pc-skill-row{display:flex;align-items:center;gap:.5rem;font-size:.8rem}
+.pcs-dir{font-size:.68rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;flex-shrink:0}
+.dir-teach{background:rgba(24,199,122,.12);color:var(--green-light)}
+.dir-learn{background:rgba(30,111,217,.12);color:var(--blue-glow)}
+.pcs-name{color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-overlap{display:flex;align-items:center;gap:.375rem;font-size:.72rem;margin-bottom:.875rem}
+.overlap-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.btn-view{width:100%;padding:.55rem;border-radius:var(--radius-sm);background:rgba(30,111,217,.12);border:1px solid rgba(30,111,217,.25);color:var(--blue-glow);font-family:var(--font-body);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-view:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ── LIST VIEW ── */
+.cards-list{display:flex;flex-direction:column;gap:.875rem;padding:1.5rem}
+.person-list-item{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.1rem 1.25rem;display:flex;align-items:center;gap:1.25rem;cursor:pointer;transition:all .2s}
+.person-list-item:hover{border-color:var(--border-light);background:var(--card-bg2)}
+.pli-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#fff;position:relative}
+.pli-online{position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;background:var(--green);border:2px solid var(--card-bg)}
+.pli-main{flex:1;min-width:0}
+.pli-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.3rem;flex-wrap:wrap}
+.pli-name{font-size:.95rem;font-weight:700}
+.pli-loc{font-size:.78rem;color:var(--text-muted)}
+.pli-skills{display:flex;gap:.625rem;flex-wrap:wrap;margin-bottom:.375rem}
+.pli-skill{display:inline-flex;align-items:center;gap:.3rem;font-size:.75rem}
+.pli-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0}
+.pli-rating{font-size:.8rem;color:var(--text-muted)}
+.pli-rating span{color:#F5B700}
+.pli-overlap{font-size:.72rem;padding:.2rem .5rem;border-radius:100px}
+.btn-connect-sm{padding:.4rem 1rem;border-radius:var(--radius-sm);background:var(--blue);border:none;color:#fff;font-family:var(--font-body);font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn-connect-sm:hover{background:var(--blue-light)}
+
+/* ── EMPTY STATE ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 2rem;text-align:center;height:100%}
+.empty-icon{font-size:3rem;margin-bottom:1rem;opacity:.4}
+.empty-state h3{font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:.5rem}
+.empty-state p{font-size:.875rem;color:var(--text-muted);max-width:300px}
+
+/* ── CATEGORY PILLS ── */
+.category-bar{padding:.875rem 1.5rem;border-bottom:1px solid var(--border);display:flex;gap:.5rem;overflow-x:auto;background:var(--navy-mid)}
+.category-bar::-webkit-scrollbar{display:none}
+.cat-pill{display:inline-flex;align-items:center;gap:.375rem;padding:.375rem .875rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:var(--font-body);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.cat-pill:hover{border-color:var(--border-light);color:var(--text-secondary)}
+.cat-pill.active{border-color:var(--blue-light);background:rgba(30,111,217,.12);color:var(--blue-glow)}
+
+/* ── FILTER PANEL MOBILE ── */
+.filter-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:49}
+.filter-overlay.show{display:block}
+.filter-panel-mobile{position:fixed;left:0;top:0;bottom:0;width:280px;background:var(--navy-mid);border-right:1px solid var(--border);overflow-y:auto;padding:1.25rem;z-index:50;transform:translateX(-100%);transition:transform .3s}
+.filter-panel-mobile.open{transform:translateX(0)}
+
+/* ── SIDEBAR OVERLAY ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:29}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.filter-panel{display:none}.mobile-filter-btn{display:flex}}
+@media(max-width:900px){
+  .sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;z-index:30;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}.sidebar-overlay.show{display:block}
+  .hamburger-btn{display:flex}.topbar-search-wrap{width:200px}.coin-widget{display:none}
+}
+@media(max-width:600px){
+  .topbar-search-wrap{display:none}
+  .cards-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));padding:1rem;gap:.875rem}
+  .discover-header{padding:.875rem 1rem}
+  .category-bar{padding:.625rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger-btn" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    <a href="skillswap-landing.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">SkillSwap</span>
+    </a>
+    <div class="topbar-search-wrap">
+      <span style="color:var(--text-muted);font-size:.85rem;flex-shrink:0">🔍</span>
+      <input type="text" id="mainSearch" placeholder="Search skills, people, categories..." autocomplete="off"/>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn">🔔<span class="notif-badge">3</span></button>
+    <button class="icon-btn">💬</button>
+    <div class="topbar-avatar">JD</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="nav-item" href="skillswap-dashboard.html"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a class="nav-item active" href="skillswap-discover.html"><span class="nav-icon">🔍</span> Discover<span class="nav-badge green">New</span></a>
+      <a class="nav-item" href="skillswap-swaps.html"><span class="nav-icon">🔁</span> My Swaps<span class="nav-badge">2</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span> Sessions</a>
+      <a class="nav-item" href="skillswap-messages.html"><span class="nav-icon">💬</span> Messages<span class="nav-badge">4</span></a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="skillswap-profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⬡</span> SkillCoins<span class="nav-badge amber">14</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏆</span> Achievements</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <a class="nav-item" href="#" style="background:rgba(30,111,217,.08);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)"><span class="nav-icon">⚡</span> Go Premium</a>
+    </div>
+    <div class="coin-widget">
+      <div class="coin-widget-label">SkillCoin Balance</div>
+      <div class="coin-widget-bal">⬡ 14</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">≈ 14 hrs of learning</div>
+      <div class="coin-widget-bar"><div class="coin-widget-fill"></div></div>
+    </div>
+  </aside>
+
+  <!-- DISCOVER LAYOUT -->
+  <div class="discover-layout">
+
+    <!-- FILTER PANEL (desktop) -->
+    <div class="filter-panel" id="filterPanel">
+      <div class="filter-title">
+        Filters
+        <button class="filter-clear" onclick="clearFilters()">Clear all</button>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Availability Overlap</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" id="f-great" onchange="applyFilters()"/><label for="f-great">🟢 Great (5+ hrs/week)</label><span class="filter-count">142</span></label>
+          <label class="filter-option"><input type="checkbox" id="f-ok" onchange="applyFilters()"/><label for="f-ok">🟡 Some (1–4 hrs/week)</label><span class="filter-count">318</span></label>
+          <label class="filter-option"><input type="checkbox" id="f-async" onchange="applyFilters()"/><label for="f-async">📹 Async only</label><span class="filter-count">89</span></label>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Verification Tier</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" id="f-pro" onchange="applyFilters()"/><label for="f-pro">💼 Professional</label><span class="filter-count">84</span></label>
+          <label class="filter-option"><input type="checkbox" id="f-cert" onchange="applyFilters()"/><label for="f-cert">🎓 Credential Verified</label><span class="filter-count">156</span></label>
+          <label class="filter-option"><input type="checkbox" id="f-ver" onchange="applyFilters()"/><label for="f-ver">⭐ Platform Verified</label><span class="filter-count">287</span></label>
+          <label class="filter-option"><input type="checkbox" id="f-basic" onchange="applyFilters()"/><label for="f-basic">🟤 Community</label><span class="filter-count">431</span></label>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Minimum Rating</div>
+        <input type="range" class="filter-range" id="ratingRange" min="0" max="5" step="0.5" value="0" oninput="updateRating(this)"/>
+        <div class="range-labels"><span>Any</span><span id="ratingVal">Any rating</span><span>5.0★</span></div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Session Type</div>
+        <div class="filter-tags">
+          <span class="ftag" onclick="toggleFtag(this)">🎥 Live</span>
+          <span class="ftag" onclick="toggleFtag(this)">📹 Async</span>
+          <span class="ftag" onclick="toggleFtag(this)">🤝 In-person</span>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Skill Category</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>💻 Technology</label><span class="filter-count">312</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>🌍 Languages</label><span class="filter-count">428</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>🎨 Design & Art</label><span class="filter-count">189</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>🎵 Music</label><span class="filter-count">143</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>📈 Business</label><span class="filter-count">201</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>🏋️ Fitness</label><span class="filter-count">167</span></label>
+          <label class="filter-option"><input type="checkbox" onchange="applyFilters()"/><label>🍳 Cooking</label><span class="filter-count">98</span></label>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Proficiency Level</div>
+        <div class="filter-tags">
+          <span class="ftag" onclick="toggleFtag(this)">Beginner</span>
+          <span class="ftag" onclick="toggleFtag(this)">Intermediate</span>
+          <span class="ftag" onclick="toggleFtag(this)">Advanced</span>
+          <span class="ftag" onclick="toggleFtag(this)">Expert</span>
+        </div>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Location</div>
+        <input type="text" placeholder="City or country..." style="width:100%;padding:.6rem .75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--input-bg,var(--navy));color:var(--text-primary);font-family:var(--font-body);font-size:.83rem;outline:none" oninput="applyFilters()"/>
+      </div>
+
+      <div class="filter-divider"></div>
+
+      <div class="filter-section">
+        <div class="filter-label">Online Now</div>
+        <div class="filter-options">
+          <label class="filter-option"><input type="checkbox" id="f-online" onchange="applyFilters()"/><label for="f-online">🟢 Online now</label><span class="filter-count">47</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE FILTER PANEL -->
+    <div class="filter-overlay" id="filterOverlay"></div>
+    <div class="filter-panel-mobile" id="filterPanelMobile">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+        <span style="font-family:var(--font-display);font-size:.9rem;font-weight:700">Filters</span>
+        <button onclick="closeMobileFilter()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem">✕</button>
+      </div>
+      <p style="font-size:.85rem;color:var(--text-secondary)">Use the filter options on the right panel (desktop) or scroll down in this panel to filter results.</p>
+    </div>
+
+    <!-- MAIN DISCOVER AREA -->
+    <div class="discover-main">
+
+      <!-- CATEGORY BAR -->
+      <div class="category-bar" id="categoryBar">
+        <button class="cat-pill active" onclick="setCategory(this,'all')">✨ All Skills</button>
+        <button class="cat-pill" onclick="setCategory(this,'tech')">💻 Technology</button>
+        <button class="cat-pill" onclick="setCategory(this,'lang')">🌍 Languages</button>
+        <button class="cat-pill" onclick="setCategory(this,'design')">🎨 Design</button>
+        <button class="cat-pill" onclick="setCategory(this,'music')">🎵 Music</button>
+        <button class="cat-pill" onclick="setCategory(this,'business')">📈 Business</button>
+        <button class="cat-pill" onclick="setCategory(this,'fitness')">🏋️ Fitness</button>
+        <button class="cat-pill" onclick="setCategory(this,'cooking')">🍳 Cooking</button>
+        <button class="cat-pill" onclick="setCategory(this,'photo')">📸 Photography</button>
+        <button class="cat-pill" onclick="setCategory(this,'writing')">✍️ Writing</button>
+        <button class="cat-pill" onclick="setCategory(this,'math')">🧮 Math</button>
+      </div>
+
+      <!-- DISCOVER HEADER -->
+      <div class="discover-header">
+        <div class="discover-header-left">
+          <span class="result-count"><strong id="resultCount">958</strong> people found</span>
+          <select class="sort-select" id="sortSelect" onchange="sortResults()">
+            <option value="match">Best Match</option>
+            <option value="rating">Highest Rated</option>
+            <option value="sessions">Most Sessions</option>
+            <option value="recent">Recently Active</option>
+            <option value="online">Online Now</option>
+          </select>
+          <button class="mobile-filter-btn" id="mobileFilterBtn">⚙ Filters</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <div class="view-toggle">
+            <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Grid view">⊞</button>
+            <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="List view">☰</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVE FILTERS BAR -->
+      <div class="active-filters" id="activeFiltersBar" style="display:none">
+        <span style="font-size:.72rem;color:var(--text-muted);flex-shrink:0">Active:</span>
+      </div>
+
+      <!-- CARDS CONTAINER -->
+      <div id="cardsContainer">
+        <div class="cards-grid" id="cardsGrid">
+
+          <!-- Card 1 -->
+          <div class="person-card" data-cat="lang" data-rating="4.9" data-online="true" data-tier="pro">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">
+                MK<div class="pc-online"></div>
+              </div>
+              <div class="pc-name">Maria Kovač</div>
+              <div class="pc-loc">📍 Zagreb, Croatia</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★★</span> 4.9 <span>(24)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-pro">💼 PRO</span><span class="pc-badge badge-verified">⭐ Verified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Spanish · Advanced</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Python · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap · 6 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="person-card" data-cat="tech" data-rating="4.8" data-online="true" data-tier="cert">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">
+                TN<div class="pc-online"></div>
+              </div>
+              <div class="pc-name">Tariq Nasser</div>
+              <div class="pc-loc">📍 Dubai, UAE</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★★</span> 4.8 <span>(17)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-cert">🎓 Certified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Arabic · Expert</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">UI Design · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--amber)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟡 Some overlap · 2 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="person-card" data-cat="tech" data-rating="4.7" data-online="false" data-tier="pro">
+            <div class="person-card-top">
+              <div class="pc-fav active" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#EC4899,#8B5CF6)">PL</div>
+              <div class="pc-name">Priya Lal</div>
+              <div class="pc-loc">📍 Bangalore, India</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★½</span> 4.7 <span>(31)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-pro">💼 PRO</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Data Science · Expert</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Guitar · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap · 8 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="person-card" data-cat="lang" data-rating="5.0" data-online="true" data-tier="cert">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">
+                KO<div class="pc-online"></div>
+              </div>
+              <div class="pc-name">Kwame Osei</div>
+              <div class="pc-loc">📍 Accra, Ghana</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★★</span> 5.0 <span>(9)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-cert">🎓 Certified</span><span class="pc-badge badge-verified">⭐ Verified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">French · Advanced</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">JavaScript · Intermediate</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap · 5 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="person-card" data-cat="lang" data-rating="4.6" data-online="false" data-tier="verified">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">SB</div>
+              <div class="pc-name">Sophie Berger</div>
+              <div class="pc-loc">📍 Berlin, Germany</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★½</span> 4.6 <span>(12)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-verified">⭐ Verified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">German · Expert</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Photography · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--amber)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟡 Some overlap · 3 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="person-card" data-cat="music" data-rating="4.9" data-online="true" data-tier="pro">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#A78BFA,#6D28D9)">
+                JD<div class="pc-online"></div>
+              </div>
+              <div class="pc-name">James Donovan</div>
+              <div class="pc-loc">📍 Dublin, Ireland</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★★</span> 4.9 <span>(42)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-pro">💼 PRO</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Guitar · Expert</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Spanish · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap · 7 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 7 -->
+          <div class="person-card" data-cat="design" data-rating="4.5" data-online="false" data-tier="cert">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#F97316,#EC4899)">AL</div>
+              <div class="pc-name">Amara Leonce</div>
+              <div class="pc-loc">📍 Dakar, Senegal</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★½</span> 4.5 <span>(19)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-cert">🎓 Certified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Illustration · Advanced</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">English · Intermediate</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--amber)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟡 Some overlap · 4 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 8 -->
+          <div class="person-card" data-cat="fitness" data-rating="4.8" data-online="true" data-tier="pro">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#22D3EE,#0EA5E9)">
+                RK<div class="pc-online"></div>
+              </div>
+              <div class="pc-name">Riya Kapoor</div>
+              <div class="pc-loc">📍 Mumbai, India</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★★</span> 4.8 <span>(28)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-pro">💼 PRO</span><span class="pc-badge badge-cert">🎓 Certified</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Yoga · Expert</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Photography · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap · 6 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+          <!-- Card 9 -->
+          <div class="person-card" data-cat="cooking" data-rating="4.7" data-online="false" data-tier="basic">
+            <div class="person-card-top">
+              <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+              <div class="pc-avatar" style="background:linear-gradient(135deg,#84CC16,#16A34A)">LC</div>
+              <div class="pc-name">Lucas Carvalho</div>
+              <div class="pc-loc">📍 São Paulo, Brazil</div>
+              <div class="pc-rating"><span class="pc-stars">★★★★½</span> 4.7 <span>(15)</span></div>
+              <div class="pc-badges"><span class="pc-badge badge-basic">🟤 Community</span></div>
+            </div>
+            <div class="pc-divider"></div>
+            <div class="person-card-bottom">
+              <div class="pc-exchange">
+                <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">Brazilian Cuisine · Advanced</span></div>
+                <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">Python · Beginner</span></div>
+              </div>
+              <div class="pc-overlap"><div class="overlap-dot" style="background:var(--amber)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟡 Some overlap · 2 hrs/week</span></div>
+              <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /discover-main -->
+  </div><!-- /discover-layout -->
+</div><!-- /app -->
+
+<script>
+// Hamburger / sidebar
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebarOverlay');
+hamburgerBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); sidebarOverlay.classList.toggle('show'); });
+sidebarOverlay.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+
+// Mobile filter
+document.getElementById('mobileFilterBtn').addEventListener('click', () => {
+  document.getElementById('filterPanelMobile').classList.add('open');
+  document.getElementById('filterOverlay').classList.add('show');
+});
+function closeMobileFilter() {
+  document.getElementById('filterPanelMobile').classList.remove('open');
+  document.getElementById('filterOverlay').classList.remove('show');
+}
+document.getElementById('filterOverlay').addEventListener('click', closeMobileFilter);
+
+// View toggle
+let currentView = 'grid';
+function setView(view) {
+  currentView = view;
+  document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+  document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+  renderCards();
+}
+
+// Category filter
+let activeCategory = 'all';
+function setCategory(btn, cat) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  activeCategory = cat;
+  applyFilters();
+}
+
+// Rating range
+function updateRating(input) {
+  const val = parseFloat(input.value);
+  document.getElementById('ratingVal').textContent = val === 0 ? 'Any rating' : `${val}★+`;
+  applyFilters();
+}
+
+// Ftag toggle
+function toggleFtag(el) { el.classList.toggle('selected'); applyFilters(); }
+
+// Favourite toggle
+function toggleFav(el) {
+  el.classList.toggle('active');
+  el.textContent = '♥';
+}
+
+// Clear filters
+function clearFilters() {
+  document.querySelectorAll('.filter-panel input[type=checkbox],.filter-panel-mobile input[type=checkbox]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.ftag').forEach(t => t.classList.remove('selected'));
+  document.getElementById('ratingRange').value = 0;
+  document.getElementById('ratingVal').textContent = 'Any rating';
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  document.querySelector('.cat-pill').classList.add('active');
+  activeCategory = 'all';
+  applyFilters();
+}
+
+// Get all cards data
+const allCards = [
+  {cat:'lang',rating:4.9,online:true,tier:'pro',name:'Maria Kovač',loc:'Zagreb, Croatia',bg:'linear-gradient(135deg,#1E6FD9,#7C3AED)',init:'MK',teaches:'Spanish · Advanced',wants:'Python · Beginner',overlap:'great',hrs:'6'},
+  {cat:'tech',rating:4.8,online:true,tier:'cert',name:'Tariq Nasser',loc:'Dubai, UAE',bg:'linear-gradient(135deg,#10B981,#059669)',init:'TN',teaches:'Arabic · Expert',wants:'UI Design · Beginner',overlap:'ok',hrs:'2'},
+  {cat:'tech',rating:4.7,online:false,tier:'pro',name:'Priya Lal',loc:'Bangalore, India',bg:'linear-gradient(135deg,#EC4899,#8B5CF6)',init:'PL',teaches:'Data Science · Expert',wants:'Guitar · Beginner',overlap:'great',hrs:'8'},
+  {cat:'lang',rating:5.0,online:true,tier:'cert',name:'Kwame Osei',loc:'Accra, Ghana',bg:'linear-gradient(135deg,#F59E0B,#EF4444)',init:'KO',teaches:'French · Advanced',wants:'JavaScript · Intermediate',overlap:'great',hrs:'5'},
+  {cat:'lang',rating:4.6,online:false,tier:'verified',name:'Sophie Berger',loc:'Berlin, Germany',bg:'linear-gradient(135deg,#06B6D4,#3B82F6)',init:'SB',teaches:'German · Expert',wants:'Photography · Beginner',overlap:'ok',hrs:'3'},
+  {cat:'music',rating:4.9,online:true,tier:'pro',name:'James Donovan',loc:'Dublin, Ireland',bg:'linear-gradient(135deg,#A78BFA,#6D28D9)',init:'JD',teaches:'Guitar · Expert',wants:'Spanish · Beginner',overlap:'great',hrs:'7'},
+  {cat:'design',rating:4.5,online:false,tier:'cert',name:'Amara Leonce',loc:'Dakar, Senegal',bg:'linear-gradient(135deg,#F97316,#EC4899)',init:'AL',teaches:'Illustration · Advanced',wants:'English · Intermediate',overlap:'ok',hrs:'4'},
+  {cat:'fitness',rating:4.8,online:true,tier:'pro',name:'Riya Kapoor',loc:'Mumbai, India',bg:'linear-gradient(135deg,#22D3EE,#0EA5E9)',init:'RK',teaches:'Yoga · Expert',wants:'Photography · Beginner',overlap:'great',hrs:'6'},
+  {cat:'cooking',rating:4.7,online:false,tier:'basic',name:'Lucas Carvalho',loc:'São Paulo, Brazil',bg:'linear-gradient(135deg,#84CC16,#16A34A)',init:'LC',teaches:'Brazilian Cuisine · Advanced',wants:'Python · Beginner',overlap:'ok',hrs:'2'},
+];
+
+function tierBadgeHTML(tier) {
+  const map = {pro:`<span class="pc-badge badge-pro">💼 PRO</span>`,cert:`<span class="pc-badge badge-cert">🎓 Certified</span>`,verified:`<span class="pc-badge badge-verified">⭐ Verified</span>`,basic:`<span class="pc-badge badge-basic">🟤 Community</span>`};
+  return map[tier]||'';
+}
+function overlapLabel(o) {
+  return o==='great'?`<div class="overlap-dot" style="background:var(--green)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟢 Great overlap</span>`:`<div class="overlap-dot" style="background:var(--amber)"></div><span style="font-size:.72rem;color:var(--text-muted)">🟡 Some overlap</span>`;
+}
+
+function applyFilters() {
+  const ratingMin = parseFloat(document.getElementById('ratingRange').value)||0;
+  const onlineOnly = document.getElementById('f-online')&&document.getElementById('f-online').checked;
+  const tierChecks = {pro:document.getElementById('f-pro')&&document.getElementById('f-pro').checked,cert:document.getElementById('f-cert')&&document.getElementById('f-cert').checked,ver:document.getElementById('f-ver')&&document.getElementById('f-ver').checked,basic:document.getElementById('f-basic')&&document.getElementById('f-basic').checked};
+  const anyTier = !Object.values(tierChecks).some(Boolean);
+  const overlapGreat = document.getElementById('f-great')&&document.getElementById('f-great').checked;
+  const overlapOk = document.getElementById('f-ok')&&document.getElementById('f-ok').checked;
+  const anyOverlap = !overlapGreat&&!overlapOk;
+  const mainSearch = document.getElementById('mainSearch').value.toLowerCase();
+
+  const filtered = allCards.filter(c => {
+    if (activeCategory !== 'all' && c.cat !== activeCategory) return false;
+    if (c.rating < ratingMin) return false;
+    if (onlineOnly && !c.online) return false;
+    if (!anyTier) {
+      const ok = (tierChecks.pro&&c.tier==='pro')||(tierChecks.cert&&c.tier==='cert')||(tierChecks.ver&&c.tier==='verified')||(tierChecks.basic&&c.tier==='basic');
+      if (!ok) return false;
+    }
+    if (!anyOverlap) {
+      const ok = (overlapGreat&&c.overlap==='great')||(overlapOk&&c.overlap==='ok');
+      if (!ok) return false;
+    }
+    if (mainSearch) {
+      const hay = (c.name+c.teaches+c.wants+c.loc).toLowerCase();
+      if (!hay.includes(mainSearch)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('resultCount').textContent = filtered.length + (filtered.length === allCards.length ? '' : ` of ${allCards.length}`);
+  renderFilteredCards(filtered);
+}
+
+function renderFilteredCards(filtered) {
+  if (currentView === 'grid') {
+    const grid = document.getElementById('cardsGrid');
+    if (!grid) return;
+    if (filtered.length === 0) {
+      document.getElementById('cardsContainer').innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><h3>No matches found</h3><p>Try adjusting your filters or search term to find more people.</p></div>`;
+      return;
+    }
+    grid.innerHTML = filtered.map(c => `
+      <div class="person-card">
+        <div class="person-card-top">
+          <div class="pc-fav" onclick="toggleFav(this)">♥</div>
+          <div class="pc-avatar" style="background:${c.bg}">${c.init}${c.online?'<div class="pc-online"></div>':''}</div>
+          <div class="pc-name">${c.name}</div>
+          <div class="pc-loc">📍 ${c.loc}</div>
+          <div class="pc-rating"><span class="pc-stars">★★★★★</span> ${c.rating}</div>
+          <div class="pc-badges">${tierBadgeHTML(c.tier)}</div>
+        </div>
+        <div class="pc-divider"></div>
+        <div class="person-card-bottom">
+          <div class="pc-exchange">
+            <div class="pc-skill-row"><span class="pcs-dir dir-teach">Teaches</span><span class="pcs-name">${c.teaches}</span></div>
+            <div class="pc-skill-row"><span class="pcs-dir dir-learn">Wants</span><span class="pcs-name">${c.wants}</span></div>
+          </div>
+          <div class="pc-overlap">${overlapLabel(c.overlap)}</div>
+          <button class="btn-view" onclick="window.location.href='skillswap-profile.html'">View Profile →</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function renderCards() {
+  const container = document.getElementById('cardsContainer');
+  if (currentView === 'list') {
+    container.innerHTML = `<div class="cards-list" id="cardsList">${allCards.map(c=>`
+      <div class="person-list-item">
+        <div class="pli-avatar" style="background:${c.bg}">${c.init}${c.online?'<div class="pli-online"></div>':''}</div>
+        <div class="pli-main">
+          <div class="pli-top">
+            <span class="pli-name">${c.name}</span>
+            <span class="pli-loc">📍 ${c.loc}</span>
+            ${tierBadgeHTML(c.tier)}
+          </div>
+          <div class="pli-skills">
+            <span class="pli-skill"><span class="pcs-dir dir-teach" style="font-size:.65rem;padding:.1rem .35rem">Teaches</span> ${c.teaches}</span>
+            <span class="pli-skill"><span class="pcs-dir dir-learn" style="font-size:.65rem;padding:.1rem .35rem">Wants</span> ${c.wants}</span>
+          </div>
+        </div>
+        <div class="pli-right">
+          <span class="pli-rating"><span>★</span> ${c.rating}</span>
+          <button class="btn-connect-sm" onclick="window.location.href='skillswap-profile.html'">View →</button>
+        </div>
+      </div>
+    `).join('')}</div>`;
+  } else {
+    container.innerHTML = `<div class="cards-grid" id="cardsGrid"></div>`;
+    applyFilters();
+  }
+}
+
+// Search
+document.getElementById('mainSearch').addEventListener('input', applyFilters);
+
+// Animate cards on load
+function animateCards() {
+  document.querySelectorAll('.person-card,.person-list-item').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = `opacity .35s ${i * 0.05}s ease, transform .35s ${i * 0.05}s ease`;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }));
+  });
+}
+animateCards();
+
+// Sort
+function sortResults() {
+  const val = document.getElementById('sortSelect').value;
+  const sorted = [...allCards].sort((a,b) => {
+    if (val==='rating') return b.rating-a.rating;
+    if (val==='online') return (b.online?1:0)-(a.online?1:0);
+    return 0;
+  });
+  renderFilteredCards(sorted);
+  setTimeout(animateCards, 50);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — Maria Kovač · Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;--navy-mid:#0F1E33;--navy-soft:#13243E;
+  --blue:#1E6FD9;--blue-light:#3D8EF5;--blue-glow:#5AA3FF;
+  --green:#18C77A;--green-light:#2EDEA0;
+  --amber:#F5B700;--red:#F87171;--purple:#A78BFA;
+  --white:#FFFFFF;--text-primary:#EEF2FF;--text-secondary:#9AAEC8;--text-muted:#5E7A9A;
+  --border:#1E3455;--border-light:#2A4466;
+  --card-bg:#0F1E33;--card-bg2:#111F35;
+  --sidebar-w:240px;--topbar-h:64px;
+  --radius-sm:8px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;
+  --font-display:'Syne',sans-serif;--font-body:'Outfit',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--navy);color:var(--text-primary);display:flex;flex-direction:column}
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - var(--topbar-h))}
+
+/* ── TOPBAR ── */
+.topbar{height:var(--topbar-h);background:var(--navy-mid);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;z-index:40}
+.topbar-left{display:flex;align-items:center;gap:1rem}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;text-decoration:none}
+.logo-name{font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--white);text-decoration:none}
+.breadcrumb{display:flex;align-items:center;gap:.375rem;font-size:.82rem;color:var(--text-muted)}
+.breadcrumb a{color:var(--text-muted);text-decoration:none;transition:color .2s}.breadcrumb a:hover{color:var(--text-secondary)}
+.breadcrumb-sep{font-size:.7rem}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.icon-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;color:var(--text-secondary);font-size:.9rem;position:relative}
+.icon-btn:hover{border-color:var(--border-light);background:var(--navy-soft);color:var(--text-primary)}
+.notif-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--red);border:2px solid var(--navy-mid);font-size:.6rem;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center}
+.topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.8rem;font-weight:800;color:#fff;cursor:pointer;border:2px solid var(--border-light)}
+.hamburger-btn{display:none;width:36px;height:36px;border:1px solid var(--border);border-radius:var(--radius-sm);background:transparent;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.hamburger-btn span{display:block;width:16px;height:1.5px;background:var(--text-secondary);border-radius:1px}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--navy-mid);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);padding:0 .5rem;margin-bottom:.5rem}
+.nav-item{display:flex;align-items:center;gap:.75rem;padding:.6rem .75rem;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;color:var(--text-muted);font-size:.875rem;font-weight:500;text-decoration:none}
+.nav-item:hover{background:var(--navy-soft);color:var(--text-secondary)}
+.nav-item.active{background:rgba(30,111,217,.12);color:var(--blue-glow);border:1px solid rgba(30,111,217,.2)}
+.nav-icon{width:18px;text-align:center;font-size:.95rem;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:100px;min-width:18px;text-align:center}
+.nav-badge.green{background:var(--green)}.nav-badge.amber{background:var(--amber);color:var(--navy)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+.coin-widget{margin:auto 1rem 1.25rem;background:linear-gradient(135deg,rgba(30,111,217,.15),rgba(24,199,122,.1));border:1px solid rgba(30,111,217,.25);border-radius:var(--radius-md);padding:1rem}
+.coin-widget-label{font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem}
+.coin-widget-bal{font-family:var(--font-display);font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--blue-glow),var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.coin-widget-bar{height:4px;background:var(--border);border-radius:2px;margin-top:.75rem}
+.coin-widget-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--green));width:58%}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:29}
+
+/* ── PROFILE MAIN ── */
+.profile-main{flex:1;overflow-y:auto;overflow-x:hidden}
+.profile-main::-webkit-scrollbar{width:5px}
+.profile-main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ── HERO BANNER ── */
+.profile-hero{
+  background:linear-gradient(135deg,rgba(30,111,217,.2),rgba(24,199,122,.08));
+  border-bottom:1px solid var(--border);
+  padding:2rem 2.5rem 0;
+  position:relative;overflow:hidden;
+}
+.profile-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(30,111,217,.12),transparent 70%);pointer-events:none}
+.profile-hero-grid{display:grid;grid-template-columns:auto 1fr auto;gap:1.75rem;align-items:flex-start}
+.profile-avatar-wrap{position:relative}
+.profile-avatar{
+  width:96px;height:96px;border-radius:50%;
+  background:linear-gradient(135deg,#1E6FD9,#7C3AED);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:2rem;font-weight:800;color:#fff;
+  border:3px solid var(--border-light);flex-shrink:0;
+}
+.profile-online-badge{
+  position:absolute;bottom:4px;right:4px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--green);border:3px solid var(--navy-mid);
+}
+.profile-info{padding-top:.25rem}
+.profile-name-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.375rem}
+.profile-name{font-family:var(--font-display);font-size:1.6rem;font-weight:800;letter-spacing:-.02em}
+.profile-online-text{font-size:.75rem;color:var(--green-light);background:rgba(24,199,122,.1);border:1px solid rgba(24,199,122,.2);padding:.15rem .5rem;border-radius:100px}
+.profile-tagline{font-size:.95rem;color:var(--text-secondary);margin-bottom:.625rem;font-weight:300}
+.profile-meta-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:.875rem}
+.profile-meta-item{display:flex;align-items:center;gap:.375rem;font-size:.8rem;color:var(--text-muted)}
+.profile-badges-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.p-badge{font-size:.72rem;font-weight:700;padding:.25rem .625rem;border-radius:100px}
+.pb-pro{background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.25);color:var(--green-light)}
+.pb-cert{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.25);color:var(--purple)}
+.pb-verified{background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.25);color:var(--blue-glow)}
+.pb-sessions{background:rgba(245,183,0,.1);border:1px solid rgba(245,183,0,.2);color:#FFD700}
+.profile-action-col{display:flex;flex-direction:column;gap:.625rem;min-width:180px}
+.btn-swap-req{
+  width:100%;padding:.7rem 1.25rem;border-radius:var(--radius-md);
+  background:linear-gradient(135deg,var(--blue),var(--blue-light));
+  border:none;color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;
+  cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(30,111,217,.3);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn-swap-req:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,111,217,.4)}
+.btn-message{
+  width:100%;padding:.7rem 1.25rem;border-radius:var(--radius-md);
+  background:transparent;border:1px solid var(--border-light);color:var(--text-primary);
+  font-family:var(--font-body);font-size:.875rem;font-weight:500;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn-message:hover{border-color:var(--blue-light);color:var(--blue-light);background:rgba(30,111,217,.06)}
+.btn-fav{
+  width:100%;padding:.55rem;border-radius:var(--radius-sm);
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+  font-family:var(--font-body);font-size:.8rem;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.375rem;
+}
+.btn-fav:hover,.btn-fav.active{border-color:rgba(248,113,113,.4);color:var(--red);background:rgba(248,113,113,.08)}
+
+/* PROFILE TABS */
+.profile-tabs{display:flex;gap:0;border-top:1px solid var(--border);margin-top:1rem}
+.profile-tab{
+  padding:.875rem 1.25rem;font-size:.85rem;font-weight:500;color:var(--text-muted);
+  cursor:pointer;border:none;background:none;font-family:var(--font-body);
+  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
+}
+.profile-tab:hover{color:var(--text-secondary)}
+.profile-tab.active{color:var(--blue-glow);border-bottom-color:var(--blue)}
+
+/* ── PROFILE BODY ── */
+.profile-body{display:grid;grid-template-columns:1fr 320px;gap:1.5rem;padding:1.75rem 2.5rem;max-width:1100px}
+
+/* ── TAB PANELS ── */
+.tab-panel{display:none}.tab-panel.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.25rem}
+.sc-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;margin-bottom:1.1rem;display:flex;align-items:center;gap:.5rem}
+.sc-title-icon{font-size:1rem}
+
+/* ── BIO ── */
+.bio-text{font-size:.9rem;color:var(--text-secondary);line-height:1.75;font-weight:300}
+
+/* ── SKILL BLOCKS ── */
+.skill-blocks{display:flex;flex-direction:column;gap:.625rem}
+.skill-block{
+  background:var(--navy-soft);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:1rem 1.1rem;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;
+  transition:border-color .2s;
+}
+.skill-block:hover{border-color:var(--border-light)}
+.sb-left{flex:1}
+.sb-name{font-size:.9rem;font-weight:600;margin-bottom:.25rem;display:flex;align-items:center;gap:.5rem}
+.sb-desc{font-size:.78rem;color:var(--text-muted);line-height:1.5}
+.sb-right{display:flex;flex-direction:column;align-items:flex-end;gap:.375rem;flex-shrink:0}
+.sb-level{font-size:.72rem;font-weight:700;padding:.2rem .5rem;border-radius:100px}
+.level-expert{background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.2);color:var(--green-light)}
+.level-advanced{background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)}
+.level-intermediate{background:rgba(167,139,250,.15);border:1px solid rgba(167,139,250,.2);color:var(--purple)}
+.level-beginner{background:rgba(94,122,154,.15);border:1px solid rgba(94,122,154,.2);color:var(--text-muted)}
+.sb-tier{font-size:.68rem;color:var(--text-muted)}
+
+/* ── REVIEWS ── */
+.reviews-summary{display:flex;gap:2rem;align-items:center;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.rating-big{text-align:center}
+.rating-big-num{font-family:var(--font-display);font-size:3rem;font-weight:800;line-height:1;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rating-big-stars{color:#F5B700;font-size:1.1rem;letter-spacing:2px;margin:.25rem 0}
+.rating-big-count{font-size:.75rem;color:var(--text-muted)}
+.rating-bars{flex:1}
+.rating-bar-row{display:flex;align-items:center;gap:.625rem;margin-bottom:.375rem}
+.rb-label{font-size:.75rem;color:var(--text-muted);width:14px;text-align:right;flex-shrink:0}
+.rb-track{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.rb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--amber),#F5B700);transition:width .6s ease}
+.rb-count{font-size:.72rem;color:var(--text-muted);width:20px;flex-shrink:0}
+.review-list{display:flex;flex-direction:column;gap:1rem}
+.review-item{padding:1.1rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md)}
+.review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.625rem;gap:.75rem}
+.review-author{display:flex;align-items:center;gap:.625rem}
+.review-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.78rem;font-weight:800;color:#fff;flex-shrink:0}
+.review-name{font-size:.875rem;font-weight:600}
+.review-skill{font-size:.72rem;color:var(--text-muted)}
+.review-stars-date{text-align:right}
+.review-stars{color:#F5B700;font-size:.85rem}
+.review-date{font-size:.72rem;color:var(--text-muted);margin-top:1px}
+.review-text{font-size:.855rem;color:var(--text-secondary);line-height:1.65;font-weight:300}
+.review-tags{display:flex;flex-wrap:wrap;gap:.375rem;margin-top:.625rem}
+.review-tag{font-size:.7rem;padding:.2rem .5rem;border-radius:100px;background:rgba(30,111,217,.1);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)}
+.review-response{margin-top:.75rem;padding:.75rem;background:rgba(30,111,217,.06);border-left:2px solid var(--blue);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.review-response-label{font-size:.7rem;font-weight:700;color:var(--blue-glow);margin-bottom:.25rem}
+.review-response-text{font-size:.8rem;color:var(--text-secondary);line-height:1.5;font-weight:300}
+.load-more-btn{width:100%;padding:.7rem;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:var(--font-body);font-size:.85rem;cursor:pointer;margin-top:.875rem;transition:all .2s}
+.load-more-btn:hover{border-color:var(--border-light);color:var(--text-secondary)}
+
+/* ── AVAILABILITY TAB ── */
+.avail-grid{display:flex;flex-direction:column;gap:.625rem}
+.avail-row{display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md)}
+.avail-day{font-size:.85rem;font-weight:600;min-width:90px}
+.avail-time{font-size:.82rem;color:var(--text-secondary)}
+.avail-inactive{opacity:.35}
+.avail-inactive .avail-time{color:var(--text-muted)}
+.avail-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tz-note{font-size:.78rem;color:var(--text-muted);padding:.75rem 1rem;background:rgba(30,111,217,.06);border-radius:var(--radius-sm);margin-top:.75rem;display:flex;align-items:center;gap:.5rem}
+.overlap-summary{background:rgba(24,199,122,.08);border:1px solid rgba(24,199,122,.2);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:.875rem}
+.overlap-icon{font-size:1.4rem;flex-shrink:0}
+.overlap-text h4{font-size:.875rem;font-weight:600;color:var(--green-light);margin-bottom:.2rem}
+.overlap-text p{font-size:.78rem;color:var(--text-muted)}
+
+/* ── RIGHT SIDEBAR ── */
+.right-sidebar{display:flex;flex-direction:column;gap:1.25rem}
+.stat-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.stat-mini{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:.875rem;text-align:center}
+.sm-num{font-family:var(--font-display);font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--blue-glow),var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.2rem}
+.sm-label{font-size:.7rem;color:var(--text-muted)}
+
+/* SWAP REQUEST CARD */
+.swap-req-card{background:var(--card-bg);border:1px solid rgba(30,111,217,.3);border-radius:var(--radius-lg);padding:1.25rem;position:relative;overflow:hidden}
+.swap-req-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(30,111,217,.1),transparent 70%)}
+.src-title{font-family:var(--font-display);font-size:.9rem;font-weight:700;margin-bottom:.875rem;display:flex;align-items:center;gap:.5rem}
+.src-row{margin-bottom:.875rem}
+.src-label{font-size:.72rem;font-weight:600;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.4rem}
+.src-select{width:100%;padding:.55rem .75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--navy);color:var(--text-primary);font-family:var(--font-body);font-size:.83rem;cursor:pointer}
+.src-select:focus{outline:none;border-color:var(--blue-light)}
+.src-textarea{width:100%;padding:.6rem .75rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--navy);color:var(--text-primary);font-family:var(--font-body);font-size:.83rem;resize:none;min-height:72px;outline:none;line-height:1.5}
+.src-textarea:focus{border-color:var(--blue-light)}
+.src-textarea::placeholder{color:var(--text-muted)}
+.src-mode-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.875rem}
+.src-mode-card{padding:.6rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;cursor:pointer;text-align:center;transition:all .18s}
+.src-mode-card:hover{border-color:var(--border-light)}
+.src-mode-card.selected{border-color:var(--blue);background:rgba(30,111,217,.1)}
+.src-mode-icon{font-size:1.1rem;margin-bottom:.2rem}
+.src-mode-label{font-size:.7rem;color:var(--text-muted)}
+.src-mode-card.selected .src-mode-label{color:var(--blue-glow)}
+.btn-send-swap{
+  width:100%;padding:.75rem;border-radius:var(--radius-md);
+  background:linear-gradient(135deg,var(--blue),var(--blue-light));
+  border:none;color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;
+  cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(30,111,217,.25);
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+}
+.btn-send-swap:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,111,217,.4)}
+
+/* SIMILAR PROFILES */
+.similar-list{display:flex;flex-direction:column;gap:.625rem}
+.similar-item{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all .2s;text-decoration:none}
+.similar-item:hover{border-color:var(--border-light);transform:translateX(3px)}
+.sim-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.8rem;font-weight:800;color:#fff;flex-shrink:0}
+.sim-info{flex:1;min-width:0}
+.sim-name{font-size:.83rem;font-weight:600;margin-bottom:1px}
+.sim-skill{font-size:.72rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sim-rating{font-size:.75rem;color:#F5B700;flex-shrink:0}
+
+/* REPORT / SHARE ROW */
+.action-row{display:flex;gap:.5rem}
+.btn-action-sm{flex:1;padding:.5rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:var(--font-body);font-size:.75rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.3rem}
+.btn-action-sm:hover{border-color:var(--border-light);color:var(--text-secondary)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.show{display:flex;animation:fadeModal .2s ease}
+@keyframes fadeModal{from{opacity:0}to{opacity:1}}
+.modal{background:var(--navy-mid);border:1px solid var(--border-light);border-radius:var(--radius-xl);padding:2rem;width:100%;max-width:480px;position:relative;animation:slideModal .3s ease}
+@keyframes slideModal{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem;transition:color .2s}
+.modal-close:hover{color:var(--text-primary)}
+.modal-title{font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:.375rem}
+.modal-sub{font-size:.85rem;color:var(--text-secondary);margin-bottom:1.5rem;font-weight:300}
+.modal-success{display:none;text-align:center;padding:1rem 0}
+.modal-success.show{display:block}
+.modal-success-icon{font-size:2.5rem;margin-bottom:.875rem}
+.modal-success h3{font-family:var(--font-display);font-size:1.2rem;font-weight:800;margin-bottom:.5rem}
+.modal-success p{font-size:.875rem;color:var(--text-secondary);line-height:1.6}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){.profile-body{grid-template-columns:1fr}}
+@media(max-width:900px){
+  .sidebar{position:fixed;top:var(--topbar-h);left:0;bottom:0;z-index:30;transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}.sidebar-overlay.show{display:block}
+  .hamburger-btn{display:flex}.coin-widget{display:none}
+  .profile-hero-grid{grid-template-columns:auto 1fr;gap:1rem}
+  .profile-action-col{display:none}
+  .profile-body{padding:1.25rem 1rem}
+}
+@media(max-width:600px){
+  .profile-hero-grid{grid-template-columns:1fr;text-align:center}
+  .profile-avatar{margin:0 auto}
+  .profile-name-row,.profile-meta-row,.profile-badges-row{justify-content:center}
+  .profile-tabs{overflow-x:auto}.profile-tabs::-webkit-scrollbar{display:none}
+  .reviews-summary{flex-direction:column;gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger-btn" id="hamburgerBtn"><span></span><span></span><span></span></button>
+    <a href="skillswap-landing.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">SkillSwap</span>
+    </a>
+    <div class="breadcrumb">
+      <a href="skillswap-discover.html">Discover</a>
+      <span class="breadcrumb-sep">›</span>
+      <span style="color:var(--text-secondary)">Maria Kovač</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn">🔔<span class="notif-badge">3</span></button>
+    <button class="icon-btn">💬</button>
+    <div class="topbar-avatar">JD</div>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="nav-item" href="skillswap-dashboard.html"><span class="nav-icon">🏠</span> Dashboard</a>
+      <a class="nav-item active" href="skillswap-discover.html"><span class="nav-icon">🔍</span> Discover</a>
+      <a class="nav-item" href="skillswap-swaps.html"><span class="nav-icon">🔁</span> My Swaps<span class="nav-badge">2</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span> Sessions</a>
+      <a class="nav-item" href="skillswap-messages.html"><span class="nav-icon">💬</span> Messages<span class="nav-badge">4</span></a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="skillswap-profile.html"><span class="nav-icon">👤</span> My Profile</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⬡</span> SkillCoins<span class="nav-badge amber">14</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏆</span> Achievements</a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <a class="nav-item" href="#" style="background:rgba(30,111,217,.08);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)"><span class="nav-icon">⚡</span> Go Premium</a>
+    </div>
+    <div class="coin-widget">
+      <div class="coin-widget-label">SkillCoin Balance</div>
+      <div class="coin-widget-bal">⬡ 14</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">≈ 14 hrs of learning</div>
+      <div class="coin-widget-bar"><div class="coin-widget-fill"></div></div>
+    </div>
+  </aside>
+
+  <!-- PROFILE MAIN -->
+  <div class="profile-main">
+
+    <!-- HERO BANNER -->
+    <div class="profile-hero">
+      <div class="profile-hero-grid">
+
+        <!-- Avatar -->
+        <div class="profile-avatar-wrap">
+          <div class="profile-avatar">MK</div>
+          <div class="profile-online-badge"></div>
+        </div>
+
+        <!-- Info -->
+        <div class="profile-info">
+          <div class="profile-name-row">
+            <span class="profile-name">Maria Kovač</span>
+            <span class="profile-online-text">🟢 Online now</span>
+          </div>
+          <div class="profile-tagline">Senior Software Engineer & Spanish Language Coach · Zagreb, Croatia</div>
+          <div class="profile-meta-row">
+            <span class="profile-meta-item">📍 Zagreb, Croatia</span>
+            <span class="profile-meta-item">🌍 English, Spanish, Croatian</span>
+            <span class="profile-meta-item">🕐 Member since Jan 2024</span>
+            <span class="profile-meta-item">⏰ CET (UTC+1)</span>
+          </div>
+          <div class="profile-badges-row">
+            <span class="p-badge pb-pro">💼 Professional Verified</span>
+            <span class="p-badge pb-cert">🎓 Credential Verified</span>
+            <span class="p-badge pb-verified">⭐ Platform Verified</span>
+            <span class="p-badge pb-sessions">✓ 24 Sessions Completed</span>
+          </div>
+        </div>
+
+        <!-- Action col (desktop) -->
+        <div class="profile-action-col">
+          <button class="btn-swap-req" onclick="openSwapModal()">
+            🔁 Request Swap
+          </button>
+          <button class="btn-message" onclick="window.location.href='skillswap-messages.html'">
+            💬 Send Message
+          </button>
+          <button class="btn-fav" id="favBtn" onclick="toggleFavBtn()">
+            ♥ Save Profile
+          </button>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="showTab('overview',this)">Overview</button>
+        <button class="profile-tab" onclick="showTab('skills',this)">Skills</button>
+        <button class="profile-tab" onclick="showTab('reviews',this)">Reviews (24)</button>
+        <button class="profile-tab" onclick="showTab('availability',this)">Availability</button>
+        <button class="profile-tab" onclick="showTab('portfolio',this)">Portfolio</button>
+      </div>
+    </div>
+
+    <!-- PROFILE BODY -->
+    <div class="profile-body">
+
+      <!-- LEFT MAIN -->
+      <div>
+
+        <!-- ══ OVERVIEW TAB ══ -->
+        <div class="tab-panel active" id="tab-overview">
+
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">👤</span> About Maria</div>
+            <div class="bio-text">
+              I'm a Senior Software Engineer at a Zagreb-based fintech startup with 8 years of experience in Python, Django, and data engineering. I've been teaching Spanish since university — it's a genuine passion, not just a side gig. Born in Zagreb with Croatian and Bosnian roots, I grew up trilingual and I believe language learning is one of the most rewarding investments you can make.
+              <br/><br/>
+              I believe in structured, practical learning. My Python sessions follow a curriculum I've built over 3 years of tutoring, and my Spanish teaching adapts to your current level — I don't use generic textbooks. I'm patient, direct, and I track your progress session-to-session.
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">🔁</span> Skills She Teaches</div>
+            <div class="skill-blocks">
+              <div class="skill-block">
+                <div class="sb-left">
+                  <div class="sb-name">🐍 Python Programming <span style="font-size:.7rem;color:var(--text-muted)">· 8 years exp</span></div>
+                  <div class="sb-desc">Django, FastAPI, data engineering, automation scripts, API development. I structure sessions around your actual project or goal — no abstract tutorials.</div>
+                </div>
+                <div class="sb-right">
+                  <span class="sb-level level-expert">Expert</span>
+                  <span class="sb-tier">💼 PRO</span>
+                </div>
+              </div>
+              <div class="skill-block">
+                <div class="sb-left">
+                  <div class="sb-name">🇪🇸 Spanish Language <span style="font-size:.7rem;color:var(--text-muted)">· Native-level fluency</span></div>
+                  <div class="sb-desc">All levels A1–C1. Conversational practice, grammar deep-dives, business Spanish, or travel prep. I've taught 40+ students over 5 years.</div>
+                </div>
+                <div class="sb-right">
+                  <span class="sb-level level-expert">Expert</span>
+                  <span class="sb-tier">🎓 CERT</span>
+                </div>
+              </div>
+              <div class="skill-block">
+                <div class="sb-left">
+                  <div class="sb-name">🗃️ SQL & PostgreSQL</div>
+                  <div class="sb-desc">Query optimisation, schema design, indexing, and working with large datasets. Great for analysts and developers.</div>
+                </div>
+                <div class="sb-right">
+                  <span class="sb-level level-advanced">Advanced</span>
+                  <span class="sb-tier">⭐ VERIFIED</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">🎯</span> Skills She Wants to Learn</div>
+            <div class="skill-blocks">
+              <div class="skill-block">
+                <div class="sb-left">
+                  <div class="sb-name">🎸 Guitar — Fingerstyle</div>
+                  <div class="sb-desc">I've always wanted to play fingerstyle classical guitar. I'm a complete beginner but very motivated. I can commit to 1–2 sessions/week.</div>
+                </div>
+                <div class="sb-right"><span class="sb-level level-beginner">Beginner</span></div>
+              </div>
+              <div class="skill-block">
+                <div class="sb-left">
+                  <div class="sb-name">📸 Portrait Photography</div>
+                  <div class="sb-desc">I have a Canon R50 and want to learn composition, natural light, and basic editing. Intermediate interest, total beginner skill.</div>
+                </div>
+                <div class="sb-right"><span class="sb-level level-beginner">Beginner</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ══ SKILLS TAB ══ -->
+        <div class="tab-panel" id="tab-skills">
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">📖</span> All Teaching Skills</div>
+            <div class="skill-blocks">
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🐍 Python Programming</div><div class="sb-desc">Django, FastAPI, data engineering, scripting, APIs</div></div><div class="sb-right"><span class="sb-level level-expert">Expert</span><span class="sb-tier">💼 PRO</span></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🇪🇸 Spanish Language</div><div class="sb-desc">All levels, conversational, grammar, business Spanish</div></div><div class="sb-right"><span class="sb-level level-expert">Expert</span><span class="sb-tier">🎓 CERT</span></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🗃️ SQL & PostgreSQL</div><div class="sb-desc">Query optimisation, schema design, large datasets</div></div><div class="sb-right"><span class="sb-level level-advanced">Advanced</span><span class="sb-tier">⭐ VERIFIED</span></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🇭🇷 Croatian Language</div><div class="sb-desc">Native speaker — conversational, grammar, pronunciation</div></div><div class="sb-right"><span class="sb-level level-expert">Expert</span><span class="sb-tier">⭐ VERIFIED</span></div></div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">🎯</span> Skills Wanted</div>
+            <div class="skill-blocks">
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🎸 Guitar — Fingerstyle</div><div class="sb-desc">Classical or fingerpicking style, complete beginner</div></div><div class="sb-right"><span class="sb-level level-beginner">Beginner</span></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">📸 Portrait Photography</div><div class="sb-desc">Composition, natural light, Canon R50 specific tips</div></div><div class="sb-right"><span class="sb-level level-beginner">Beginner</span></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">🎹 Piano Basics</div><div class="sb-desc">Music theory and beginner piano — always wanted to learn</div></div><div class="sb-right"><span class="sb-level level-beginner">Beginner</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ REVIEWS TAB ══ -->
+        <div class="tab-panel" id="tab-reviews">
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">★</span> Reviews & Ratings</div>
+            <div class="reviews-summary">
+              <div class="rating-big">
+                <div class="rating-big-num">4.9</div>
+                <div class="rating-big-stars">★★★★★</div>
+                <div class="rating-big-count">24 reviews</div>
+              </div>
+              <div class="rating-bars">
+                <div class="rating-bar-row"><span class="rb-label">5</span><div class="rb-track"><div class="rb-fill" style="width:88%"></div></div><span class="rb-count">21</span></div>
+                <div class="rating-bar-row"><span class="rb-label">4</span><div class="rb-track"><div class="rb-fill" style="width:12%;background:linear-gradient(90deg,#9AAEC8,#7A90A8)"></div></div><span class="rb-count">2</span></div>
+                <div class="rating-bar-row"><span class="rb-label">3</span><div class="rb-track"><div class="rb-fill" style="width:4%;background:var(--border)"></div></div><span class="rb-count">1</span></div>
+                <div class="rating-bar-row"><span class="rb-label">2</span><div class="rb-track"><div class="rb-fill" style="width:0%"></div></div><span class="rb-count">0</span></div>
+                <div class="rating-bar-row"><span class="rb-label">1</span><div class="rb-track"><div class="rb-fill" style="width:0%"></div></div><span class="rb-count">0</span></div>
+              </div>
+            </div>
+            <div class="review-list">
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="review-author">
+                    <div class="review-av" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">JD</div>
+                    <div><div class="review-name">James Donovan</div><div class="review-skill">Reviewed: Python Sessions</div></div>
+                  </div>
+                  <div class="review-stars-date">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-date">March 2026</div>
+                  </div>
+                </div>
+                <div class="review-text">Maria is an exceptional teacher. She took the time to understand my specific project goals before our first session and every lesson since has been directly applicable to real work I was doing. Clear, patient, and genuinely passionate about Python. I've learned more in 6 sessions with her than in months of self-study.</div>
+                <div class="review-tags">
+                  <span class="review-tag">Patient teacher</span>
+                  <span class="review-tag">Well-prepared</span>
+                  <span class="review-tag">Real-world focus</span>
+                </div>
+                <div class="review-response">
+                  <div class="review-response-label">Maria's response</div>
+                  <div class="review-response-text">Thank you James! Your project was genuinely interesting and it pushed me to prepare better examples too. Really enjoyed our sessions — good luck with the API deployment!</div>
+                </div>
+              </div>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="review-author">
+                    <div class="review-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">KO</div>
+                    <div><div class="review-name">Kwame Osei</div><div class="review-skill">Reviewed: Spanish Sessions</div></div>
+                  </div>
+                  <div class="review-stars-date">
+                    <div class="review-stars">★★★★★</div>
+                    <div class="review-date">February 2026</div>
+                  </div>
+                </div>
+                <div class="review-text">I've tried three other Spanish tutors and none of them came close to Maria's teaching style. She doesn't just translate — she explains the logic behind grammar rules, and that makes everything stick. My Spanish went from broken A2 to solid B1 in three months of weekly sessions. Incredible value.</div>
+                <div class="review-tags">
+                  <span class="review-tag">Explains clearly</span>
+                  <span class="review-tag">Fast progress</span>
+                  <span class="review-tag">Highly recommended</span>
+                </div>
+              </div>
+
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="review-author">
+                    <div class="review-av" style="background:linear-gradient(135deg,#22D3EE,#0EA5E9)">RK</div>
+                    <div><div class="review-name">Riya Kapoor</div><div class="review-skill">Reviewed: SQL Sessions</div></div>
+                  </div>
+                  <div class="review-stars-date">
+                    <div class="review-stars">★★★★☆</div>
+                    <div class="review-date">January 2026</div>
+                  </div>
+                </div>
+                <div class="review-text">Great SQL knowledge and very clear explanations. The only reason I'm not giving 5 stars is one session had to be rescheduled last-minute, but Maria was apologetic and made up for it in the next session with extra material. Would definitely recommend for anyone learning database work.</div>
+                <div class="review-tags">
+                  <span class="review-tag">Deep knowledge</span>
+                  <span class="review-tag">Clear examples</span>
+                </div>
+              </div>
+            </div>
+            <button class="load-more-btn">Load 21 more reviews</button>
+          </div>
+        </div>
+
+        <!-- ══ AVAILABILITY TAB ══ -->
+        <div class="tab-panel" id="tab-availability">
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">📅</span> Weekly Availability</div>
+            <div class="overlap-summary">
+              <div class="overlap-icon">🟢</div>
+              <div class="overlap-text">
+                <h4>Great overlap with you — ~6 hours/week</h4>
+                <p>Your free time and Maria's availability overlap on weekday evenings and most of Saturday.</p>
+              </div>
+            </div>
+            <div class="avail-grid">
+              <div class="avail-row avail-inactive"><div class="avail-dot" style="background:var(--border)"></div><span class="avail-day">Monday</span><span class="avail-time">Not available</span></div>
+              <div class="avail-row"><div class="avail-dot" style="background:var(--blue)"></div><span class="avail-day">Tuesday</span><span class="avail-time">6:00 PM – 9:00 PM CET</span></div>
+              <div class="avail-row"><div class="avail-dot" style="background:var(--blue)"></div><span class="avail-day">Wednesday</span><span class="avail-time">6:00 PM – 9:00 PM CET</span></div>
+              <div class="avail-row avail-inactive"><div class="avail-dot" style="background:var(--border)"></div><span class="avail-day">Thursday</span><span class="avail-time">Not available</span></div>
+              <div class="avail-row"><div class="avail-dot" style="background:var(--blue)"></div><span class="avail-day">Friday</span><span class="avail-time">5:00 PM – 10:00 PM CET</span></div>
+              <div class="avail-row"><div class="avail-dot" style="background:var(--green)"></div><span class="avail-day">Saturday</span><span class="avail-time">9:00 AM – 4:00 PM CET</span></div>
+              <div class="avail-row"><div class="avail-dot" style="background:var(--green)"></div><span class="avail-day">Sunday</span><span class="avail-time">10:00 AM – 2:00 PM CET</span></div>
+            </div>
+            <div class="tz-note">🕐 All times shown in Maria's timezone (CET, UTC+1). Your local equivalent is displayed during scheduling.</div>
+          </div>
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">🎥</span> Session Preferences</div>
+            <div class="skill-blocks">
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">Format</div><div class="sb-desc">Live video sessions preferred. Async available for review feedback.</div></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">Session Length</div><div class="sb-desc">1 hour standard. 1.5 hours available on Saturdays for deeper topics.</div></div></div>
+              <div class="skill-block"><div class="sb-left"><div class="sb-name">Frequency</div><div class="sb-desc">1–2 sessions per week preferred. Flexible for motivated learners.</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ PORTFOLIO TAB ══ -->
+        <div class="tab-panel" id="tab-portfolio">
+          <div class="section-card">
+            <div class="sc-title"><span class="sc-title-icon">🔗</span> Portfolio & Links</div>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <a href="#" style="display:flex;align-items:center;gap:.875rem;padding:.875rem 1rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'">
+                <span style="font-size:1.2rem">💼</span>
+                <div><div style="font-size:.875rem;font-weight:600;color:var(--text-primary)">LinkedIn Profile</div><div style="font-size:.75rem;color:var(--text-muted)">linkedin.com/in/mariakovac</div></div>
+              </a>
+              <a href="#" style="display:flex;align-items:center;gap:.875rem;padding:.875rem 1rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'">
+                <span style="font-size:1.2rem">🐙</span>
+                <div><div style="font-size:.875rem;font-weight:600;color:var(--text-primary)">GitHub</div><div style="font-size:.75rem;color:var(--text-muted)">github.com/mariakovac · 47 repos</div></div>
+              </a>
+              <a href="#" style="display:flex;align-items:center;gap:.875rem;padding:.875rem 1rem;background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='var(--border-light)'" onmouseout="this.style.borderColor='var(--border)'">
+                <span style="font-size:1.2rem">🎓</span>
+                <div><div style="font-size:.875rem;font-weight:600;color:var(--text-primary)">DELE C1 Spanish Certificate</div><div style="font-size:.75rem;color:var(--text-muted)">Instituto Cervantes — Verified credential</div></div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="right-sidebar">
+
+        <!-- QUICK STATS -->
+        <div class="section-card" style="padding:1rem">
+          <div class="stat-mini-grid">
+            <div class="stat-mini"><div class="sm-num">4.9★</div><div class="sm-label">Rating</div></div>
+            <div class="stat-mini"><div class="sm-num">24</div><div class="sm-label">Sessions</div></div>
+            <div class="stat-mini"><div class="sm-num">6hrs</div><div class="sm-label">Overlap/wk</div></div>
+            <div class="stat-mini"><div class="sm-num">100%</div><div class="sm-label">Response</div></div>
+          </div>
+        </div>
+
+        <!-- SWAP REQUEST CARD -->
+        <div class="swap-req-card">
+          <div class="src-title">🔁 Request a Swap</div>
+
+          <div class="src-row">
+            <div class="src-label">I'll teach her</div>
+            <select class="src-select">
+              <option>🎸 Guitar (my skill)</option>
+              <option>📸 Photography (my skill)</option>
+              <option>💻 JavaScript (my skill)</option>
+            </select>
+          </div>
+
+          <div class="src-row">
+            <div class="src-label">I want to learn</div>
+            <select class="src-select">
+              <option>🐍 Python — Expert</option>
+              <option>🇪🇸 Spanish — Expert</option>
+              <option>🗃️ SQL — Advanced</option>
+            </select>
+          </div>
+
+          <div class="src-label" style="margin-bottom:.5rem">Session format</div>
+          <div class="src-mode-row">
+            <div class="src-mode-card selected" onclick="selectMode(this)">
+              <div class="src-mode-icon">🎥</div>
+              <div class="src-mode-label">Live Video</div>
+            </div>
+            <div class="src-mode-card" onclick="selectMode(this)">
+              <div class="src-mode-icon">📹</div>
+              <div class="src-mode-label">Async</div>
+            </div>
+            <div class="src-mode-card" onclick="selectMode(this)">
+              <div class="src-mode-icon">🔀</div>
+              <div class="src-mode-label">Flexible</div>
+            </div>
+            <div class="src-mode-card" onclick="selectMode(this)">
+              <div class="src-mode-icon">📅</div>
+              <div class="src-mode-label">Weekly</div>
+            </div>
+          </div>
+
+          <div class="src-row">
+            <div class="src-label">Intro message</div>
+            <textarea class="src-textarea" placeholder="Hi Maria, I'd love to swap Python lessons for guitar teaching. I'm an intermediate guitarist and very motivated to learn Python for my data project..."></textarea>
+          </div>
+
+          <button class="btn-send-swap" onclick="openSwapModal()">
+            Send Swap Request 🔁
+          </button>
+        </div>
+
+        <!-- SIMILAR PROFILES -->
+        <div class="section-card">
+          <div class="sc-title" style="margin-bottom:.875rem"><span class="sc-title-icon">👥</span> Similar Profiles</div>
+          <div class="similar-list">
+            <a class="similar-item" href="#">
+              <div class="sim-av" style="background:linear-gradient(135deg,#10B981,#059669)">TN</div>
+              <div class="sim-info"><div class="sim-name">Tariq Nasser</div><div class="sim-skill">Teaches Arabic · Expert</div></div>
+              <div class="sim-rating">★ 4.8</div>
+            </a>
+            <a class="similar-item" href="#">
+              <div class="sim-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">KO</div>
+              <div class="sim-info"><div class="sim-name">Kwame Osei</div><div class="sim-skill">Teaches French · Expert</div></div>
+              <div class="sim-rating">★ 5.0</div>
+            </a>
+            <a class="similar-item" href="#">
+              <div class="sim-av" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">SB</div>
+              <div class="sim-info"><div class="sim-name">Sophie Berger</div><div class="sim-skill">Teaches German · Expert</div></div>
+              <div class="sim-rating">★ 4.6</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- REPORT / SHARE -->
+        <div class="action-row">
+          <button class="btn-action-sm">↗ Share Profile</button>
+          <button class="btn-action-sm">⚑ Report</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SWAP REQUEST MODAL -->
+<div class="modal-overlay" id="swapModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSwapModal()">✕</button>
+
+    <div id="modalForm">
+      <div class="modal-title">🔁 Swap Request Sent!</div>
+      <div class="modal-sub">Your request has been sent to Maria Kovač. She usually responds within 2 hours.</div>
+      <div style="background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.25rem">
+        <div style="display:flex;justify-content:space-between;font-size:.83rem;margin-bottom:.5rem">
+          <span style="color:var(--text-muted)">You teach</span>
+          <span style="color:var(--green-light);font-weight:600">🎸 Guitar</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.83rem;margin-bottom:.5rem">
+          <span style="color:var(--text-muted)">You learn</span>
+          <span style="color:var(--blue-glow);font-weight:600">🐍 Python</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.83rem">
+          <span style="color:var(--text-muted)">Format</span>
+          <span style="color:var(--text-secondary)">🎥 Live Video</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button onclick="closeSwapModal()" style="flex:1;padding:.7rem;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--text-secondary);font-family:var(--font-body);font-size:.875rem;cursor:pointer">Close</button>
+        <button onclick="window.location.href='skillswap-messages.html'" style="flex:1;padding:.7rem;border-radius:var(--radius-md);border:none;background:var(--blue);color:#fff;font-family:var(--font-body);font-size:.875rem;font-weight:600;cursor:pointer">View in Messages →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Sidebar
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+hamburgerBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('show'); });
+overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('show'); });
+
+// Tabs
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Fav
+function toggleFavBtn() {
+  const btn = document.getElementById('favBtn');
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '♥ Saved!' : '♥ Save Profile';
+}
+
+// Mode select
+function selectMode(card) {
+  document.querySelectorAll('.src-mode-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+// Modal
+function openSwapModal() {
+  document.getElementById('swapModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeSwapModal() {
+  document.getElementById('swapModal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+document.getElementById('swapModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSwapModal();
+});
+
+// Animate rating bars on tab switch
+function animateRatingBars() {
+  document.querySelectorAll('.rb-fill').forEach(bar => {
+    const w = bar.style.width;
+    bar.style.width = '0';
+    setTimeout(() => bar.style.width = w, 50);
+  });
+}
+
+// Animate elements on load
+document.querySelectorAll('.section-card,.stat-mini,.similar-item').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(12px)';
+  el.style.transition = `opacity .4s ${i * 0.06}s ease, transform .4s ${i * 0.06}s ease`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }));
+});
+
+setTimeout(animateRatingBars, 300);
+</script>
+</body>
+</html>
