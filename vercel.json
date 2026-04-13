@@ -10,6 +10,7 @@
     { "src": "/discover", "dest": "/skillswap-discover.html" },
     { "src": "/profile", "dest": "/skillswap-profile.html" },
     { "src": "/swaps", "dest": "/skillswap-swaps.html" },
-    { "src": "/messages", "dest": "/skillswap-messages.html" }
+    { "src": "/messages", "dest": "/skillswap-messages.html" },
+    { "src": "^/(.*)", "dest": "/skillswap-landing.html" }
   ]
 }
