@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/skillswap-landing.html" },
+    { "source": "/auth", "destination": "/skillswap-auth.html" },
+    { "source": "/onboarding", "destination": "/skillswap-onboarding.html" },
+    { "source": "/dashboard", "destination": "/skillswap-dashboard.html" },
+    { "source": "/discover", "destination": "/skillswap-discover.html" },
+    { "source": "/profile", "destination": "/skillswap-profile.html" },
+    { "source": "/swaps", "destination": "/skillswap-swaps.html" },
+    { "source": "/messages", "destination": "/skillswap-messages.html" }
+  ]
+}
