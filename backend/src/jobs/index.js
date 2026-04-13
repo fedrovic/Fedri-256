@@ -35,13 +35,14 @@ const sessionReminderJob = async () => {
     const sessions24h = await prisma.session.findMany({
       where: { status: 'SCHEDULED', reminderSent24h: false, scheduledAt: { gte: now, lte: tomorrow } },
       include: {
-        participants: { include: { user: { select: { id: true, email: true, displayName: true } } } },
+        teacher: { select: { id: true, email: true, displayName: true } },
+        learner: { select: { id: true, email: true, displayName: true } },
         swap: { select: { id: true } },
       },
     });
 
     for (const session of sessions24h) {
-      const users = session.participants.map(p => p.user);
+      const users = [session.teacher, session.learner].filter(Boolean);
       for (const user of users) {
         const partner = users.find(u => u.id !== user.id);
         await notify({
@@ -67,13 +68,14 @@ const sessionReminderJob = async () => {
     const sessions30m = await prisma.session.findMany({
       where: { status: 'SCHEDULED', reminderSent30m: false, scheduledAt: { gte: now, lte: in30m } },
       include: {
-        participants: { include: { user: { select: { id: true, email: true, displayName: true } } } },
+        teacher: { select: { id: true, email: true, displayName: true } },
+        learner: { select: { id: true, email: true, displayName: true } },
         swap: { select: { id: true } },
       },
     });
 
     for (const session of sessions30m) {
-      const users = session.participants.map(p => p.user);
+      const users = [session.teacher, session.learner].filter(Boolean);
       for (const user of users) {
         const partner = users.find(u => u.id !== user.id);
         await notify({
@@ -147,7 +149,7 @@ const responseRateJob = async () => {
 
     while (true) {
       const users = await prisma.user.findMany({
-        where:   { status: 'ACTIVE', deletedAt: null },
+        where:   { status: 'ACTIVE', isActive: true },
         select:  { id: true },
         take:    BATCH_SIZE,
         ...(cursor && { skip: 1, cursor: { id: cursor } }),

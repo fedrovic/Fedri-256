@@ -7,9 +7,9 @@
   "scripts": {
     "dev":          "nodemon src/server.js",
     "start":        "node src/server.js",
-    "test":         "NODE_ENV=test jest --forceExit",
+    "test":         "NODE_ENV=test jest",
     "test:unit":    "NODE_ENV=test jest tests/unit --coverage",
-    "test:int":     "NODE_ENV=test jest tests/integration --runInBand --forceExit",
+    "test:int":     "NODE_ENV=test jest tests/integration --runInBand",
     "test:watch":   "NODE_ENV=test jest --watch",
     "lint":         "eslint src/**/*.js --fix",
     "db:migrate":   "prisma migrate dev",

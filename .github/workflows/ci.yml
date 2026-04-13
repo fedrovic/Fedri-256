@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: skillswap_user
+          POSTGRES_PASSWORD: skillswap_dev_password
+          POSTGRES_DB: skillswap_db
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U skillswap_user -d skillswap_db"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://skillswap_user:skillswap_dev_password@localhost:5432/skillswap_db
+      REDIS_URL: redis://localhost:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: backend
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432 -U skillswap_user -d skillswap_db; do sleep 1; done
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+        working-directory: backend
+
+      - name: Reset DB and seed
+        run: npm run db:reset
+        working-directory: backend
+
+      - name: Run tests
+        run: npm test
+        working-directory: backend

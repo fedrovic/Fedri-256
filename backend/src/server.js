@@ -46,12 +46,23 @@ async function bootstrap() {
       server.close(async () => {
         const { disconnectDB } = require('./config/database');
         const { disconnectRedis } = require('./config/redis');
-        await disconnectDB();
-        await disconnectRedis();
-        logger.info('Connections closed. Goodbye 👋');
-        process.exit(0);
+        try {
+          await disconnectDB();
+          await disconnectRedis();
+          logger.info('Connections closed. Goodbye 👋');
+          process.exitCode = 0;
+        } catch (cleanupErr) {
+          logger.error('Error during shutdown cleanup:', cleanupErr);
+          process.exitCode = 1;
+        }
       });
-      setTimeout(() => { logger.error('Forced shutdown after timeout'); process.exit(1); }, 10000);
+
+      // If cleanup doesn't complete within the timeout, mark the exit code
+      // and allow the process supervisor/container to handle termination.
+      setTimeout(() => {
+        logger.error('Forced shutdown after timeout');
+        process.exitCode = 1;
+      }, 10000);
     };
 
     process.on('SIGTERM', () => shutdown('SIGTERM'));
@@ -59,7 +70,14 @@ async function bootstrap() {
 
   } catch (err) {
     logger.error('Failed to start server:', err);
-    process.exit(1);
+    // Set non-zero exit code so supervisors/CI detect failure. Avoid
+    // immediate process.exit() to give runtime a chance to flush logs.
+    process.exitCode = 1;
+    // Ensure the process eventually exits if not handled externally.
+    setTimeout(() => {
+      logger.error('Exiting after startup failure');
+      process.exit(1);
+    }, 5000);
   }
 }
 
