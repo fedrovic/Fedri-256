@@ -113,7 +113,7 @@ async function main() {
     await prisma.skill.upsert({
       where: { slug },
       update: {},
-      create: { name, slug, categoryId, isApproved: true },
+      create: { name, slug, categoryId, isActive: true },
     });
   }
 
