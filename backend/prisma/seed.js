@@ -131,7 +131,7 @@ async function main() {
       bio: 'Full-stack developer and guitar enthusiast. Happy to teach Python, JS and guitar.',
       location: 'Kampala, Uganda',
       timezone: 'Africa/Kampala',
-      coinBalance: 14,
+      skillCoinBalance: 14,
     },
     {
       email: 'maria.kovac@test.skillswap.io',
@@ -142,8 +142,8 @@ async function main() {
       location: 'Zagreb, Croatia',
       timezone: 'Europe/Zagreb',
       reputationScore: 4.9,
-      totalSessions: 24,
-      coinBalance: 22,
+      totalSessionsCompleted: 24,
+      skillCoinBalance: 22,
     },
     {
       email: 'sara.lindqvist@test.skillswap.io',
@@ -154,8 +154,8 @@ async function main() {
       location: 'Stockholm, Sweden',
       timezone: 'Europe/Stockholm',
       reputationScore: 4.7,
-      totalSessions: 18,
-      coinBalance: 8,
+      totalSessionsCompleted: 18,
+      skillCoinBalance: 8,
     },
   ];
 
