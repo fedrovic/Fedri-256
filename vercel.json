@@ -7,15 +7,15 @@
       "config": { "distDir": "public" }
     }
   ],
-  "routes": [
-    { "src": "/", "dest": "/skillswap-landing.html" },
-    { "src": "/auth", "dest": "/skillswap-auth.html" },
-    { "src": "/onboarding", "dest": "/skillswap-onboarding.html" },
-    { "src": "/dashboard", "dest": "/skillswap-dashboard.html" },
-    { "src": "/discover", "dest": "/skillswap-discover.html" },
-    { "src": "/profile", "dest": "/skillswap-profile.html" },
-    { "src": "/swaps", "dest": "/skillswap-swaps.html" },
-    { "src": "/messages", "dest": "/skillswap-messages.html" },
-    { "src": "^/(.*)", "dest": "/skillswap-landing.html" }
+  "rewrites": [
+    { "source": "/", "destination": "/skillswap-landing.html" },
+    { "source": "/auth", "destination": "/skillswap-auth.html" },
+    { "source": "/onboarding", "destination": "/skillswap-onboarding.html" },
+    { "source": "/dashboard", "destination": "/skillswap-dashboard.html" },
+    { "source": "/discover", "destination": "/skillswap-discover.html" },
+    { "source": "/profile", "destination": "/skillswap-profile.html" },
+    { "source": "/swaps", "destination": "/skillswap-swaps.html" },
+    { "source": "/messages", "destination": "/skillswap-messages.html" },
+    { "source": "/:path*", "destination": "/skillswap-landing.html" }
   ]
 }
