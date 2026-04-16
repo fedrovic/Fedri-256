@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;
+  --navy-mid:#0F1E33;
+  --navy-soft:#13243E;
+  --blue:#1E6FD9;
+  --blue-light:#3D8EF5;
+  --blue-glow:#5AA3FF;
+  --green:#18C77A;
+  --green-light:#2EDEA0;
+  --amber:#F5B700;
+  --red:#F87171;
+  --white:#FFFFFF;
+  --text-primary:#EEF2FF;
+  --text-secondary:#9AAEC8;
+  --text-muted:#5E7A9A;
+  --border:#1E3455;
+  --border-light:#2A4466;
+  --card-bg:#0F1E33;
+  --card-bg2:#111F35;
+  --sidebar-w:240px;
+  --topbar-h:64px;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --font-display:'Syne',sans-serif;
+  --font-body:'Outfit',sans-serif;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--navy);color:var(--text-primary);display:flex;flex-direction:column}
+
+/* ══ LAYOUT ══ */
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - var(--topbar-h))}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  height:var(--topbar-h);
+  background:var(--navy-mid);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 1.5rem;
+  flex-shrink:0;position:relative;z-index:40;
+}
+.topbar-left{display:flex;align-items:center;gap:1rem}
+.logo-mark{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.85rem;font-weight:800;color:#fff;
+  flex-shrink:0;cursor:pointer;
+}
+.logo-name{font-family:var(--font-display);font-size:1.15rem;font-weight:800;color:var(--white)}
+.topbar-search{
+  display:flex;align-items:center;gap:.625rem;
+  background:var(--navy-soft);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:.45rem .875rem;
+  width:280px;cursor:text;
+  transition:all .2s;
+}
+.topbar-search:hover{border-color:var(--border-light)}
+.topbar-search input{
+  background:none;border:none;outline:none;
+  color:var(--text-primary);font-family:var(--font-body);font-size:.875rem;
+  width:100%;
+}
+.topbar-search input::placeholder{color:var(--text-muted)}
+.search-icon{color:var(--text-muted);font-size:.85rem;flex-shrink:0}
+.topbar-right{display:flex;align-items:center;gap:.75rem}
+.icon-btn{
+  width:36px;height:36px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;position:relative;
+  color:var(--text-secondary);font-size:.9rem;
+}
+.icon-btn:hover{border-color:var(--border-light);background:var(--navy-soft);color:var(--text-primary)}
+.notif-badge{
+  position:absolute;top:-3px;right:-3px;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--red);border:2px solid var(--navy-mid);
+  font-size:.6rem;font-weight:700;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+}
+.topbar-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.8rem;font-weight:800;color:#fff;
+  cursor:pointer;border:2px solid var(--border-light);
+  transition:border-color .2s;
+}
+.topbar-avatar:hover{border-color:var(--blue-light)}
+.hamburger-btn{
+  display:none;width:36px;height:36px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:transparent;cursor:pointer;
+  align-items:center;justify-content:center;flex-direction:column;gap:4px;
+}
+.hamburger-btn span{display:block;width:16px;height:1.5px;background:var(--text-secondary);border-radius:1px;transition:all .3s}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--navy-mid);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  transition:transform .3s;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border)}
+.sidebar-section{padding:1.25rem 1rem .5rem}
+.sidebar-label{
+  font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);padding:0 .5rem;margin-bottom:.5rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.6rem .75rem;border-radius:var(--radius-sm);
+  cursor:pointer;transition:all .2s;
+  color:var(--text-muted);font-size:.875rem;font-weight:500;
+  position:relative;text-decoration:none;
+}
+.nav-item:hover{background:var(--navy-soft);color:var(--text-secondary)}
+.nav-item.active{background:rgba(30,111,217,.12);color:var(--blue-glow);border:1px solid rgba(30,111,217,.2)}
+.nav-icon{width:18px;text-align:center;font-size:.95rem;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;
+  background:var(--blue);color:#fff;
+  font-size:.65rem;font-weight:700;
+  padding:.1rem .4rem;border-radius:100px;min-width:18px;text-align:center;
+}
+.nav-badge.green{background:var(--green)}
+.nav-badge.amber{background:var(--amber);color:var(--navy)}
+.sidebar-divider{height:1px;background:var(--border);margin:.5rem 1rem}
+.coin-widget{
+  margin:auto 1rem 1.25rem;
+  background:linear-gradient(135deg,rgba(30,111,217,.15),rgba(24,199,122,.1));
+  border:1px solid rgba(30,111,217,.25);
+  border-radius:var(--radius-md);padding:1rem;
+}
+.coin-widget-label{font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem}
+.coin-widget-bal{
+  font-family:var(--font-display);font-size:1.5rem;font-weight:800;
+  background:linear-gradient(135deg,var(--blue-glow),var(--green-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.coin-widget-sub{font-size:.72rem;color:var(--text-muted);margin-top:2px}
+.coin-widget-bar{height:4px;background:var(--border);border-radius:2px;margin-top:.75rem}
+.coin-widget-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--green));width:58%}
+
+/* ══ MAIN CONTENT ══ */
+.main{flex:1;overflow-y:auto;overflow-x:hidden}
+.main::-webkit-scrollbar{width:5px}
+.main::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.main-inner{padding:1.75rem 2rem;max-width:1200px}
+
+/* ══ WELCOME BANNER ══ */
+.welcome-banner{
+  background:linear-gradient(135deg,rgba(30,111,217,.18),rgba(24,199,122,.1));
+  border:1px solid rgba(30,111,217,.25);
+  border-radius:var(--radius-lg);
+  padding:1.5rem 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+  margin-bottom:1.75rem;
+  position:relative;overflow:hidden;
+}
+.welcome-banner::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(30,111,217,.1),transparent 70%);
+}
+.wb-text h2{font-family:var(--font-display);font-size:1.3rem;font-weight:800;margin-bottom:.25rem}
+.wb-text p{font-size:.875rem;color:var(--text-secondary);font-weight:300}
+.wb-text p strong{color:var(--blue-glow)}
+.wb-cta{
+  padding:.6rem 1.4rem;border-radius:var(--radius-md);
+  background:var(--blue);border:none;color:#fff;
+  font-family:var(--font-body);font-size:.875rem;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.wb-cta:hover{background:var(--blue-light);transform:translateY(-1px)}
+
+/* ══ STATS ROW ══ */
+.stats-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1rem;margin-bottom:1.75rem;
+}
+.stat-card{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:1.1rem 1.25rem;
+  transition:all .25s;
+}
+.stat-card:hover{border-color:var(--border-light);transform:translateY(-2px)}
+.stat-label{font-size:.75rem;color:var(--text-muted);margin-bottom:.35rem;font-weight:500}
+.stat-value{
+  font-family:var(--font-display);font-size:1.7rem;font-weight:800;
+  line-height:1;margin-bottom:.3rem;
+}
+.stat-value.blue{background:linear-gradient(135deg,var(--blue-glow),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-value.green{background:linear-gradient(135deg,var(--green-light),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-value.amber{background:linear-gradient(135deg,#FFD700,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-value.purple{background:linear-gradient(135deg,#C084FC,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-delta{font-size:.75rem;display:flex;align-items:center;gap:4px}
+.delta-up{color:var(--green-light)}
+.delta-neutral{color:var(--text-muted)}
+
+/* ══ GRID ══ */
+.content-grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem}
+.content-grid .full-col{grid-column:1/-1}
+
+/* ══ SECTION HEADER ══ */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.sec-hdr h3{font-family:var(--font-display);font-size:.95rem;font-weight:700}
+.sec-hdr a{font-size:.8rem;color:var(--blue-light);text-decoration:none;transition:color .2s}
+.sec-hdr a:hover{color:var(--blue-glow)}
+
+/* ══ MATCH CARDS ══ */
+.matches-scroll{display:flex;gap:1rem;overflow-x:auto;padding-bottom:.5rem}
+.matches-scroll::-webkit-scrollbar{height:4px}
+.matches-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.match-card{
+  flex-shrink:0;width:210px;
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:1.25rem 1rem;
+  cursor:pointer;transition:all .25s;
+}
+.match-card:hover{border-color:var(--border-light);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.match-avatar{
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:#fff;
+  margin:0 auto .75rem;position:relative;
+}
+.match-online{
+  position:absolute;bottom:1px;right:1px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--green);border:2px solid var(--card-bg);
+}
+.match-name{font-size:.875rem;font-weight:600;text-align:center;margin-bottom:.2rem}
+.match-location{font-size:.72rem;color:var(--text-muted);text-align:center;margin-bottom:.625rem}
+.match-overlap{
+  text-align:center;font-size:.72rem;
+  padding:.2rem .5rem;border-radius:100px;
+  margin-bottom:.875rem;
+  display:inline-block;width:100%;
+}
+.overlap-great{background:rgba(24,199,122,.1);color:var(--green-light);border:1px solid rgba(24,199,122,.2)}
+.overlap-ok{background:rgba(245,183,0,.1);color:#FFD700;border:1px solid rgba(245,183,0,.2)}
+.match-skills{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.875rem}
+.skill-exchange{display:flex;align-items:center;justify-content:center;gap:.375rem;font-size:.72rem;color:var(--text-secondary)}
+.skill-badge-sm{
+  padding:.15rem .4rem;border-radius:4px;font-weight:600;font-size:.68rem;
+}
+.badge-teach{background:rgba(24,199,122,.12);color:var(--green-light)}
+.badge-learn{background:rgba(30,111,217,.12);color:var(--blue-glow)}
+.match-rating{text-align:center;font-size:.72rem;color:var(--text-muted);margin-bottom:.875rem}
+.match-rating span{color:#F5B700}
+.btn-connect{
+  width:100%;padding:.5rem;border-radius:var(--radius-sm);
+  background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.3);
+  color:var(--blue-glow);font-family:var(--font-body);font-size:.8rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-connect:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* ══ ACTIVE SWAPS ══ */
+.swap-list{display:flex;flex-direction:column;gap:.75rem}
+.swap-item{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:1rem 1.25rem;
+  display:flex;align-items:center;gap:1rem;cursor:pointer;
+  transition:all .2s;
+}
+.swap-item:hover{border-color:var(--border-light);background:var(--card-bg2)}
+.swap-av{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.9rem;font-weight:800;color:#fff;
+}
+.swap-info{flex:1;min-width:0}
+.swap-name{font-size:.875rem;font-weight:600;margin-bottom:2px}
+.swap-skills{font-size:.775rem;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.swap-right{text-align:right;flex-shrink:0}
+.swap-next{font-size:.72rem;color:var(--text-muted);margin-bottom:3px}
+.swap-status{
+  font-size:.7rem;font-weight:600;padding:.2rem .5rem;
+  border-radius:100px;
+}
+.status-active{background:rgba(24,199,122,.12);color:var(--green-light);border:1px solid rgba(24,199,122,.2)}
+.status-pending{background:rgba(245,183,0,.1);color:#FFD700;border:1px solid rgba(245,183,0,.2)}
+.status-new{background:rgba(30,111,217,.12);color:var(--blue-glow);border:1px solid rgba(30,111,217,.2)}
+
+/* ══ UPCOMING SESSIONS ══ */
+.session-list{display:flex;flex-direction:column;gap:.75rem}
+.session-item{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);overflow:hidden;
+  transition:all .2s;cursor:pointer;
+}
+.session-item:hover{border-color:var(--border-light)}
+.session-accent{height:3px}
+.session-body{padding:.875rem 1rem}
+.session-time{
+  font-size:.72rem;color:var(--text-muted);
+  display:flex;align-items:center;gap:.375rem;margin-bottom:.375rem;
+}
+.session-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.session-title{font-size:.875rem;font-weight:600;margin-bottom:.25rem}
+.session-with{font-size:.775rem;color:var(--text-secondary)}
+.session-footer{
+  padding:.5rem 1rem;background:rgba(0,0,0,.1);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.session-mode{font-size:.7rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem}
+.btn-join{
+  padding:.3rem .75rem;border-radius:6px;
+  background:var(--blue);border:none;color:#fff;
+  font-family:var(--font-body);font-size:.72rem;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-join:hover{background:var(--blue-light)}
+.btn-join.soon{background:var(--green);animation:pulse-btn 2s infinite}
+@keyframes pulse-btn{0%,100%{box-shadow:0 0 0 0 rgba(24,199,122,.4)}50%{box-shadow:0 0 0 6px rgba(24,199,122,0)}}
+
+/* ══ RIGHT COLUMN ══ */
+.right-col{display:flex;flex-direction:column;gap:1.25rem}
+
+/* ══ ACTIVITY FEED ══ */
+.activity-list{display:flex;flex-direction:column;gap:0}
+.activity-item{
+  display:flex;align-items:flex-start;gap:.75rem;
+  padding:.75rem 0;border-bottom:1px solid var(--border);
+}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;margin-top:1px;
+}
+.activity-text{flex:1;min-width:0}
+.activity-text p{font-size:.82rem;line-height:1.4;color:var(--text-secondary)}
+.activity-text p strong{color:var(--text-primary);font-weight:600}
+.activity-time{font-size:.7rem;color:var(--text-muted);margin-top:2px}
+
+/* ══ COIN HISTORY ══ */
+.coin-history{display:flex;flex-direction:column;gap:.5rem}
+.ch-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.6rem .875rem;
+  background:var(--navy-soft);border-radius:var(--radius-sm);
+}
+.ch-info{display:flex;align-items:center;gap:.625rem}
+.ch-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ch-label{font-size:.82rem;color:var(--text-secondary)}
+.ch-amount{font-size:.875rem;font-weight:700}
+.earn{color:var(--green-light)}.spend{color:var(--red)}
+
+/* ══ CARD WRAPPER ══ */
+.card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.25rem}
+
+/* ══ NOTIFICATION PANEL ══ */
+.notif-panel{
+  display:none;
+  position:absolute;top:calc(var(--topbar-h) + 8px);right:1.5rem;
+  width:320px;
+  background:var(--navy-mid);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius-lg);
+  box-shadow:0 16px 48px rgba(0,0,0,.4);
+  z-index:100;overflow:hidden;
+}
+.notif-panel.show{display:block;animation:dropIn .2s ease}
+@keyframes dropIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.notif-header{
+  padding:.875rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.notif-header h4{font-family:var(--font-display);font-size:.875rem;font-weight:700}
+.notif-clear{font-size:.75rem;color:var(--blue-light);cursor:pointer;background:none;border:none}
+.notif-item{
+  padding:.875rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;gap:.75rem;cursor:pointer;transition:background .2s;
+}
+.notif-item:hover{background:var(--navy-soft)}
+.notif-item:last-child{border-bottom:none}
+.notif-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff}
+.notif-body{flex:1}
+.notif-body p{font-size:.82rem;line-height:1.4;color:var(--text-secondary)}
+.notif-body p strong{color:var(--text-primary)}
+.notif-time{font-size:.7rem;color:var(--text-muted);margin-top:2px}
+.notif-unread{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:4px}
+
+/* ══ OVERLAY ══ */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:29}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:1100px){
+  .content-grid{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .sidebar{
+    position:fixed;top:var(--topbar-h);left:0;bottom:0;z-index:30;
+    transform:translateX(-100%);
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.show{display:block}
+  .main-inner{padding:1.25rem 1rem}
+  .hamburger-btn{display:flex}
+  .topbar-search{display:none}
+  .coin-widget{display:none}
+}
+@media(max-width:600px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .matches-scroll .match-card{width:180px}
+  .welcome-banner{flex-direction:column;padding:1.25rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger-btn" id="hamburgerBtn">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="skillswap-landing.html" style="display:flex;align-items:center;gap:.625rem;text-decoration:none">
+      <div class="logo-mark">S</div>
+      <span class="logo-name">SkillSwap</span>
+    </a>
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search skills, people..."/>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" id="notifBtn">
+      🔔
+      <span class="notif-badge">3</span>
+    </button>
+    <button class="icon-btn">💬</button>
+    <div class="topbar-avatar" title="John Doe">JD</div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-header">
+    <h4>Notifications</h4>
+    <button class="notif-clear">Mark all read</button>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:linear-gradient(135deg,#1E6FD9,#18C77A)">MK</div>
+    <div class="notif-body">
+      <p><strong>Maria K.</strong> accepted your swap request for Python ↔ Spanish 🎉</p>
+      <div class="notif-time">2 minutes ago</div>
+    </div>
+    <div class="notif-unread"></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:linear-gradient(135deg,#7C3AED,#EC4899)">AR</div>
+    <div class="notif-body">
+      <p><strong>Ahmed R.</strong> left you a 5★ review after your guitar session</p>
+      <div class="notif-time">1 hour ago</div>
+    </div>
+    <div class="notif-unread"></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">SL</div>
+    <div class="notif-body">
+      <p>Reminder: Your session with <strong>Sara L.</strong> starts in <strong>30 minutes</strong></p>
+      <div class="notif-time">30 min ago</div>
+    </div>
+    <div class="notif-unread"></div>
+  </div>
+  <div class="notif-item">
+    <div class="notif-av" style="background:linear-gradient(135deg,#10B981,#3B82F6)">SS</div>
+    <div class="notif-body">
+      <p>You earned <strong>⬡ 2 SkillCoins</strong> for completing your session with Kwame</p>
+      <div class="notif-time">Yesterday</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="app">
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="nav-item active" href="skillswap-dashboard.html">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a class="nav-item" href="skillswap-discover.html">
+        <span class="nav-icon">🔍</span> Discover
+        <span class="nav-badge green">New</span>
+      </a>
+      <a class="nav-item" href="skillswap-swaps.html">
+        <span class="nav-icon">🔁</span> My Swaps
+        <span class="nav-badge">2</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📅</span> Sessions
+      </a>
+      <a class="nav-item" href="skillswap-messages.html">
+        <span class="nav-icon">💬</span> Messages
+        <span class="nav-badge">4</span>
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Account</div>
+      <a class="nav-item" href="skillswap-profile.html">
+        <span class="nav-icon">👤</span> My Profile
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">⬡</span> SkillCoins
+        <span class="nav-badge amber">14</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🏆</span> Achievements
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">⚙️</span> Settings
+      </a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Upgrade</div>
+      <a class="nav-item" href="#" style="background:rgba(30,111,217,.08);border:1px solid rgba(30,111,217,.2);color:var(--blue-glow)">
+        <span class="nav-icon">⚡</span> Go Premium
+      </a>
+    </div>
+
+    <div class="coin-widget">
+      <div class="coin-widget-label">SkillCoin Balance</div>
+      <div class="coin-widget-bal">⬡ 14</div>
+      <div class="coin-widget-sub">≈ 14 hrs of learning</div>
+      <div class="coin-widget-bar"><div class="coin-widget-fill"></div></div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main">
+    <div class="main-inner">
+
+      <!-- WELCOME BANNER -->
+      <div class="welcome-banner">
+        <div class="wb-text">
+          <h2>Good morning, John 👋</h2>
+          <p>You have <strong>2 pending swap requests</strong> and a session with Sara in <strong>30 minutes.</strong></p>
+        </div>
+        <button class="wb-cta" onclick="window.location.href='skillswap-discover.html'">Browse New Matches →</button>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Active Swaps</div>
+          <div class="stat-value blue">3</div>
+          <div class="stat-delta delta-up">↑ 1 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sessions Completed</div>
+          <div class="stat-value green">12</div>
+          <div class="stat-delta delta-up">↑ 3 this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">SkillCoins</div>
+          <div class="stat-value amber">⬡ 14</div>
+          <div class="stat-delta delta-up">↑ +2 this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Your Rating</div>
+          <div class="stat-value purple">4.9★</div>
+          <div class="stat-delta delta-neutral">Based on 8 reviews</div>
+        </div>
+      </div>
+
+      <!-- CONTENT GRID -->
+      <div class="content-grid">
+
+        <!-- LEFT COLUMN -->
+        <div>
+
+          <!-- RECOMMENDED MATCHES -->
+          <div class="sec-hdr">
+            <h3>🎯 Recommended Matches</h3>
+            <a href="skillswap-discover.html">View all →</a>
+          </div>
+          <div class="matches-scroll">
+
+            <div class="match-card">
+              <div class="match-avatar" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">
+                MK
+                <div class="match-online"></div>
+              </div>
+              <div class="match-name">Maria Kovač</div>
+              <div class="match-location">📍 Zagreb, Croatia</div>
+              <div class="match-overlap overlap-great">🟢 Great overlap · 6hrs/week</div>
+              <div class="match-skills">
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-teach">Teaches</span> Spanish
+                </div>
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-learn">Wants</span> Python
+                </div>
+              </div>
+              <div class="match-rating"><span>★★★★★</span> 4.9 · 24 sessions</div>
+              <button class="btn-connect">Request Swap</button>
+            </div>
+
+            <div class="match-card">
+              <div class="match-avatar" style="background:linear-gradient(135deg,#10B981,#059669)">
+                TN
+              </div>
+              <div class="match-name">Tariq Nasser</div>
+              <div class="match-location">📍 Dubai, UAE</div>
+              <div class="match-overlap overlap-ok">🟡 Some overlap · 2hrs/week</div>
+              <div class="match-skills">
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-teach">Teaches</span> Arabic
+                </div>
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-learn">Wants</span> UI Design
+                </div>
+              </div>
+              <div class="match-rating"><span>★★★★★</span> 4.8 · 17 sessions</div>
+              <button class="btn-connect">Request Swap</button>
+            </div>
+
+            <div class="match-card">
+              <div class="match-avatar" style="background:linear-gradient(135deg,#EC4899,#8B5CF6)">
+                PL
+              </div>
+              <div class="match-name">Priya Lal</div>
+              <div class="match-location">📍 Bangalore, India</div>
+              <div class="match-overlap overlap-great">🟢 Great overlap · 8hrs/week</div>
+              <div class="match-skills">
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-teach">Teaches</span> Data Science
+                </div>
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-learn">Wants</span> Guitar
+                </div>
+              </div>
+              <div class="match-rating"><span>★★★★½</span> 4.7 · 31 sessions</div>
+              <button class="btn-connect">Request Swap</button>
+            </div>
+
+            <div class="match-card">
+              <div class="match-avatar" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">
+                KO
+              </div>
+              <div class="match-name">Kwame Osei</div>
+              <div class="match-location">📍 Accra, Ghana</div>
+              <div class="match-overlap overlap-great">🟢 Great overlap · 5hrs/week</div>
+              <div class="match-skills">
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-teach">Teaches</span> French
+                </div>
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-learn">Wants</span> JavaScript
+                </div>
+              </div>
+              <div class="match-rating"><span>★★★★★</span> 5.0 · 9 sessions</div>
+              <button class="btn-connect">Request Swap</button>
+            </div>
+
+            <div class="match-card">
+              <div class="match-avatar" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">
+                SB
+              </div>
+              <div class="match-name">Sophie Berger</div>
+              <div class="match-location">📍 Berlin, Germany</div>
+              <div class="match-overlap overlap-ok">🟡 Some overlap · 3hrs/week</div>
+              <div class="match-skills">
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-teach">Teaches</span> German
+                </div>
+                <div class="skill-exchange">
+                  <span class="skill-badge-sm badge-learn">Wants</span> Photography
+                </div>
+              </div>
+              <div class="match-rating"><span>★★★★½</span> 4.6 · 12 sessions</div>
+              <button class="btn-connect">Request Swap</button>
+            </div>
+
+          </div>
+
+          <!-- ACTIVE SWAPS -->
+          <div class="sec-hdr" style="margin-top:1.75rem">
+            <h3>🔁 Active Swaps</h3>
+            <a href="skillswap-swaps.html">Manage all →</a>
+          </div>
+          <div class="swap-list">
+            <div class="swap-item">
+              <div class="swap-av" style="background:linear-gradient(135deg,#1E6FD9,#7C3AED)">MK</div>
+              <div class="swap-info">
+                <div class="swap-name">Maria Kovač</div>
+                <div class="swap-skills">You teach Python · She teaches Spanish</div>
+              </div>
+              <div class="swap-right">
+                <div class="swap-next">Next: Today 3PM</div>
+                <span class="swap-status status-active">Active</span>
+              </div>
+            </div>
+            <div class="swap-item">
+              <div class="swap-av" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">AR</div>
+              <div class="swap-info">
+                <div class="swap-name">Ahmed Rashid</div>
+                <div class="swap-skills">You teach Guitar · He teaches Excel</div>
+              </div>
+              <div class="swap-right">
+                <div class="swap-next">Next: Fri 10AM</div>
+                <span class="swap-status status-active">Active</span>
+              </div>
+            </div>
+            <div class="swap-item">
+              <div class="swap-av" style="background:linear-gradient(135deg,#EC4899,#8B5CF6)">SL</div>
+              <div class="swap-info">
+                <div class="swap-name">Sara Lindqvist</div>
+                <div class="swap-skills">You teach Photography · She teaches Yoga</div>
+              </div>
+              <div class="swap-right">
+                <div class="swap-next">In 30 minutes!</div>
+                <span class="swap-status status-new">Starting Soon</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- UPCOMING SESSIONS -->
+          <div class="sec-hdr" style="margin-top:1.75rem">
+            <h3>📅 Upcoming Sessions</h3>
+            <a href="#">Full calendar →</a>
+          </div>
+          <div class="session-list">
+            <div class="session-item">
+              <div class="session-accent" style="background:linear-gradient(90deg,var(--green),var(--blue))"></div>
+              <div class="session-body">
+                <div class="session-time">
+                  <div class="session-dot" style="background:var(--green)"></div>
+                  Today · 3:00 PM – 4:00 PM EAT
+                </div>
+                <div class="session-title">Photography Lesson — Session 3</div>
+                <div class="session-with">with Sara Lindqvist</div>
+              </div>
+              <div class="session-footer">
+                <span class="session-mode">🎥 Live video call</span>
+                <button class="btn-join soon">Join Now</button>
+              </div>
+            </div>
+            <div class="session-item">
+              <div class="session-accent" style="background:linear-gradient(90deg,var(--blue),#7C3AED)"></div>
+              <div class="session-body">
+                <div class="session-time">
+                  <div class="session-dot" style="background:var(--blue)"></div>
+                  Tomorrow · 10:00 AM – 11:00 AM EAT
+                </div>
+                <div class="session-title">Python Basics — Session 2</div>
+                <div class="session-with">with Maria Kovač</div>
+              </div>
+              <div class="session-footer">
+                <span class="session-mode">🎥 Live video call</span>
+                <button class="btn-join">Prepare</button>
+              </div>
+            </div>
+            <div class="session-item">
+              <div class="session-accent" style="background:linear-gradient(90deg,#F59E0B,#EF4444)"></div>
+              <div class="session-body">
+                <div class="session-time">
+                  <div class="session-dot" style="background:#F59E0B"></div>
+                  Friday · 10:00 AM – 11:30 AM EAT
+                </div>
+                <div class="session-title">Guitar Fingerstyle — Session 5</div>
+                <div class="session-with">with Ahmed Rashid</div>
+              </div>
+              <div class="session-footer">
+                <span class="session-mode">🎥 Live video call</span>
+                <button class="btn-join">Prepare</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-col">
+
+          <!-- ACTIVITY FEED -->
+          <div class="card">
+            <div class="sec-hdr" style="margin-bottom:.875rem">
+              <h3>🔔 Recent Activity</h3>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(24,199,122,.12)">⬡</div>
+                <div class="activity-text">
+                  <p>You earned <strong>+2 SkillCoins</strong> for completing a session with Kwame</p>
+                  <div class="activity-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(245,183,0,.12)">★</div>
+                <div class="activity-text">
+                  <p><strong>Ahmed R.</strong> gave you a 5-star review: "Best guitar teacher I've found!"</p>
+                  <div class="activity-time">5 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(30,111,217,.12)">🔁</div>
+                <div class="activity-text">
+                  <p><strong>Maria K.</strong> accepted your swap request. You're all set!</p>
+                  <div class="activity-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(192,132,252,.12)">🏆</div>
+                <div class="activity-text">
+                  <p>You earned the <strong>"10 Sessions"</strong> badge. Keep it up!</p>
+                  <div class="activity-time">2 days ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon" style="background:rgba(24,199,122,.12)">✓</div>
+                <div class="activity-text">
+                  <p>Session with <strong>Sara L.</strong> marked complete. Leave a review?</p>
+                  <div class="activity-time">3 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COIN HISTORY -->
+          <div class="card">
+            <div class="sec-hdr" style="margin-bottom:.875rem">
+              <h3>⬡ SkillCoin Activity</h3>
+              <a href="#">Details →</a>
+            </div>
+            <div style="text-align:center;padding:.5rem 0 1rem">
+              <div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.25rem">Current Balance</div>
+              <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;background:linear-gradient(135deg,var(--blue-glow),var(--green-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">⬡ 14</div>
+              <div style="font-size:.75rem;color:var(--text-muted)">≈ 14 hours of learning available</div>
+            </div>
+            <div class="coin-history">
+              <div class="ch-item">
+                <div class="ch-info"><div class="ch-dot" style="background:var(--green)"></div><span class="ch-label">Taught Kwame · Guitar</span></div>
+                <span class="ch-amount earn">+2 ⬡</span>
+              </div>
+              <div class="ch-item">
+                <div class="ch-info"><div class="ch-dot" style="background:var(--red)"></div><span class="ch-label">Learned Spanish · Maria</span></div>
+                <span class="ch-amount spend">−1 ⬡</span>
+              </div>
+              <div class="ch-item">
+                <div class="ch-info"><div class="ch-dot" style="background:var(--green)"></div><span class="ch-label">Taught Sara · Photography</span></div>
+                <span class="ch-amount earn">+1 ⬡</span>
+              </div>
+              <div class="ch-item">
+                <div class="ch-info"><div class="ch-dot" style="background:var(--red)"></div><span class="ch-label">Learned Yoga · Sara</span></div>
+                <span class="ch-amount spend">−2 ⬡</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PENDING REQUESTS -->
+          <div class="card">
+            <div class="sec-hdr" style="margin-bottom:.875rem">
+              <h3>📨 Pending Requests</h3>
+              <span style="font-size:.75rem;background:rgba(245,183,0,.15);color:#FFD700;border:1px solid rgba(245,183,0,.2);padding:.15rem .5rem;border-radius:100px">2 new</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.75rem">
+              <div style="background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:.875rem 1rem">
+                <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem">
+                  <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#10B981,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">NJ</div>
+                  <div>
+                    <div style="font-size:.85rem;font-weight:600">Nina Johansson</div>
+                    <div style="font-size:.72rem;color:var(--text-muted)">Stockholm, Sweden</div>
+                  </div>
+                </div>
+                <div style="font-size:.78rem;color:var(--text-secondary);margin-bottom:.75rem">Offers <strong style="color:var(--green-light)">Swedish</strong> · Wants <strong style="color:var(--blue-glow)">Python</strong></div>
+                <div style="display:flex;gap:.5rem">
+                  <button onclick="this.closest('div[style]').style.opacity='.4'" style="flex:1;padding:.4rem;border-radius:6px;background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.3);color:var(--green-light);font-family:var(--font-body);font-size:.78rem;font-weight:600;cursor:pointer">Accept ✓</button>
+                  <button onclick="this.closest('div[style]').style.opacity='.4'" style="flex:1;padding:.4rem;border-radius:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-body);font-size:.78rem;cursor:pointer">Decline</button>
+                </div>
+              </div>
+              <div style="background:var(--navy-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:.875rem 1rem">
+                <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:.5rem">
+                  <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#EF4444);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:#fff;flex-shrink:0">OB</div>
+                  <div>
+                    <div style="font-size:.85rem;font-weight:600">Omar Ben Ali</div>
+                    <div style="font-size:.72rem;color:var(--text-muted)">Tunis, Tunisia</div>
+                  </div>
+                </div>
+                <div style="font-size:.78rem;color:var(--text-secondary);margin-bottom:.75rem">Offers <strong style="color:var(--green-light)">Arabic</strong> · Wants <strong style="color:var(--blue-glow)">UI Design</strong></div>
+                <div style="display:flex;gap:.5rem">
+                  <button onclick="this.closest('div[style]').style.opacity='.4'" style="flex:1;padding:.4rem;border-radius:6px;background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.3);color:var(--green-light);font-family:var(--font-body);font-size:.78rem;font-weight:600;cursor:pointer">Accept ✓</button>
+                  <button onclick="this.closest('div[style]').style.opacity='.4'" style="flex:1;padding:.4rem;border-radius:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-body);font-size:.78rem;cursor:pointer">Decline</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// Hamburger / sidebar
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const sidebar = document.getElementById('sidebar');
+const overlay = document.getElementById('sidebarOverlay');
+
+hamburgerBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('show');
+});
+
+// Notifications panel
+const notifBtn = document.getElementById('notifBtn');
+const notifPanel = document.getElementById('notifPanel');
+notifBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  notifPanel.classList.toggle('show');
+});
+document.addEventListener('click', () => notifPanel.classList.remove('show'));
+notifPanel.addEventListener('click', e => e.stopPropagation());
+
+// Animate stat cards on load
+document.querySelectorAll('.stat-card,.match-card,.swap-item,.session-item,.card').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(12px)';
+  el.style.transition = `opacity .4s ${i * 0.04}s ease, transform .4s ${i * 0.04}s ease`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(0)';
+  }));
+});
+
+// Topbar search — navigate to discover
+document.querySelector('.topbar-search input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') window.location.href = 'skillswap-discover.html';
+});
+</script>
+</body>
+</html>

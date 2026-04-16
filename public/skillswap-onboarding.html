@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SkillSwap — Set Up Your Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1628;
+  --navy-mid:#0F1E33;
+  --navy-soft:#13243E;
+  --blue:#1E6FD9;
+  --blue-light:#3D8EF5;
+  --blue-glow:#5AA3FF;
+  --green:#18C77A;
+  --green-light:#2EDEA0;
+  --amber:#F5B700;
+  --white:#FFFFFF;
+  --text-primary:#EEF2FF;
+  --text-secondary:#9AAEC8;
+  --text-muted:#5E7A9A;
+  --border:#1E3455;
+  --border-light:#2A4466;
+  --border-focus:#3D8EF5;
+  --card-bg:#0F1E33;
+  --input-bg:#0B1628;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+  --font-display:'Syne',sans-serif;
+  --font-body:'Outfit',sans-serif;
+}
+html,body{height:100%}
+body{
+  font-family:var(--font-body);
+  background:var(--navy);
+  color:var(--text-primary);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  overflow-x:hidden;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  padding:1.25rem 5%;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:var(--navy-mid);
+  position:sticky;top:0;z-index:50;
+}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{
+  width:34px;height:34px;border-radius:9px;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:.85rem;font-weight:800;color:#fff;
+}
+.logo-text{font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--white)}
+.topbar-right{font-size:.82rem;color:var(--text-muted)}
+.topbar-right span{color:var(--text-secondary)}
+
+/* ── PROGRESS ── */
+.progress-wrap{
+  padding:1.5rem 5%;
+  background:var(--navy-mid);
+  border-bottom:1px solid var(--border);
+}
+.progress-steps{
+  display:flex;align-items:center;
+  max-width:560px;margin:0 auto;gap:0;
+}
+.prog-step{
+  display:flex;flex-direction:column;align-items:center;
+  flex:1;position:relative;
+}
+.prog-step:not(:last-child)::after{
+  content:'';
+  position:absolute;top:18px;left:calc(50% + 18px);
+  right:calc(-50% + 18px);
+  height:2px;background:var(--border);
+  transition:background .4s;
+}
+.prog-step.done:not(:last-child)::after,
+.prog-step.active:not(:last-child)::after{
+  background:var(--blue);
+}
+.prog-circle{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid var(--border);
+  background:var(--navy);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:var(--text-muted);
+  transition:all .3s;position:relative;z-index:1;margin-bottom:.4rem;
+}
+.prog-step.active .prog-circle{
+  border-color:var(--blue);background:rgba(30,111,217,.15);color:var(--blue-glow);
+}
+.prog-step.done .prog-circle{
+  border-color:var(--green);background:rgba(24,199,122,.15);color:var(--green);
+}
+.prog-label{font-size:.72rem;color:var(--text-muted);text-align:center;white-space:nowrap}
+.prog-step.active .prog-label{color:var(--text-primary)}
+.prog-step.done .prog-label{color:var(--green)}
+
+/* ── MAIN ── */
+main{flex:1;padding:3rem 5%;display:flex;flex-direction:column;align-items:center}
+.step-container{width:100%;max-width:680px}
+.step-header{margin-bottom:2.5rem;text-align:center}
+.step-header h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-weight:800;margin-bottom:.5rem;
+  letter-spacing:-.02em;
+}
+.step-header p{font-size:.95rem;color:var(--text-secondary);font-weight:300}
+
+.step-panel{display:none}
+.step-panel.active{display:block;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── STEP 1: PROFILE ── */
+.avatar-section{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:2rem;
+}
+.avatar-upload{
+  width:96px;height:96px;border-radius:50%;
+  background:linear-gradient(135deg,var(--blue),var(--green));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;border:3px solid var(--border);
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.avatar-upload:hover{border-color:var(--blue-light);transform:scale(1.04)}
+.avatar-initials{font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:#fff}
+.avatar-upload-hint{font-size:.65rem;color:rgba(255,255,255,.7);margin-top:2px}
+.avatar-edit-overlay{
+  position:absolute;inset:0;background:rgba(0,0,0,.5);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .2s;font-size:1.2rem;
+}
+.avatar-upload:hover .avatar-edit-overlay{opacity:1}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.form-grid .full{grid-column:1/-1}
+.field{margin-bottom:0}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--text-secondary);margin-bottom:.4rem;letter-spacing:.02em}
+input[type=text],input[type=email],textarea,select{
+  width:100%;padding:.75rem 1rem;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);
+  background:var(--input-bg);
+  color:var(--text-primary);
+  font-family:var(--font-body);font-size:.93rem;
+  outline:none;transition:all .2s;
+}
+input:focus,textarea:focus,select:focus{
+  border-color:var(--border-focus);
+  box-shadow:0 0 0 3px rgba(61,142,245,.1);
+}
+input::placeholder,textarea::placeholder{color:var(--text-muted)}
+select option{background:var(--navy-mid)}
+textarea{resize:vertical;min-height:88px;line-height:1.5}
+.char-count{font-size:.72rem;color:var(--text-muted);text-align:right;margin-top:.25rem}
+
+/* ── STEP 2: SKILLS ── */
+.skills-section{margin-bottom:2rem}
+.skills-section-title{
+  font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text-muted);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.skills-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.skill-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:.35rem .75rem;border-radius:100px;
+  font-size:.82rem;font-weight:500;cursor:pointer;
+  border:1px solid var(--border);background:var(--card-bg);
+  color:var(--text-secondary);transition:all .2s;
+}
+.skill-tag:hover{border-color:var(--border-light);color:var(--text-primary)}
+.skill-tag.teach.selected{border-color:var(--green);background:rgba(24,199,122,.1);color:var(--green-light)}
+.skill-tag.learn.selected{border-color:var(--blue-light);background:rgba(30,111,217,.12);color:var(--blue-glow)}
+.skill-tag .tag-remove{font-size:.7rem;opacity:.7;margin-left:2px}
+.custom-skill-row{display:flex;gap:.75rem;margin-top:.75rem}
+.custom-skill-row input{flex:1}
+.btn-add-skill{
+  padding:.75rem 1.1rem;border-radius:var(--radius-sm);
+  border:1px solid var(--border-light);background:transparent;
+  color:var(--text-primary);font-family:var(--font-body);
+  font-size:.85rem;font-weight:500;cursor:pointer;
+  white-space:nowrap;transition:all .2s;
+}
+.btn-add-skill:hover{border-color:var(--blue-light);color:var(--blue-light)}
+.selected-skills{margin-top:1rem}
+.selected-skill-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.625rem .875rem;
+  background:var(--navy-soft);border:1px solid var(--border);
+  border-radius:var(--radius-sm);margin-bottom:.5rem;
+  animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.selected-skill-name{font-size:.88rem;font-weight:500;display:flex;align-items:center;gap:.5rem}
+.selected-skill-controls{display:flex;align-items:center;gap:.625rem}
+.level-select{
+  padding:.25rem .5rem;border-radius:6px;font-size:.75rem;
+  border:1px solid var(--border);background:var(--input-bg);
+  color:var(--text-secondary);cursor:pointer;
+}
+.remove-skill{
+  background:none;border:none;cursor:pointer;
+  color:var(--text-muted);font-size:.85rem;padding:2px;
+  transition:color .2s;
+}
+.remove-skill:hover{color:#F87171}
+.skill-tip{
+  background:rgba(30,111,217,.08);border:1px solid rgba(30,111,217,.2);
+  border-radius:var(--radius-sm);padding:.75rem 1rem;
+  font-size:.82rem;color:var(--blue-glow);margin-top:1rem;
+  display:flex;gap:.5rem;align-items:flex-start;
+}
+
+/* ── STEP 3: AVAILABILITY ── */
+.avail-grid{display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem}
+.day-row{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:1rem 1.25rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.day-toggle{display:flex;align-items:center;gap:.625rem;min-width:110px;cursor:pointer}
+.day-toggle input[type=checkbox]{accent-color:var(--blue);width:16px;height:16px}
+.day-name{font-size:.9rem;font-weight:600}
+.day-times{
+  display:flex;align-items:center;gap:.75rem;flex:1;flex-wrap:wrap;
+  opacity:.4;pointer-events:none;transition:opacity .2s;
+}
+.day-row.active .day-times{opacity:1;pointer-events:all}
+.time-select{
+  padding:.45rem .75rem;border-radius:var(--radius-sm);font-size:.82rem;
+  border:1px solid var(--border);background:var(--input-bg);
+  color:var(--text-secondary);cursor:pointer;min-width:110px;
+}
+.time-sep{font-size:.78rem;color:var(--text-muted)}
+.timezone-row{
+  display:flex;gap:1rem;align-items:center;flex-wrap:wrap;
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:1rem 1.25rem;
+  margin-bottom:1.5rem;
+}
+.timezone-row label{min-width:80px;margin-bottom:0}
+.timezone-row select{flex:1}
+.session-prefs{
+  display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;
+}
+.pref-card{
+  background:var(--card-bg);border:2px solid var(--border);
+  border-radius:var(--radius-md);padding:1.25rem;
+  cursor:pointer;transition:all .2s;text-align:center;
+}
+.pref-card:hover{border-color:var(--border-light)}
+.pref-card.selected{border-color:var(--blue);background:rgba(30,111,217,.08)}
+.pref-icon{font-size:1.6rem;margin-bottom:.5rem}
+.pref-title{font-size:.9rem;font-weight:600;margin-bottom:.25rem}
+.pref-desc{font-size:.75rem;color:var(--text-muted)}
+
+/* ── NAV BUTTONS ── */
+.step-nav{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:2.5rem;padding-top:1.5rem;
+  border-top:1px solid var(--border);
+}
+.btn-back{
+  padding:.75rem 1.5rem;border-radius:var(--radius-md);
+  border:1px solid var(--border-light);background:transparent;
+  color:var(--text-secondary);font-family:var(--font-body);
+  font-size:.9rem;font-weight:500;cursor:pointer;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.btn-back:hover{border-color:var(--border-focus);color:var(--text-primary)}
+.btn-next{
+  padding:.75rem 2rem;border-radius:var(--radius-md);
+  border:none;
+  background:linear-gradient(135deg,var(--blue),var(--blue-light));
+  color:#fff;font-family:var(--font-body);font-size:.9rem;font-weight:600;
+  cursor:pointer;transition:all .25s;
+  display:flex;align-items:center;gap:6px;
+  box-shadow:0 4px 14px rgba(30,111,217,.3);
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,111,217,.4)}
+.btn-skip{
+  background:none;border:none;color:var(--text-muted);
+  font-family:var(--font-body);font-size:.82rem;cursor:pointer;
+  text-decoration:underline;transition:color .2s;
+}
+.btn-skip:hover{color:var(--text-secondary)}
+
+/* ── COMPLETE SCREEN ── */
+.complete-screen{
+  display:none;text-align:center;padding:2rem 0;
+  animation:fadeUp .5s ease;
+}
+.complete-screen.show{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.complete-icon{
+  width:80px;height:80px;border-radius:50%;margin:0 auto 1.5rem;
+  background:linear-gradient(135deg,rgba(30,111,217,.2),rgba(24,199,122,.2));
+  border:2px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+}
+.complete-screen h2{
+  font-family:var(--font-display);
+  font-size:2rem;font-weight:800;margin-bottom:.75rem;
+}
+.complete-screen p{font-size:1rem;color:var(--text-secondary);margin-bottom:2rem;line-height:1.6;max-width:440px;margin-left:auto;margin-right:auto}
+.complete-chips{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-bottom:2rem;
+}
+.complete-chip{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:.35rem .875rem;border-radius:100px;
+  font-size:.8rem;font-weight:500;
+}
+.chip-green{background:rgba(24,199,122,.15);border:1px solid rgba(24,199,122,.3);color:var(--green-light)}
+.chip-blue{background:rgba(30,111,217,.15);border:1px solid rgba(30,111,217,.3);color:var(--blue-glow)}
+.go-dashboard-btn{
+  padding:.9rem 2.5rem;border-radius:var(--radius-md);
+  border:none;
+  background:linear-gradient(135deg,var(--blue),var(--blue-light));
+  color:#fff;font-family:var(--font-body);font-size:1rem;font-weight:600;
+  cursor:pointer;transition:all .25s;
+  box-shadow:0 4px 20px rgba(30,111,217,.35);
+}
+.go-dashboard-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(30,111,217,.45)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  main{padding:2rem 4%}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid .full{grid-column:auto}
+  .session-prefs{grid-template-columns:1fr}
+  .day-row{flex-direction:column;align-items:flex-start}
+  .day-times{width:100%}
+  .step-nav{flex-wrap:wrap;gap:.75rem}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="skillswap-landing.html" class="topbar-logo">
+    <div class="logo-icon">S</div>
+    <span class="logo-text">SkillSwap</span>
+  </a>
+  <div class="topbar-right">Step <span id="topbarStep">1</span> of 3</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-steps">
+    <div class="prog-step active" id="ps1">
+      <div class="prog-circle" id="pc1">1</div>
+      <div class="prog-label">Your Profile</div>
+    </div>
+    <div class="prog-step" id="ps2">
+      <div class="prog-circle" id="pc2">2</div>
+      <div class="prog-label">Your Skills</div>
+    </div>
+    <div class="prog-step" id="ps3">
+      <div class="prog-circle" id="pc3">3</div>
+      <div class="prog-label">Availability</div>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="step-container">
+
+  <!-- ══ STEP 1: PROFILE ══ -->
+  <div class="step-panel active" id="step1">
+    <div class="step-header">
+      <h2>Tell us about yourself</h2>
+      <p>This is how other members will find and get to know you.</p>
+    </div>
+
+    <div class="avatar-section">
+      <div class="avatar-upload" id="avatarUpload">
+        <div class="avatar-initials" id="avatarInitials">JD</div>
+        <div class="avatar-upload-hint">Upload photo</div>
+        <div class="avatar-edit-overlay">📷</div>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="s1First">First name *</label>
+        <input type="text" id="s1First" placeholder="John" value="John"/>
+      </div>
+      <div class="field">
+        <label for="s1Last">Last name *</label>
+        <input type="text" id="s1Last" placeholder="Doe" value="Doe"/>
+      </div>
+      <div class="field">
+        <label for="s1Display">Display name *</label>
+        <input type="text" id="s1Display" placeholder="How you'll appear to others" value="John Doe"/>
+      </div>
+      <div class="field">
+        <label for="s1Location">Location (City, Country)</label>
+        <input type="text" id="s1Location" placeholder="e.g. Kampala, Uganda"/>
+      </div>
+      <div class="field full">
+        <label for="s1Bio">Bio <span style="font-weight:400;color:var(--text-muted)">(tell others what makes you interesting)</span></label>
+        <textarea id="s1Bio" placeholder="e.g. Software engineer by day, guitarist by night. Passionate about teaching what I know and learning what I don't..." maxlength="500"></textarea>
+        <div class="char-count"><span id="bioCount">0</span>/500</div>
+      </div>
+      <div class="field full">
+        <label for="s1Lang">Primary language(s)</label>
+        <input type="text" id="s1Lang" placeholder="e.g. English, French, Swahili"/>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <span></span>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button class="btn-skip" onclick="nextStep(1)">Skip for now</button>
+        <button class="btn-next" onclick="nextStep(1)">
+          Continue
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 2: SKILLS ══ -->
+  <div class="step-panel" id="step2">
+    <div class="step-header">
+      <h2>What can you teach & learn?</h2>
+      <p>Select from popular categories or add your own. You can always edit this later.</p>
+    </div>
+
+    <!-- TEACH -->
+    <div class="skills-section">
+      <div class="skills-section-title">
+        <span style="color:var(--green-light)">✦</span> Skills I Can Teach
+      </div>
+      <div class="skill-tags" id="teachTags">
+        <div class="skill-tag teach" data-skill="JavaScript">💻 JavaScript</div>
+        <div class="skill-tag teach" data-skill="Python">🐍 Python</div>
+        <div class="skill-tag teach" data-skill="UI Design">🎨 UI Design</div>
+        <div class="skill-tag teach" data-skill="English">🌍 English</div>
+        <div class="skill-tag teach" data-skill="Guitar">🎸 Guitar</div>
+        <div class="skill-tag teach" data-skill="Photography">📸 Photography</div>
+        <div class="skill-tag teach" data-skill="Excel">📊 Excel</div>
+        <div class="skill-tag teach" data-skill="French">🇫🇷 French</div>
+        <div class="skill-tag teach" data-skill="Cooking">🍳 Cooking</div>
+        <div class="skill-tag teach" data-skill="Fitness">🏋️ Fitness</div>
+        <div class="skill-tag teach" data-skill="Video Editing">🎬 Video Editing</div>
+        <div class="skill-tag teach" data-skill="Math">🧮 Math</div>
+      </div>
+      <div class="custom-skill-row">
+        <input type="text" id="customTeach" placeholder="Add a skill you can teach..."/>
+        <button class="btn-add-skill" onclick="addCustomSkill('teach')">+ Add</button>
+      </div>
+      <div class="selected-skills" id="teachSelected"></div>
+    </div>
+
+    <!-- LEARN -->
+    <div class="skills-section">
+      <div class="skills-section-title">
+        <span style="color:var(--blue-glow)">✦</span> Skills I Want to Learn
+      </div>
+      <div class="skill-tags" id="learnTags">
+        <div class="skill-tag learn" data-skill="Spanish">🇪🇸 Spanish</div>
+        <div class="skill-tag learn" data-skill="React">⚛️ React</div>
+        <div class="skill-tag learn" data-skill="Piano">🎹 Piano</div>
+        <div class="skill-tag learn" data-skill="Drawing">✏️ Drawing</div>
+        <div class="skill-tag learn" data-skill="Yoga">🧘 Yoga</div>
+        <div class="skill-tag learn" data-skill="Public Speaking">🎤 Public Speaking</div>
+        <div class="skill-tag learn" data-skill="Data Science">📈 Data Science</div>
+        <div class="skill-tag learn" data-skill="German">🇩🇪 German</div>
+        <div class="skill-tag learn" data-skill="Illustration">🖌️ Illustration</div>
+        <div class="skill-tag learn" data-skill="Chess">♟️ Chess</div>
+        <div class="skill-tag learn" data-skill="SEO">📱 SEO</div>
+        <div class="skill-tag learn" data-skill="Writing">✍️ Writing</div>
+      </div>
+      <div class="custom-skill-row">
+        <input type="text" id="customLearn" placeholder="Add a skill you want to learn..."/>
+        <button class="btn-add-skill" onclick="addCustomSkill('learn')">+ Add</button>
+      </div>
+      <div class="selected-skills" id="learnSelected"></div>
+    </div>
+
+    <div class="skill-tip">
+      <span>💡</span>
+      <span>The more skills you list, the better your matches. You can always update these from your profile settings.</span>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="prevStep(2)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <div style="display:flex;align-items:center;gap:1rem">
+        <button class="btn-skip" onclick="nextStep(2)">Skip for now</button>
+        <button class="btn-next" onclick="nextStep(2)">
+          Continue
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STEP 3: AVAILABILITY ══ -->
+  <div class="step-panel" id="step3">
+    <div class="step-header">
+      <h2>When are you available?</h2>
+      <p>Set your weekly schedule so matches can see when you're free. Timezone-aware.</p>
+    </div>
+
+    <div class="timezone-row">
+      <label>Your timezone</label>
+      <select id="tzSelect">
+        <option>Africa/Kampala (EAT, UTC+3)</option>
+        <option>Africa/Nairobi (EAT, UTC+3)</option>
+        <option>Africa/Lagos (WAT, UTC+1)</option>
+        <option>Africa/Accra (GMT, UTC+0)</option>
+        <option>Europe/London (GMT/BST)</option>
+        <option>Europe/Berlin (CET, UTC+1)</option>
+        <option>America/New_York (EST, UTC-5)</option>
+        <option>America/Los_Angeles (PST, UTC-8)</option>
+        <option>Asia/Dubai (GST, UTC+4)</option>
+        <option>Asia/Kolkata (IST, UTC+5:30)</option>
+        <option>Asia/Singapore (SGT, UTC+8)</option>
+        <option>Australia/Sydney (AEST, UTC+10)</option>
+      </select>
+    </div>
+
+    <div class="avail-grid">
+      <div class="day-row" data-day="mon">
+        <label class="day-toggle"><input type="checkbox" class="day-check"/><span class="day-name">Monday</span></label>
+        <div class="day-times">
+          <select class="time-select"><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select>
+          <span class="time-sep">to</span>
+          <select class="time-select"><option>10:00 AM</option><option selected>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select>
+        </div>
+      </div>
+      <div class="day-row" data-day="tue">
+        <label class="day-toggle"><input type="checkbox" class="day-check"/><span class="day-name">Tuesday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option selected>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+      <div class="day-row" data-day="wed">
+        <label class="day-toggle"><input type="checkbox" class="day-check"/><span class="day-name">Wednesday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option selected>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+      <div class="day-row" data-day="thu">
+        <label class="day-toggle"><input type="checkbox" class="day-check"/><span class="day-name">Thursday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option selected>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+      <div class="day-row" data-day="fri">
+        <label class="day-toggle"><input type="checkbox" class="day-check"/><span class="day-name">Friday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option selected>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+      <div class="day-row active" data-day="sat">
+        <label class="day-toggle"><input type="checkbox" class="day-check" checked/><span class="day-name">Saturday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option selected>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option>12:00 PM</option><option selected>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+      <div class="day-row active" data-day="sun">
+        <label class="day-toggle"><input type="checkbox" class="day-check" checked/><span class="day-name">Sunday</span></label>
+        <div class="day-times"><select class="time-select"><option>6:00 AM</option><option selected>9:00 AM</option><option>10:00 AM</option><option>12:00 PM</option><option>2:00 PM</option><option>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option></select><span class="time-sep">to</span><select class="time-select"><option>10:00 AM</option><option>12:00 PM</option><option selected>4:00 PM</option><option>6:00 PM</option><option>8:00 PM</option><option>10:00 PM</option></select></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1.25rem">
+      <label style="display:block;margin-bottom:.75rem">Preferred session format</label>
+      <div class="session-prefs">
+        <div class="pref-card selected" data-pref="live" onclick="selectPref(this)">
+          <div class="pref-icon">🎥</div>
+          <div class="pref-title">Live Sessions</div>
+          <div class="pref-desc">Real-time video calls with your partner</div>
+        </div>
+        <div class="pref-card" data-pref="async" onclick="selectPref(this)">
+          <div class="pref-icon">📹</div>
+          <div class="pref-title">Async Sessions</div>
+          <div class="pref-desc">Record lessons, reply on your own time</div>
+        </div>
+        <div class="pref-card" data-pref="both" onclick="selectPref(this)">
+          <div class="pref-icon">🔀</div>
+          <div class="pref-title">Both Work</div>
+          <div class="pref-desc">I'm flexible — whatever suits my match</div>
+        </div>
+        <div class="pref-card" data-pref="inperson" onclick="selectPref(this)">
+          <div class="pref-icon">🤝</div>
+          <div class="pref-title">In Person</div>
+          <div class="pref-desc">Meet locally when possible</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn-back" onclick="prevStep(3)">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <button class="btn-next" onclick="completeOnboarding()">
+        Finish Setup
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ COMPLETE ══ -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-icon">🎉</div>
+    <h2>You're all set, John!</h2>
+    <p>Your profile is live. We've already found <strong style="color:var(--blue-glow)">12 potential matches</strong> based on your skills and availability.</p>
+    <div class="complete-chips">
+      <span class="complete-chip chip-green">✓ Profile created</span>
+      <span class="complete-chip chip-green">✓ Skills added</span>
+      <span class="complete-chip chip-green">✓ Availability set</span>
+      <span class="complete-chip chip-blue">⬡ 3 SkillCoins awarded</span>
+    </div>
+    <button class="go-dashboard-btn" onclick="window.location.href='skillswap-dashboard.html'">
+      Go to My Dashboard →
+    </button>
+  </div>
+
+</div>
+</main>
+
+<script>
+let currentStep = 1;
+const teachSelected = {};
+const learnSelected = {};
+
+function updateProgress(step) {
+  for (let i = 1; i <= 3; i++) {
+    const ps = document.getElementById('ps' + i);
+    const pc = document.getElementById('pc' + i);
+    ps.className = 'prog-step';
+    if (i < step) { ps.classList.add('done'); pc.textContent = '✓'; }
+    else if (i === step) { ps.classList.add('active'); pc.textContent = i; }
+    else { pc.textContent = i; }
+  }
+  document.getElementById('topbarStep').textContent = step;
+}
+
+function nextStep(from) {
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from + 1;
+  if (currentStep <= 3) {
+    document.getElementById('step' + currentStep).classList.add('active');
+    updateProgress(currentStep);
+    window.scrollTo(0, 0);
+  }
+}
+
+function prevStep(from) {
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateProgress(currentStep);
+  window.scrollTo(0, 0);
+}
+
+function completeOnboarding() {
+  document.getElementById('step3').classList.remove('active');
+  document.getElementById('completeScreen').classList.add('show');
+  // Mark all steps done
+  for (let i = 1; i <= 3; i++) {
+    document.getElementById('ps' + i).className = 'prog-step done';
+    document.getElementById('pc' + i).textContent = '✓';
+  }
+  window.scrollTo(0, 0);
+}
+
+// Skill tag selection
+document.querySelectorAll('.skill-tag').forEach(tag => {
+  tag.addEventListener('click', () => {
+    const type = tag.classList.contains('teach') ? 'teach' : 'learn';
+    const skill = tag.dataset.skill;
+    const map = type === 'teach' ? teachSelected : learnSelected;
+    if (tag.classList.contains('selected')) {
+      tag.classList.remove('selected');
+      delete map[skill];
+    } else {
+      tag.classList.add('selected');
+      map[skill] = 'Intermediate';
+    }
+    renderSelected(type);
+  });
+});
+
+function addCustomSkill(type) {
+  const input = document.getElementById(type === 'teach' ? 'customTeach' : 'customLearn');
+  const val = input.value.trim();
+  if (!val) return;
+  const map = type === 'teach' ? teachSelected : learnSelected;
+  map[val] = 'Intermediate';
+  renderSelected(type);
+  input.value = '';
+}
+
+document.getElementById('customTeach').addEventListener('keydown', e => { if (e.key === 'Enter') addCustomSkill('teach'); });
+document.getElementById('customLearn').addEventListener('keydown', e => { if (e.key === 'Enter') addCustomSkill('learn'); });
+
+function renderSelected(type) {
+  const map = type === 'teach' ? teachSelected : learnSelected;
+  const container = document.getElementById(type + 'Selected');
+  const color = type === 'teach' ? 'var(--green-light)' : 'var(--blue-glow)';
+  const borderColor = type === 'teach' ? 'rgba(24,199,122,.25)' : 'rgba(30,111,217,.25)';
+  container.innerHTML = Object.entries(map).map(([skill, level]) => `
+    <div class="selected-skill-item" style="border-color:${borderColor}">
+      <span class="selected-skill-name" style="color:${color}">
+        <span style="font-size:.9rem">${type === 'teach' ? '📖' : '🎯'}</span> ${skill}
+      </span>
+      <div class="selected-skill-controls">
+        <select class="level-select" onchange="updateLevel('${type}','${skill}',this.value)">
+          <option ${level==='Beginner'?'selected':''}>Beginner</option>
+          <option ${level==='Intermediate'?'selected':''}>Intermediate</option>
+          <option ${level==='Advanced'?'selected':''}>Advanced</option>
+          <option ${level==='Expert'?'selected':''}>Expert</option>
+        </select>
+        <button class="remove-skill" onclick="removeSkill('${type}','${skill}')">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateLevel(type, skill, level) {
+  const map = type === 'teach' ? teachSelected : learnSelected;
+  map[skill] = level;
+}
+
+function removeSkill(type, skill) {
+  const map = type === 'teach' ? teachSelected : learnSelected;
+  delete map[skill];
+  // deselect tag if present
+  document.querySelectorAll(`.skill-tag.${type}[data-skill="${skill}"]`).forEach(t => t.classList.remove('selected'));
+  renderSelected(type);
+}
+
+// Day availability toggles
+document.querySelectorAll('.day-check').forEach(cb => {
+  cb.addEventListener('change', () => {
+    const row = cb.closest('.day-row');
+    row.classList.toggle('active', cb.checked);
+  });
+});
+
+// Session preference cards
+function selectPref(card) {
+  document.querySelectorAll('.pref-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+}
+
+// Bio character count
+document.getElementById('s1Bio').addEventListener('input', function() {
+  document.getElementById('bioCount').textContent = this.value.length;
+});
+
+// Avatar initials from name
+document.getElementById('s1First').addEventListener('input', updateInitials);
+document.getElementById('s1Last').addEventListener('input', updateInitials);
+function updateInitials() {
+  const f = document.getElementById('s1First').value.trim();
+  const l = document.getElementById('s1Last').value.trim();
+  const initials = (f[0] || '') + (l[0] || '');
+  document.getElementById('avatarInitials').textContent = initials.toUpperCase() || 'SS';
+  const display = document.getElementById('s1Display');
+  if (f || l) display.value = (f + ' ' + l).trim();
+}
+</script>
+</body>
+</html>
