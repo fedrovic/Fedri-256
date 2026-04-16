@@ -60,7 +60,10 @@ jobs:
         working-directory: backend
 
       - name: Reset DB and seed
-        run: npm run db:reset
+        run: |
+          # Apply schema directly (no migrations present) then run seed
+          npx prisma db push --accept-data-loss
+          node prisma/seed.js
         working-directory: backend
 
       - name: Run tests
