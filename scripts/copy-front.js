@@ -26,6 +26,12 @@ async function copyDir(srcDir, destDir) {
     }
     await fs.promises.rm(dest, { recursive: true, force: true });
     await copyDir(src, dest);
+    // Ensure a root index.html exists so static hosts (and Vercel) serve '/'
+    const indexPath = path.join(dest, 'index.html');
+    if (!fs.existsSync(indexPath)) {
+      const redirectHtml = `<!doctype html>\n<html lang="en">\n  <head>\n    <meta charset="utf-8" />\n    <meta http-equiv="refresh" content="0;url=/skillswap-landing.html" />\n    <meta name="viewport" content="width=device-width,initial-scale=1" />\n    <title>Redirecting…</title>\n    <script>location.replace('/skillswap-landing.html');</script>\n  </head>\n  <body>\n    Redirecting to <a href="/skillswap-landing.html">skillswap-landing.html</a>\n  </body>\n</html>`;
+      await fs.promises.writeFile(indexPath, redirectHtml, 'utf8');
+    }
     console.log('Copied frontend -> public');
   } catch (err) {
     console.error(err);

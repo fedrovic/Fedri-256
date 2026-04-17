@@ -8,14 +8,14 @@
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/skillswap-landing.html" },
-    { "source": "/auth", "destination": "/skillswap-auth.html" },
-    { "source": "/onboarding", "destination": "/skillswap-onboarding.html" },
-    { "source": "/dashboard", "destination": "/skillswap-dashboard.html" },
-    { "source": "/discover", "destination": "/skillswap-discover.html" },
-    { "source": "/profile", "destination": "/skillswap-profile.html" },
-    { "source": "/swaps", "destination": "/skillswap-swaps.html" },
-    { "source": "/messages", "destination": "/skillswap-messages.html" },
-    { "source": "/:path*", "destination": "/skillswap-landing.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/auth", "destination": "/index.html" },
+    { "source": "/onboarding", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/discover", "destination": "/index.html" },
+    { "source": "/profile", "destination": "/index.html" },
+    { "source": "/swaps", "destination": "/index.html" },
+    { "source": "/messages", "destination": "/index.html" },
+    { "source": "/:path*", "destination": "/index.html" }
   ]
 }
