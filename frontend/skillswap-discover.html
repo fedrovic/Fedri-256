@@ -211,7 +211,7 @@ body{font-family:var(--font-body);background:var(--navy);color:var(--text-primar
   <div class="topbar-right">
     <button class="icon-btn">🔔<span class="notif-badge">3</span></button>
     <button class="icon-btn">💬</button>
-    <div class="topbar-avatar">JD</div>
+    <div class="topbar-avatar" id="topbarAvatar" title="Your profile">SS</div>
   </div>
 </div>
 
@@ -607,6 +607,34 @@ body{font-family:var(--font-body);background:var(--navy);color:var(--text-primar
 </div><!-- /app -->
 
 <script>
+function applyTopbarAvatar() {
+  const avatarEl = document.getElementById('topbarAvatar');
+  if (!avatarEl) return;
+
+  try {
+    const raw = localStorage.getItem('ss_user');
+    if (!raw) return;
+    const user = JSON.parse(raw);
+
+    if (user.avatarUrl) {
+      avatarEl.textContent = '';
+      avatarEl.style.backgroundImage = `url('${user.avatarUrl}')`;
+      avatarEl.style.backgroundSize = 'cover';
+      avatarEl.style.backgroundPosition = 'center';
+    } else {
+      const first = (user.firstName || '').trim();
+      const last = (user.lastName || '').trim();
+      const initials = ((first[0] || '') + (last[0] || '')) || (user.displayName || 'SS').slice(0, 2);
+      avatarEl.textContent = initials.toUpperCase();
+      avatarEl.style.backgroundImage = '';
+    }
+
+    avatarEl.title = user.displayName || 'Your profile';
+  } catch (_) {}
+}
+
+applyTopbarAvatar();
+
 // Hamburger / sidebar
 const hamburgerBtn = document.getElementById('hamburgerBtn');
 const sidebar = document.getElementById('sidebar');
