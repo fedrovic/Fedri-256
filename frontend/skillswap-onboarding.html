@@ -136,8 +136,17 @@ main{flex:1;padding:3rem 5%;display:flex;flex-direction:column;align-items:cente
   transition:all .2s;position:relative;overflow:hidden;
 }
 .avatar-upload:hover{border-color:var(--blue-light);transform:scale(1.04)}
+.avatar-upload.has-photo{background:var(--navy-soft)}
 .avatar-initials{font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:#fff}
 .avatar-upload-hint{font-size:.65rem;color:rgba(255,255,255,.7);margin-top:2px}
+.avatar-photo{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;
+  display:none;
+}
+.avatar-upload.has-photo .avatar-photo{display:block}
+.avatar-upload.has-photo .avatar-initials,
+.avatar-upload.has-photo .avatar-upload-hint{display:none}
 .avatar-edit-overlay{
   position:absolute;inset:0;background:rgba(0,0,0,.5);
   display:flex;align-items:center;justify-content:center;
@@ -392,10 +401,12 @@ textarea{resize:vertical;min-height:88px;line-height:1.5}
 
     <div class="avatar-section">
       <div class="avatar-upload" id="avatarUpload">
+        <img class="avatar-photo" id="avatarPhoto" alt="Profile photo preview"/>
         <div class="avatar-initials" id="avatarInitials">JD</div>
         <div class="avatar-upload-hint">Upload photo</div>
         <div class="avatar-edit-overlay">📷</div>
       </div>
+      <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" style="display:none"/>
     </div>
 
     <div class="form-grid">
@@ -714,6 +725,98 @@ function addCustomSkill(type) {
 
 document.getElementById('customTeach').addEventListener('keydown', e => { if (e.key === 'Enter') addCustomSkill('teach'); });
 document.getElementById('customLearn').addEventListener('keydown', e => { if (e.key === 'Enter') addCustomSkill('learn'); });
+
+// Avatar photo upload
+const avatarUpload = document.getElementById('avatarUpload');
+const avatarInput = document.getElementById('avatarInput');
+const avatarPhoto = document.getElementById('avatarPhoto');
+
+avatarUpload.addEventListener('click', () => avatarInput.click());
+
+avatarInput.addEventListener('change', async () => {
+  const file = avatarInput.files?.[0];
+  if (!file) return;
+
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  if (!allowed.includes(file.type)) {
+    alert('Please choose a JPG, PNG, or WEBP image.');
+    avatarInput.value = '';
+    return;
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    alert('Image is too large. Maximum allowed size is 10MB.');
+    avatarInput.value = '';
+    return;
+  }
+
+  previewAvatar(file);
+  await uploadAvatar(file);
+});
+
+function previewAvatar(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    avatarPhoto.src = reader.result;
+    avatarUpload.classList.add('has-photo');
+  };
+  reader.readAsDataURL(file);
+}
+
+function getApiBase() {
+  if (window.SKILLSWAP_API_BASE_URL) return window.SKILLSWAP_API_BASE_URL;
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? 'http://localhost:4000/api/v1' : '/api/v1';
+}
+
+async function uploadAvatar(file) {
+  const token = localStorage.getItem('ss_access_token');
+  if (!token) return;
+
+  try {
+    const fd = new FormData();
+    fd.append('avatar', file);
+
+    const res = await fetch(`${getApiBase()}/users/me/avatar`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+      credentials: 'include',
+    });
+
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(txt || `HTTP ${res.status}`);
+    }
+
+    const json = await res.json();
+    const avatarUrl = json?.data?.avatarUrl;
+    if (avatarUrl) {
+      avatarPhoto.src = avatarUrl;
+      const userRaw = localStorage.getItem('ss_user');
+      if (userRaw) {
+        const user = JSON.parse(userRaw);
+        user.avatarUrl = avatarUrl;
+        localStorage.setItem('ss_user', JSON.stringify(user));
+      }
+    }
+  } catch (err) {
+    console.error('Avatar upload failed:', err.message);
+  }
+}
+
+// Restore cached avatar when available
+(() => {
+  try {
+    const raw = localStorage.getItem('ss_user');
+    if (!raw) return;
+    const user = JSON.parse(raw);
+    if (user?.avatarUrl) {
+      avatarPhoto.src = user.avatarUrl;
+      avatarUpload.classList.add('has-photo');
+    }
+  } catch (_) {}
+})();
 
 function renderSelected(type) {
   const map = type === 'teach' ? teachSelected : learnSelected;
