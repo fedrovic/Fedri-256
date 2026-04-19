@@ -401,15 +401,15 @@ textarea{resize:vertical;min-height:88px;line-height:1.5}
     <div class="form-grid">
       <div class="field">
         <label for="s1First">First name *</label>
-        <input type="text" id="s1First" placeholder="John" value="John"/>
+        <input type="text" id="s1First" placeholder="First name"/>
       </div>
       <div class="field">
         <label for="s1Last">Last name *</label>
-        <input type="text" id="s1Last" placeholder="Doe" value="Doe"/>
+        <input type="text" id="s1Last" placeholder="Last name"/>
       </div>
       <div class="field">
         <label for="s1Display">Display name *</label>
-        <input type="text" id="s1Display" placeholder="How you'll appear to others" value="John Doe"/>
+        <input type="text" id="s1Display" placeholder="How you'll appear to others"/>
       </div>
       <div class="field">
         <label for="s1Location">Location (City, Country)</label>
@@ -618,7 +618,7 @@ textarea{resize:vertical;min-height:88px;line-height:1.5}
   <!-- ══ COMPLETE ══ -->
   <div class="complete-screen" id="completeScreen">
     <div class="complete-icon">🎉</div>
-    <h2>You're all set, John!</h2>
+    <h2 id="completionTitle">You're all set!</h2>
     <p>Your profile is live. We've already found <strong style="color:var(--blue-glow)">12 potential matches</strong> based on your skills and availability.</p>
     <div class="complete-chips">
       <span class="complete-chip chip-green">✓ Profile created</span>
@@ -670,6 +670,11 @@ function prevStep(from) {
 }
 
 function completeOnboarding() {
+  const firstName = document.getElementById('s1First').value.trim();
+  const displayName = document.getElementById('s1Display').value.trim();
+  const name = firstName || displayName;
+  document.getElementById('completionTitle').textContent = name ? `You're all set, ${name}!` : "You're all set!";
+
   document.getElementById('step3').classList.remove('active');
   document.getElementById('completeScreen').classList.add('show');
   // Mark all steps done

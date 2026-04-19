@@ -456,7 +456,7 @@ body{font-family:var(--font-body);background:var(--navy);color:var(--text-primar
       <span class="notif-badge">3</span>
     </button>
     <button class="icon-btn">💬</button>
-    <div class="topbar-avatar" title="John Doe">JD</div>
+    <div class="topbar-avatar" id="topbarAvatar" title="Your profile">SS</div>
   </div>
 </div>
 
@@ -568,7 +568,7 @@ body{font-family:var(--font-body);background:var(--navy);color:var(--text-primar
       <!-- WELCOME BANNER -->
       <div class="welcome-banner">
         <div class="wb-text">
-          <h2>Good morning, John 👋</h2>
+          <h2 id="welcomeGreeting">Welcome back 👋</h2>
           <p>You have <strong>2 pending swap requests</strong> and a session with Sara in <strong>30 minutes.</strong></p>
         </div>
         <button class="wb-cta" onclick="window.location.href='skillswap-discover.html'">Browse New Matches →</button>
@@ -967,6 +967,32 @@ document.querySelectorAll('.stat-card,.match-card,.swap-item,.session-item,.card
 document.querySelector('.topbar-search input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') window.location.href = 'skillswap-discover.html';
 });
+
+// Personalize greeting/avatar from cached authenticated user when available
+(() => {
+  try {
+    const raw = localStorage.getItem('ss_user');
+    if (!raw) return;
+
+    const user = JSON.parse(raw);
+    const name = user.firstName || user.displayName || '';
+    const greetingEl = document.getElementById('welcomeGreeting');
+    if (greetingEl) {
+      greetingEl.textContent = name ? `Welcome back, ${name}` : 'Welcome back';
+    }
+
+    const avatarEl = document.getElementById('topbarAvatar');
+    if (avatarEl) {
+      const first = (user.firstName || '').trim();
+      const last = (user.lastName || '').trim();
+      const initials = ((first[0] || '') + (last[0] || '')) || (user.displayName || 'SS').slice(0, 2);
+      avatarEl.textContent = initials.toUpperCase();
+      avatarEl.title = user.displayName || name || 'Your profile';
+    }
+  } catch (_) {
+    // Keep neutral fallback content if user cache is unavailable
+  }
+})();
 </script>
 </body>
 </html>
