@@ -8,6 +8,8 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/v1/:path*", "destination": "https://skillswap-bt3j.onrender.com/api/v1/:path*" },
+    { "source": "/socket.io/:path*", "destination": "https://skillswap-bt3j.onrender.com/socket.io/:path*" },
     { "source": "/", "destination": "/index.html" },
     { "source": "/auth", "destination": "/index.html" },
     { "source": "/onboarding", "destination": "/index.html" },
