@@ -25,12 +25,22 @@ router.post('/2fa/setup',       authenticate,                ctrl.setupTwoFactor
 router.post('/2fa/confirm',     authenticate, validate(v.confirm2FA), ctrl.confirmTwoFactor);
 
 // OAuth — Google
-router.get('/google',          passport.authenticate('google', { scope: ['profile','email'] }));
-router.get('/google/callback', passport.authenticate('google', { session: false }), ctrl.oauthCallback);
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+	router.get('/google', passport.authenticate('google', { scope: ['profile','email'] }));
+	router.get('/google/callback', passport.authenticate('google', { session: false }), ctrl.oauthCallback);
+} else {
+	router.get('/google', (req, res) => res.status(503).json({ success: false, message: 'Google OAuth not configured' }));
+	router.get('/google/callback', (req, res) => res.status(503).json({ success: false, message: 'Google OAuth not configured' }));
+}
 
 // OAuth — GitHub
-router.get('/github',          passport.authenticate('github', { scope: ['user:email'] }));
-router.get('/github/callback', passport.authenticate('github', { session: false }), ctrl.oauthCallback);
+if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
+	router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+	router.get('/github/callback', passport.authenticate('github', { session: false }), ctrl.oauthCallback);
+} else {
+	router.get('/github', (req, res) => res.status(503).json({ success: false, message: 'GitHub OAuth not configured' }));
+	router.get('/github/callback', (req, res) => res.status(503).json({ success: false, message: 'GitHub OAuth not configured' }));
+}
 
 module.exports = router;
 
