@@ -825,17 +825,22 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 });
 
 // Google buttons
+const getOAuthBase = () => {
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  return isLocal ? 'http://localhost:4000/api/v1' : '/api/v1';
+};
+
 document.getElementById('googleLoginBtn').addEventListener('click', e => {
   e.preventDefault();
-  window.location.href = '/api/v1/auth/google';
+  window.location.href = `${getOAuthBase()}/auth/google`;
 });
 document.getElementById('googleRegBtn').addEventListener('click', e => {
   e.preventDefault();
-  window.location.href = '/api/v1/auth/google';
+  window.location.href = `${getOAuthBase()}/auth/google`;
 });
 document.getElementById('githubLoginBtn').addEventListener('click', e => {
   e.preventDefault();
-  window.location.href = '/api/v1/auth/github';
+  window.location.href = `${getOAuthBase()}/auth/github`;
 });
 
 // Forgot password

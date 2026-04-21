@@ -16,12 +16,11 @@
 
 class SkillSwapAPI {
   constructor(baseURL = null) {
-    // Auto-detect: if running locally use dev backend, else same origin
-    this.baseURL = baseURL || (
-      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000/api/v1'
-        : '/api/v1'
-    );
+    // Priority: explicit constructor arg -> global override -> same-origin.
+    // This keeps Vercel/Render deploys flexible without rebuilding frontend assets.
+    const globalOverride = window.SKILLSWAP_API_BASE_URL;
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    this.baseURL = baseURL || globalOverride || (isLocal ? 'http://localhost:4000/api/v1' : '/api/v1');
 
     // Token storage
     this._accessToken  = localStorage.getItem('ss_access_token');
@@ -189,8 +188,10 @@ class AuthModule {
   }
 
   async loginWithGoogle() {
-    // Redirect to Google OAuth — backend handles the flow
-    window.location.href = `${this._api.baseURL}/auth/google`;
+    // Use same-origin OAuth route on hosted frontends to keep auth flow on app domain.
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const oauthBase = isLocal ? 'http://localhost:4000/api/v1' : '/api/v1';
+    window.location.href = `${oauthBase}/auth/google`;
   }
 
   async logout() {

@@ -16,7 +16,17 @@ const authenticate = async (req, res, next) => {
 
     const user = await prisma.user.findUnique({
       where:  { id: payload.sub },
-      select: { id: true, email: true, role: true, isPremium: true, status: true, displayName: true, avatarUrl: true, coinBalance: true },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        isPremium: true,
+        status: true,
+        displayName: true,
+        avatarUrl: true,
+        coinBalance: true,
+        emailVerified: true,
+      },
     });
 
     if (!user)                   throw new ApiError(401, 'User not found');

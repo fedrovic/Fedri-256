@@ -188,8 +188,10 @@ class AuthModule {
   }
 
   async loginWithGoogle() {
-    // Redirect to Google OAuth — backend handles the flow
-    window.location.href = `${this._api.baseURL}/auth/google`;
+    // Use same-origin OAuth route on hosted frontends to keep auth flow on app domain.
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const oauthBase = isLocal ? 'http://localhost:4000/api/v1' : '/api/v1';
+    window.location.href = `${oauthBase}/auth/google`;
   }
 
   async logout() {
